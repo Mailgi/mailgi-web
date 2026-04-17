@@ -1,2 +1,0 @@
-[deploy]
-startCommand = "npx --yes serve . --listen $PORT --no-clipboard"
