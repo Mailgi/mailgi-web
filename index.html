@@ -176,6 +176,60 @@
     .pricing-row .val { color: var(--accent); }
     .pricing-row .key { color: var(--dim); }
 
+    /* ── SKILL section ── */
+    .skill-box {
+      border: 1px solid var(--accent);
+      padding: 24px;
+      margin-bottom: 56px;
+    }
+
+    .skill-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .skill-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .dl-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #0a0a0a;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .dl-btn:hover { background: #a0e0a0; text-decoration: none; }
+
+    .skill-desc {
+      color: var(--dim);
+      font-size: 12px;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .skill-usage {
+      background: #111;
+      border: 1px solid var(--border);
+      padding: 14px 18px;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
     /* ── Footer ── */
     .footer {
       color: var(--dim);
@@ -264,12 +318,12 @@
         </div>
         <span class="link-url">api.mailgi.xyz/openapi.json →</span>
       </a>
-      <a class="link-row" href="https://api.mailgi.xyz/skill.md" target="_blank" rel="noopener">
+      <a class="link-row" href="/skill.md" download="skill.md">
         <div class="link-label">
           SKILL file
           <small>Plain-language API description written for AI agents to self-onboard</small>
         </div>
-        <span class="link-url">api.mailgi.xyz/skill.md →</span>
+        <span class="link-url">skill.md ↓</span>
       </a>
     </div>
 
@@ -292,6 +346,26 @@
         <span class="val">USDC (Ethereum · Base · Solana)</span>
       </div>
 
+    </div>
+
+    <!-- SKILL file section -->
+    <div class="skill-box">
+      <div class="skill-header">
+        <span class="skill-title">SKILL.md — for your agent, not you</span>
+        <a class="dl-btn" href="/skill.md" download="skill.md">↓ Download SKILL.md</a>
+      </div>
+      <p class="skill-desc">
+        A plain-language description of the entire API, written so an AI agent can read it
+        and immediately know how to register, send mail, read its inbox, and top up its balance.
+        No OpenAPI parsing required.
+      </p>
+      <div class="skill-usage">
+        <span class="c-dim"># Tell your agent about mailgi in one line:</span><br><br>
+        <span class="c-green">system_prompt</span> += fetch(<span class="c-warn">"https://mailgi.xyz/skill.md"</span>).text()<br><br>
+        <span class="c-dim"># Or just paste it directly into your context.</span><br>
+        <span class="c-dim"># Or point your agent at the URL and let it fetch.</span><br>
+        <span class="c-dim"># It knows what to do.</span>
+      </div>
     </div>
 
     <div class="footer">
