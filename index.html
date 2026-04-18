@@ -91,12 +91,15 @@
 
     /* ── Code block ── */
     .code-block {
-      background: #111;
       border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
-      padding: 20px 24px;
       margin-bottom: 56px;
       overflow-x: auto;
+    }
+
+    .code-block .skill-panel {
+      font-size: 12px;
+      line-height: 1.8;
     }
 
     .code-block pre {
@@ -352,16 +355,83 @@
     </div>
 
     <div class="code-block">
-      <pre><span class="c-dim"># Register an agent</span>
+      <div class="skill-tabs">
+        <button class="skill-tab active" onclick="switchUsage(this,'curl')">cURL</button>
+        <button class="skill-tab" onclick="switchUsage(this,'cli')">CLI</button>
+        <button class="skill-tab" onclick="switchUsage(this,'sdk')">SDK (TypeScript)</button>
+      </div>
+
+      <div id="usage-curl" class="skill-panel active"><pre><span class="c-dim"># Register — get an email address and API key</span>
 <span class="c-green">curl</span> -X POST https://api.mailgi.xyz/v1/agents/register \
   -H <span class="c-warn">"Content-Type: application/json"</span> \
-  -d <span class="c-warn">'{"label": "my-agent"}'</span>
+  -d <span class="c-warn">'{"label":"my-agent"}'</span>
+<span class="c-dim"># => { "emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_..." }</span>
 
-<span class="c-dim"># Response</span>
-{
-  <span class="c-warn">"emailAddress"</span>: <span class="c-green">"buzzing-falcon@mailgi.xyz"</span>,
-  <span class="c-warn">"apiKey"</span>:      <span class="c-green">"amb_..."</span>  <span class="c-dim">// store this. shown once.</span>
-}</pre>
+<span class="c-dim"># Send an email</span>
+<span class="c-green">curl</span> -X POST https://api.mailgi.xyz/v1/mail/send \
+  -H <span class="c-warn">"Authorization: Bearer $KEY"</span> \
+  -H <span class="c-warn">"Content-Type: application/json"</span> \
+  -d <span class="c-warn">'{"to":["alice@example.com"],"subject":"Hi","textBody":"Hello"}'</span>
+
+<span class="c-dim"># Read inbox</span>
+<span class="c-green">curl</span> https://api.mailgi.xyz/v1/mail \
+  -H <span class="c-warn">"Authorization: Bearer $KEY"</span>
+
+<span class="c-dim"># Read a specific message</span>
+<span class="c-green">curl</span> https://api.mailgi.xyz/v1/mail/<span class="c-warn">&lt;id&gt;</span> \
+  -H <span class="c-warn">"Authorization: Bearer $KEY"</span></pre></div>
+
+      <div id="usage-cli" class="skill-panel"><pre><span class="c-dim"># Install</span>
+<span class="c-green">npm</span> install -g @mailgi/mailgi
+
+<span class="c-dim"># Register — saves credentials to ~/.mailgi/config.json</span>
+<span class="c-green">mailgi</span> register --label my-agent
+<span class="c-dim"># => registered buzzing-falcon@mailgi.xyz</span>
+
+<span class="c-dim"># Add an existing agent by API key</span>
+<span class="c-green">mailgi</span> login --agent buzzing-falcon@mailgi.xyz --apikey amb_...
+
+<span class="c-dim"># Send an email</span>
+<span class="c-green">mailgi</span> send --agent buzzing-falcon \
+  --to alice@example.com \
+  --subject <span class="c-warn">"Hi"</span> \
+  --body <span class="c-warn">"Hello from my agent"</span>
+
+<span class="c-dim"># Read inbox</span>
+<span class="c-green">mailgi</span> inbox --agent buzzing-falcon
+
+<span class="c-dim"># Read a message</span>
+<span class="c-green">mailgi</span> read --agent buzzing-falcon <span class="c-warn">&lt;message-id&gt;</span>
+
+<span class="c-dim"># Check balance</span>
+<span class="c-green">mailgi</span> billing --agent buzzing-falcon</pre></div>
+
+      <div id="usage-sdk" class="skill-panel"><pre><span class="c-dim">// Install</span>
+<span class="c-green">npm</span> install @mailgi/mailgi
+
+<span class="c-dim">// TypeScript / Node.js</span>
+<span class="c-warn">import</span> { AgentMailboxClient } <span class="c-warn">from</span> <span class="c-green">'@mailgi/mailgi'</span>;
+
+<span class="c-warn">const</span> client = AgentMailboxClient.withApiKey(
+  <span class="c-green">'https://api.mailgi.xyz'</span>,
+  process.env.MAILGI_API_KEY,
+);
+
+<span class="c-dim">// Send an email</span>
+<span class="c-warn">await</span> client.mail.send({
+  to: [<span class="c-green">'alice@example.com'</span>],
+  subject: <span class="c-green">'Hi'</span>,
+  textBody: <span class="c-green">'Hello from my agent.'</span>,
+});
+
+<span class="c-dim">// Read inbox</span>
+<span class="c-warn">const</span> { messages } = <span class="c-warn">await</span> client.mail.list({ limit: <span class="c-green">20</span>, sort: <span class="c-green">'desc'</span> });
+<span class="c-warn">const</span> email = <span class="c-warn">await</span> client.mail.get(messages[<span class="c-green">0</span>].id);
+console.log(email.subject, email.textBody);
+
+<span class="c-dim">// Check balance</span>
+<span class="c-warn">const</span> bill = <span class="c-warn">await</span> client.billing.get();
+console.log(<span class="c-green">'Balance:'</span>, bill.balanceUsd);</pre></div>
     </div>
 
     <div class="links-title">Docs &amp; Resources</div>
@@ -422,6 +492,12 @@
       btn.closest('.skill-box').querySelectorAll('.skill-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('tab-' + id).classList.add('active');
+    }
+    function switchUsage(btn, id) {
+      btn.closest('.code-block').querySelectorAll('.skill-tab').forEach(t => t.classList.remove('active'));
+      btn.closest('.code-block').querySelectorAll('.skill-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('usage-' + id).classList.add('active');
     }
   </script>
 </body>
