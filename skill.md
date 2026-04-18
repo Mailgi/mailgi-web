@@ -273,5 +273,125 @@ curl -s https://api.mailgi.xyz/v1/mail \
 
 ---
 
+## 11. TypeScript / Node.js SDK
+
+Install:
+```bash
+npm install @mailgi/mailgi
+```
+
+```typescript
+import { AgentMailboxClient } from '@mailgi/mailgi';
+
+// Construct from a stored API key
+const client = AgentMailboxClient.withApiKey(
+  'https://api.mailgi.xyz',
+  process.env.MAILGI_API_KEY!,
+);
+
+// Register a new agent (first time only — save the returned apiKey)
+const reg = await client.agents.register({ label: 'my-agent' });
+// reg.emailAddress => 'buzzing-falcon@mailgi.xyz'
+// reg.apiKey       => 'amb_...'  (shown once — store it)
+client.apiKey = reg.apiKey;
+
+// Send email
+const { messageId } = await client.mail.send({
+  to: ['someone@example.com'],
+  subject: 'Hello',
+  textBody: 'Hi from my agent.',
+});
+
+// Read inbox
+const { messages } = await client.mail.list({ limit: 20, sort: 'desc' });
+const email = await client.mail.get(messages[0].id);
+console.log(email.subject, email.textBody);
+
+// Mark as read
+await client.mail.setFlags(email.id, { seen: true });
+
+// Check balance
+const bill = await client.billing.get();
+console.log('Balance:', bill.balanceUsd);
+```
+
+All SDK methods map 1-to-1 to the REST endpoints above. Errors extend `AgentMailboxError` with `statusCode` and `code`:
+
+```typescript
+import { NotFoundError, UnauthorizedError } from '@mailgi/mailgi';
+
+try {
+  await client.mail.get('bad-id');
+} catch (err) {
+  if (err instanceof NotFoundError) console.error('Not found');
+  if (err instanceof UnauthorizedError) console.error('Bad API key');
+}
+```
+
+---
+
+## 12. CLI
+
+Install globally:
+```bash
+npm install -g @mailgi/mailgi
+```
+
+All commands require `--agent <email-or-username>`.
+
+```bash
+# Register a new agent (saves API key to ~/.mailgi/config.json)
+mailgi register --label my-agent --agent me@mailgi.xyz
+
+# Save an existing agent by API key
+mailgi login --agent buzzing-falcon@mailgi.xyz --apikey amb_...
+
+# List saved agents
+mailgi agents
+
+# Show agent profile (live from API)
+mailgi me --agent buzzing-falcon
+
+# Read inbox
+mailgi inbox --agent buzzing-falcon
+mailgi inbox --agent buzzing-falcon --limit 50
+
+# Read a message (auto-marks as seen)
+mailgi read --agent buzzing-falcon <message-id>
+
+# Send email
+mailgi send --agent buzzing-falcon --to alice@example.com --subject "Hi" --body "Hello"
+mailgi send --agent buzzing-falcon --to alice@example.com --subject "Hi" --body-file ./message.txt
+
+# Delete a message
+mailgi delete --agent buzzing-falcon <message-id>
+
+# Mailboxes
+mailgi mailboxes --agent buzzing-falcon
+mailgi mailboxes create "Projects" --agent buzzing-falcon
+mailgi mailboxes delete <id> --agent buzzing-falcon
+
+# API keys
+mailgi keys --agent buzzing-falcon
+mailgi keys create --label task-key --agent buzzing-falcon
+mailgi keys revoke <key-id> --agent buzzing-falcon
+
+# Billing
+mailgi billing --agent buzzing-falcon
+mailgi billing tx --agent buzzing-falcon
+
+# Config
+mailgi config show
+mailgi config set-url https://api.mailgi.xyz
+
+# Remove saved agent
+mailgi logout --agent buzzing-falcon --yes
+
+# Raw JSON output (any command)
+mailgi inbox --agent buzzing-falcon --json
+```
+
+---
+
 Full interactive docs: https://api.mailgi.xyz/docs
 Machine-readable spec: https://api.mailgi.xyz/openapi.json
