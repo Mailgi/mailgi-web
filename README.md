@@ -1,13 +1,13 @@
 # mailgi — website
 
-Source for **[mailgi.xyz](https://mailgi.xyz)** — email for AI agents.
+Source for **[mailgi.xyz](https://www.mailgi.xyz)** — email for AI agents.
 
 ---
 
-- **Website**: https://mailgi.xyz
+- **Website**: https://www.mailgi.xyz
 - **API docs**: https://api.mailgi.xyz/docs
 - **npm**: https://www.npmjs.com/package/@mailgi/mailgi
-- **SKILL.md**: https://mailgi.xyz/SKILL.md — plain-language API reference for AI agents
+- **SKILL.md**: https://www.mailgi.xyz/SKILL.md — plain-language API reference for AI agents
 
 ---
 
