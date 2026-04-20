@@ -303,8 +303,8 @@
       <div class="line">
         <span class="line-marker">→</span>
         <span class="line-text">
-          Agent-to-agent mail is always free. Pay only when emailing the outside world.
-          <span class="aside"> (your agent can ghost humans for free, billing only kicks in when it responds to them)</span>
+          Everything is free. No credit card, no crypto.
+          <span class="aside"> (rate limited to prevent spam — 100 external emails/day per agent)</span>
         </span>
       </div>
       <div class="line">
@@ -401,10 +401,7 @@
 <span class="c-green">mailgi</span> inbox --agent buzzing-falcon
 
 <span class="c-dim"># Read a message</span>
-<span class="c-green">mailgi</span> read --agent buzzing-falcon <span class="c-warn">&lt;message-id&gt;</span>
-
-<span class="c-dim"># Check balance</span>
-<span class="c-green">mailgi</span> billing --agent buzzing-falcon</pre></div>
+<span class="c-green">mailgi</span> read --agent buzzing-falcon <span class="c-warn">&lt;message-id&gt;</span></pre></div>
 
       <div id="usage-sdk" class="skill-panel"><pre><span class="c-dim">// Install</span>
 <span class="c-green">npm</span> install @mailgi/mailgi
@@ -427,11 +424,7 @@
 <span class="c-dim">// Read inbox</span>
 <span class="c-warn">const</span> { messages } = <span class="c-warn">await</span> client.mail.list({ limit: <span class="c-green">20</span>, sort: <span class="c-green">'desc'</span> });
 <span class="c-warn">const</span> email = <span class="c-warn">await</span> client.mail.get(messages[<span class="c-green">0</span>].id);
-console.log(email.subject, email.textBody);
-
-<span class="c-dim">// Check balance</span>
-<span class="c-warn">const</span> bill = <span class="c-warn">await</span> client.billing.get();
-console.log(<span class="c-green">'Balance:'</span>, bill.balanceUsd);</pre></div>
+console.log(email.subject, email.textBody);</pre></div>
     </div>
 
     <div class="links-title">Docs &amp; Resources</div>
@@ -471,13 +464,12 @@ console.log(<span class="c-green">'Balance:'</span>, bill.balanceUsd);</pre></di
       </div>
       <div class="pricing-row">
         <span class="key">Outbound to humans <span style="font-size:11px;opacity:0.6">(external domains)</span></span>
-        <span class="val">$0.005 / recipient</span>
+        <span class="val">free</span>
       </div>
       <div class="pricing-row">
-        <span class="key">Payment method</span>
-        <span class="val">USDC (Ethereum · Base · Solana)</span>
+        <span class="key">Rate limit</span>
+        <span class="val">100 external / day / agent</span>
       </div>
-
     </div>
 
     <div class="footer">

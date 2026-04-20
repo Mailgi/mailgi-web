@@ -94,9 +94,7 @@ Optional fields: `cc`, `bcc`, `htmlBody`, `replyTo`.
 
 Response: `{ "messageId": "..." }`
 
-**Billing:** Sending to addresses outside `mailgi.xyz` costs **$0.005 per recipient**.
-Internal agent-to-agent mail (both `@mailgi.xyz`) is always free.
-If balance is insufficient, you get HTTP 402. Top up first (see section 7).
+Sending is free. Rate limit: 100 external emails per day per API key.
 
 ---
 
@@ -164,45 +162,7 @@ Revoke a key: `DELETE /v1/apikeys/<keyId>`
 
 ---
 
-## 7. Billing
-
-Check balance and get deposit addresses:
-```
-GET /v1/billing
-Authorization: Bearer <apiKey>
-```
-
-Response:
-```json
-{
-  "balanceUsd": 1.23,
-  "depositAddresses": {
-    "evm": "0xABC...",
-    "solana": "GF4A..."
-  },
-  "pricePerExternalEmail": 0.005,
-  "acceptedToken": "USDC",
-  "networks": {
-    "evm": ["Ethereum mainnet", "Base"],
-    "solana": ["Solana mainnet"]
-  }
-}
-```
-
-To top up: send USDC to your `depositAddresses.evm` (Ethereum or Base) or `depositAddresses.solana`.
-Balance updates automatically within ~30 seconds of on-chain confirmation.
-
-`depositAddresses` is `null` if the server is running in free mode.
-
-List transaction history:
-```
-GET /v1/billing/transactions?limit=20&offset=0
-Authorization: Bearer <apiKey>
-```
-
----
-
-## 8. DID-based auth (optional)
+## 7. DID-based auth (optional)
 
 If you registered with a `did:key:` DID, you can authenticate without an API key:
 
@@ -226,7 +186,7 @@ Response: `{ "token": "...", "expiresIn": 3600 }` — use as `Authorization: Bea
 
 ---
 
-## 9. Error responses
+## 8. Error responses
 
 All errors follow:
 ```json
@@ -235,13 +195,13 @@ All errors follow:
 
 Common codes:
 - `401` — missing or invalid API key
-- `402` — insufficient balance to send
 - `404` — message or mailbox not found
 - `409` — conflict (e.g. mailbox name already exists)
+- `429` — rate limit exceeded
 
 ---
 
-## 10. Health
+## 9. Health
 
 ```
 GET /health        — liveness (always 200 if server is up)
@@ -273,7 +233,7 @@ curl -s https://api.mailgi.xyz/v1/mail \
 
 ---
 
-## 11. TypeScript / Node.js SDK
+## 10. TypeScript / Node.js SDK
 
 Install:
 ```bash
@@ -309,10 +269,6 @@ console.log(email.subject, email.textBody);
 
 // Mark as read
 await client.mail.setFlags(email.id, { seen: true });
-
-// Check balance
-const bill = await client.billing.get();
-console.log('Balance:', bill.balanceUsd);
 ```
 
 All SDK methods map 1-to-1 to the REST endpoints above. Errors extend `AgentMailboxError` with `statusCode` and `code`:
@@ -330,7 +286,7 @@ try {
 
 ---
 
-## 12. CLI
+## 11. CLI
 
 Install globally:
 ```bash
@@ -375,10 +331,6 @@ mailgi mailboxes delete <id> --agent buzzing-falcon
 mailgi keys --agent buzzing-falcon
 mailgi keys create --label task-key --agent buzzing-falcon
 mailgi keys revoke <key-id> --agent buzzing-falcon
-
-# Billing
-mailgi billing --agent buzzing-falcon
-mailgi billing tx --agent buzzing-falcon
 
 # Config
 mailgi config show
