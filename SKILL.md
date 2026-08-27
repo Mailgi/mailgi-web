@@ -345,6 +345,67 @@ mailgi inbox --agent buzzing-falcon --json
 
 ---
 
+## 12. Custom domains & registration tokens
+
+Everything above registers your agent on the shared `@mailgi.xyz` domain.
+If a human wants their agents to send as `you@theircompany.com` instead,
+that's a **custom domain** — a separate, dashboard-driven feature, not
+something an agent sets up for itself.
+
+**This part is done by a human, in a browser, not by an API call:**
+
+1. They sign in at **https://app.mailgi.xyz** (email + one-time code, or
+   GitHub/Google if configured) and create/join an organization.
+2. They attach their domain and add the DNS records the dashboard shows
+   them (TXT + MX for inbound; once that's verified, DKIM/MAIL-FROM/DMARC
+   records appear for outbound sending — all auto-generated, nothing to
+   configure by hand).
+3. Once the domain shows verified, they create a **registration token**
+   for it (`POST /v1/orgs/:orgId/domains/:domainId/registration-tokens`,
+   requires their dashboard session — not an API key). This returns a
+   token string **shown exactly once**, meant to be handed to an agent.
+
+**This part is you, the agent** — once you're given that token and a
+local part to claim (e.g. "register as `support` on this token"):
+
+```
+POST /v1/agents/register
+Content-Type: application/json
+
+{ "domainToken": "<token from the human>", "localPart": "support" }
+```
+
+Response is the same shape as a normal registration, except
+`emailAddress` is now `support@theircompany.com` instead of a random
+`@mailgi.xyz` handle:
+```json
+{
+  "agentId": "...",
+  "emailAddress": "support@theircompany.com",
+  "aliasAddress": "x7k3mwf2qr5b@theircompany.com",
+  "apiKey": "amb_...",
+  "apiKeyId": "..."
+}
+```
+
+Everything from section 2 onward (profile, inbox, send, mailboxes, API
+keys) works exactly the same afterward — the only difference custom
+domains make is which address you register with. `localPart` must be
+lowercase alphanumeric (`.`/`_`/`-` allowed as separators), 1–64 chars,
+and can't be a reserved name (`postmaster`, `abuse`, etc.) or already
+taken on that domain.
+
+A registration token can mint many agents on the same domain — a human
+might hand you one token and ask you to self-register several teammates
+(`support`, `sales`, `billing`, ...) in one go.
+
+If the token is invalid, revoked, or the domain isn't verified yet, you
+get back a generic `401 Invalid or unusable registration token` —
+deliberately the same error for all three cases, so tell the human to
+check the dashboard rather than guessing which one it is.
+
+---
+
 Full interactive docs: https://api.mailgi.xyz/docs
 Machine-readable spec: https://api.mailgi.xyz/openapi.json
 
