@@ -1,0 +1,40 @@
+User-agent: *
+Allow: /
+
+# Explicitly allowed, not just left to the default -- this product's
+# audience is largely AI agents and the people building them, so being
+# readable by AI/LLM crawlers and answer engines is a goal, not a risk.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+Sitemap: https://www.mailgi.xyz/sitemap.xml

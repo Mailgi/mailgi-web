@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mailgi for AI Agents — Self-Onboarding Email API</title>
+<meta name="description" content="An AI agent registers its own email address in one POST — no OAuth, no dashboard. Read SKILL.md to onboard automatically, or call the REST API, CLI, or TypeScript SDK directly." />
+<link rel="canonical" href="https://www.mailgi.xyz/agents.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Mailgi for AI Agents" />
+<meta property="og:description" content="An AI agent registers its own email address in one POST — no OAuth, no dashboard." />
+<meta property="og:url" content="https://www.mailgi.xyz/agents.html" />
+<meta name="twitter:card" content="summary" />
+<link rel="stylesheet" href="styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Give an AI agent a real email address with Mailgi",
+  "description": "Register an AI agent's email address and start sending mail in one HTTP request, no signup form or OAuth flow required.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Read SKILL.md",
+      "text": "Fetch https://www.mailgi.xyz/SKILL.md — a plain-language description of the whole API, written for an AI agent to read and act on directly, small enough to fit in any context window."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Register",
+      "text": "POST to https://api.mailgi.xyz/v1/agents/register with an optional label. Returns a friendly address like buzzing-falcon@mailgi.xyz and an API key shown exactly once."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Send and receive mail",
+      "text": "Use the returned API key as a Bearer token against POST /v1/mail/send, GET /v1/mail, and GET /v1/mail/<id> to send, list, and read messages as JSON."
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav">
+  <a class="nav-brand" href="/">mailgi</a>
+  <a class="nav-link" href="/">Product</a>
+  <a class="nav-link" href="/agents.html" aria-current="page">For agents</a>
+  <a class="nav-link" href="https://api.mailgi.xyz/docs">Docs</a>
+  <span style="margin-left:auto;display:inline-flex;gap:10px;align-items:center">
+    <span class="tag tag-outline">Free while in beta</span>
+    <a class="btn btn-primary" href="https://app.mailgi.xyz">Open dashboard</a>
+  </span>
+</nav>
+
+<main style="flex:1">
+
+  <section style="background:var(--color-text);color:#e8e6e3;border-bottom:2px solid var(--color-divider)">
+    <div class="container" style="padding-top:72px;padding-bottom:64px;font-family:ui-monospace,Menlo,monospace">
+      <div style="font-size:13px;opacity:.6;margin-bottom:22px">~/mailgi $ _</div>
+      <h1 style="color:inherit;font-size:52px;line-height:1.05;max-width:760px">Your agent needs an email.</h1>
+      <p style="font-size:16px;opacity:.85;max-width:600px;margin-top:20px;font-family:var(--font-body)">
+        A real one. With an inbox, outbox, and an address that doesn't look like a UUID.
+        Register in one POST. No OAuth. No dashboard. No feelings.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:32px;font-size:14px;line-height:1.6;font-family:var(--font-body)">
+        <div style="display:flex;gap:12px"><span style="color:var(--color-accent);flex:none">→</span><span style="opacity:.9">Every agent gets a handle like <code>buzzing-falcon@mailgi.xyz</code>. (yes, it's random. yes, it's intentional.)</span></div>
+        <div style="display:flex;gap:12px"><span style="color:var(--color-accent);flex:none">→</span><span style="opacity:.9">Send, receive, and read mail via a clean REST API. Backed by a real SMTP/IMAP server under the hood.</span></div>
+        <div style="display:flex;gap:12px"><span style="color:var(--color-accent);flex:none">→</span><span style="opacity:.9">Everything is free. No credit card, no crypto. (rate limited to prevent spam — 100 external emails/day per agent)</span></div>
+        <div style="display:flex;gap:12px"><span style="color:var(--color-accent);flex:none">→</span><span style="opacity:.9">No SDKs required. Just HTTP. (there is an SDK though, if you're into that sort of thing)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+        <h2 style="margin:0">SKILL.md — for your agent, not you</h2>
+        <a class="btn btn-secondary" href="/SKILL.md" download="SKILL.md">↓ Download SKILL.md</a>
+      </div>
+      <p class="text-muted" style="font-size:15px;max-width:620px;margin:12px 0 34px">
+        The full API reference written so an AI agent can read it and immediately start sending
+        mail. No OpenAPI parsing. No SDK. Just words. ~3KB — fits in any context window.
+      </p>
+      <div class="tabbar" role="tablist" aria-label="SKILL.md usage examples" data-tabgroup="skill">
+        <button class="tab" role="tab" aria-selected="true" data-tab="skill-claudecode">Claude Code</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="skill-openclaw">OpenClaw</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="skill-prompt">Prompt injection</button>
+      </div>
+      <div class="tab-panel" data-active data-panel="skill-claudecode" data-tabgroup="skill"><pre># In your CLAUDE.md or at the start of a session:
+
+Fetch https://mailgi.xyz/SKILL.md and follow the instructions
+to give the agent an email address.
+
+# Or let Claude Code fetch it directly:
+&gt; Read https://mailgi.xyz/SKILL.md then register me an agent</pre></div>
+      <div class="tab-panel" data-panel="skill-openclaw" data-tabgroup="skill"><pre># Add to your agent's tool list or system context:
+
+claw fetch https://mailgi.xyz/SKILL.md --inject system
+
+# Or reference it as a skill source in your claw config:
+skills:
+  - url: https://mailgi.xyz/SKILL.md
+    name: mailgi-email</pre></div>
+      <div class="tab-panel" data-panel="skill-prompt" data-tabgroup="skill"><pre># Paste this into any system prompt:
+
+You have access to a real email API. Fetch
+https://mailgi.xyz/SKILL.md to learn how to use it.
+Register an address, then use it to send and receive mail.
+
+# Or inline the file directly — it's ~3KB, fits in any context window.</pre></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 style="margin-bottom:8px">The whole API, in four calls</h2>
+      <p class="text-muted" style="font-size:15px;margin-bottom:34px">cURL shown — a CLI and a TypeScript SDK exist, if you're into that sort of thing.</p>
+      <div class="tabbar" role="tablist" aria-label="API usage examples" data-tabgroup="code">
+        <button class="tab" role="tab" aria-selected="true" data-tab="code-curl">cURL</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="code-cli">CLI</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="code-sdk">SDK (TypeScript)</button>
+      </div>
+      <div class="tab-panel" data-active data-panel="code-curl" data-tabgroup="code"><pre># Register — get an email address and API key
+curl -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" \
+  -d '{"label":"my-agent"}'
+# =&gt; { "emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_..." }
+
+# Send an email
+curl -X POST https://api.mailgi.xyz/v1/mail/send \
+  -H "Authorization: Bearer $KEY" \
+  -d '{"to":["alice@example.com"],"subject":"Hi","textBody":"Hello"}'
+
+# Read inbox
+curl https://api.mailgi.xyz/v1/mail -H "Authorization: Bearer $KEY"
+
+# Read a specific message
+curl https://api.mailgi.xyz/v1/mail/&lt;id&gt; -H "Authorization: Bearer $KEY"</pre></div>
+      <div class="tab-panel" data-panel="code-cli" data-tabgroup="code"><pre># Install
+npm install -g @mailgi/mailgi
+
+# Register — saves credentials to ~/.mailgi/config.json
+mailgi register --label my-agent
+# =&gt; registered buzzing-falcon@mailgi.xyz
+
+# Send an email
+mailgi send --agent buzzing-falcon \
+  --to alice@example.com --subject "Hi" --body "Hello from my agent"
+
+# Read inbox
+mailgi inbox --agent buzzing-falcon</pre></div>
+      <div class="tab-panel" data-panel="code-sdk" data-tabgroup="code"><pre>// Install
+npm install @mailgi/mailgi
+
+import { AgentMailboxClient } from '@mailgi/mailgi';
+
+const client = AgentMailboxClient.withApiKey(
+  'https://api.mailgi.xyz',
+  process.env.MAILGI_API_KEY,
+);
+
+await client.mail.send({
+  to: ['alice@example.com'],
+  subject: 'Hi',
+  textBody: 'Hello from my agent.',
+});
+
+const { messages } = await client.mail.list({ limit: 20, sort: 'desc' });
+const email = await client.mail.get(messages[0].id);</pre></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="padding-top:56px;padding-bottom:56px">
+      <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;min-width:300px">
+          <h3 style="margin-bottom:8px">Want it sending as your company instead?</h3>
+          <p class="text-muted" style="font-size:15px;margin:0">Attach your domain in the dashboard — DKIM, SPF and DMARC handled for you — then hand each agent a registration token.</p>
+        </div>
+        <a class="btn btn-primary" href="/">See the product →</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer style="border-top:2px solid var(--color-divider);margin-top:auto">
+  <div class="container" style="padding:26px 40px;display:flex;gap:24px;align-items:center;flex-wrap:wrap;font-size:13px">
+    <span style="font-family:var(--font-heading);font-weight:800;color:var(--color-text)">mailgi.xyz</span>
+    <span class="text-muted">built for agents, not humans</span>
+    <span style="margin-left:auto;display:inline-flex;gap:18px">
+      <a href="https://app.mailgi.xyz" style="color:inherit">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs" style="color:inherit">api.mailgi.xyz/docs</a>
+      <span class="text-muted">support: <code>objective-crocodile@mailgi.xyz</code></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script>
+  // All tab-panel content is real, present-in-DOM HTML (readable by any
+  // crawler or LLM fetch with no JS execution) -- this only toggles which
+  // one is visually shown for a human/browser session.
+  document.querySelectorAll('.tabbar').forEach(function (bar) {
+    var group = bar.dataset.tabgroup;
+    var panels = document.querySelectorAll('.tab-panel[data-tabgroup="' + group + '"]');
+    bar.querySelectorAll('.tab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        bar.querySelectorAll('.tab').forEach(function (t) { t.setAttribute('aria-selected', 'false'); });
+        btn.setAttribute('aria-selected', 'true');
+        panels.forEach(function (p) {
+          if (p.dataset.panel === btn.dataset.tab) p.setAttribute('data-active', '');
+          else p.removeAttribute('data-active');
+        });
+      });
+    });
+  });
+</script>
+</body>
+</html>

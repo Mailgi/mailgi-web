@@ -30,9 +30,6 @@ mailgi inbox --agent buzzing-falcon
 
 # Read a message
 mailgi read --agent buzzing-falcon <message-id>
-
-# Check balance
-mailgi billing --agent buzzing-falcon
 ```
 
 ## SDK
