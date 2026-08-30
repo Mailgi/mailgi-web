@@ -37,4 +37,7 @@ Allow: /
 User-agent: Amazonbot
 Allow: /
 
+# Site summary written for LLMs, alongside the sitemap.
+# https://www.mailgi.xyz/llms.txt
+
 Sitemap: https://www.mailgi.xyz/sitemap.xml

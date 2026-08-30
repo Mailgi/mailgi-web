@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Choosing an email API for an AI agent — Mailgi</title>
+<meta name="description" content="Deliverability is the wrong axis to compare on. Four questions that actually decide which email API an AI agent needs — is inbound a mailbox or a webhook, can a program register itself, does the mail persist, and whose domain is it — and where each answer points." />
+<link rel="canonical" href="https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Choosing an email API for an AI agent" />
+<meta property="og:description" content="Four questions that decide it — and where each answer points, including away from us." />
+<meta property="og:url" content="https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Choosing an email API for an AI agent" />
+<meta name="twitter:description" content="Four questions that decide it — and where each answer points, including away from us." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Choosing an email API for an AI agent",
+      "description": "Deliverability is the wrong axis to compare on. Four questions that actually decide which email API an AI agent needs, and where each answer points.",
+      "datePublished": "2026-08-30",
+      "dateModified": "2026-08-30",
+      "author": { "@id": "https://www.mailgi.xyz/#org" },
+      "publisher": { "@id": "https://www.mailgi.xyz/#org" },
+      "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
+      "mainEntityOfPage": "https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What should you look for in an email API for an AI agent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not deliverability — the established transactional providers are all good at it and it rarely separates them. Four things decide an agent build instead. First, whether inbound arrives as a mailbox the agent can read and re-read, or as a webhook you must catch and store yourself. Second, whether a program can obtain credentials without a human completing a signup or reading a verification code. Third, how long received mail is retained, because an agent that cannot recall an earlier message cannot hold a conversation. Fourth, whether you send from a shared platform domain or your own, which determines whose sending reputation you depend on."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a webhook good enough for receiving an agent's email?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on whether the agent ever needs to look backwards. A webhook is a push of one message to an endpoint you host, so you must be running a public HTTPS service, handle retries and duplicates, and store the message yourself if it will be needed again. That is fine for a one-shot trigger such as a verification code. It is the wrong shape for a support agent that needs the whole thread, because you end up rebuilding a mailbox around the webhook."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do AI agents need their own email domain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not to start. A shared platform domain gets an agent working in seconds and is appropriate for prototypes, internal tooling and receiving verification codes. Move to your own domain before an agent writes to customers, for two reasons: recipients trust a company address more than an unfamiliar shared one, and on your own domain your sending reputation is yours alone rather than shared with every other agent on the platform."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">mailgi</a>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+    <a href="https://api.mailgi.xyz/docs">Docs</a>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">free while in beta</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Decision guide</div>
+  <h1 class="reveal reveal-1" style="max-width:940px">Choosing an email API <em class="accent">for an agent</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Four questions decide this, and none of them is the one everybody asks. Answer them in order and you'll know which product you need — quite possibly not ours.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="/vs-resend-postmark-mailgun.html">See the numbers</a>
+      <a class="link-serif" href="#q1">start with question one →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell split">
+    <div class="quote">
+      <div class="pull">“Which one has the best deliverability?” is the wrong first question. They all do.</div>
+      <div class="caps-note">Wrong axis · Wrong answer · Wasted week</div>
+    </div>
+    <div class="code codeblock">
+      <div class="c"># what people compare</div>
+      <div>deliverability<span class="v"> …………… all fine</span></div>
+      <div>price<span class="v"> ………………………… all similar</span></div>
+      <div>SDK quality<span class="v"> ……………… all fine</span></div>
+      <div class="c" style="margin-top:10px"># what decides the build</div>
+      <div class="v">mailbox or webhook?</div>
+      <div class="v">who creates the account?</div>
+      <div class="v">how long is mail kept?</div>
+      <div class="v">whose domain, whose reputation?</div>
+    </div>
+  </div>
+</section>
+
+<section class="section shell">
+  <h2 style="margin-bottom:12px">Why deliverability <em class="accent">isn't the axis</em></h2>
+  <p class="body" style="font-size:16px;max-width:720px">Resend, Postmark, Mailgun and SendGrid have spent years on inbox placement, and they're good at it. So is anyone building on top of the same underlying infrastructure, which — once you look — is most of the category. Comparing them on deliverability is comparing airlines on whether the plane lands.</p>
+  <p class="body" style="font-size:16px;max-width:720px;margin-top:18px">What actually separates them, for an agent specifically, is architectural: the shape mail arrives in, who is allowed to create an account, how long anything is kept, and whose reputation you're borrowing. Those four decisions are hard to reverse once you've built around them, which is why they're worth ten minutes now.</p>
+</section>
+
+<section class="rule-top surface" id="q1">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">The four questions</h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">In order. The first one eliminates the most options.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Does the agent need to look backwards?</h3>
+        <p class="body">If a message arrives, gets acted on and is never needed again — a verification code, a one-shot notification — a webhook is fine and you have the whole market to choose from. If the agent needs the thread, needs to check what was said last week, or needs to resume a conversation after a restart, you want a mailbox: something it can list, read and re-read on demand.</p>
+        <p class="body" style="margin-top:14px"><strong>Webhook is enough →</strong> any transactional provider, or Cloudflare if you're on Workers. <strong>You need a mailbox →</strong> Mailgi or AgentMail. The difference isn't capability, it's who does the storing. A webhook means you run a public HTTPS endpoint, handle retries and duplicates, and build the persistence yourself. That's a weekend you may not have budgeted.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>Who is allowed to create the account?</h3>
+        <p class="body">This is the question people discover last and should ask first. If a human can sit down once, sign up, generate a key and paste it into a config, every product in the category works and you should pick on price and polish.</p>
+        <p class="body" style="margin-top:14px">If the <em>program</em> has to obtain its own credentials — because you're spawning agents dynamically, running unattended, or building something where a human in the loop defeats the purpose — the field collapses to almost nothing. Resend, Postmark, Mailgun and SendGrid all require a browser signup. AgentMail has a sign-up API but sends a six-digit code to a human address and won't send anywhere else until someone reads it. <strong>Genuinely unattended →</strong> Mailgi, or PhoboMail if MCP-only and no custom domain suits you.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>How long does the mail need to live?</h3>
+        <p class="body">Retention is quietly one of the biggest differences here and it's rarely on the comparison table. Some providers keep received mail for 30 days on standard plans. For a workflow that's irrelevant. For an agent that's supposed to remember a customer relationship, it's a silent data-loss bug that surfaces months after launch.</p>
+        <p class="body" style="margin-top:14px">Decide the number before you pick the product, and check it — it's usually in the quotas page rather than the pricing page. If you need indefinite history, either pick something that keeps it or plan to copy every message into your own store on arrival.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>Whose domain, and whose reputation?</h3>
+        <p class="body">A shared platform domain gets you working in seconds and is right for prototypes, internal tools and catching verification codes. Your own domain is right the moment an agent writes to a customer — partly because people trust a company address, and mostly because on a shared domain your deliverability depends on the behaviour of every other agent on the platform.</p>
+        <p class="body" style="margin-top:14px">If you're going to need your own domain eventually, check what that costs before you start: on some products a custom domain is a paid tier, on others it's free but requires DNS work you should scope now rather than discover during a launch.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Where that <em class="accent">lands you</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">The four common destinations, stated plainly.</p>
+    <div class="tiles">
+      <div class="tile">
+        <span class="numeral">01</span>
+        <h3>Mostly sending, human sets it up</h3>
+        <p class="small" style="font-size:14px">Resend or Postmark. Mature, excellent delivery, better value than us at low volume. Don't overthink it.</p>
+      </div>
+      <div class="tile">
+        <span class="numeral">02</span>
+        <h3>Already on Cloudflare Workers</h3>
+        <p class="small" style="font-size:14px">Cloudflare Email Service. Receiving is free, sending is the cheapest here. You build the mailbox — on good primitives.</p>
+      </div>
+      <div class="tile">
+        <span class="numeral">03</span>
+        <h3>Multi-tenant platform, needs depth</h3>
+        <p class="small" style="font-size:14px">AgentMail. Threading, search, IMAP, SOC 2 — more mature than we are, if a one-time human signup is acceptable.</p>
+      </div>
+      <div class="tile">
+        <span class="numeral">04</span>
+        <h3>The program registers itself</h3>
+        <p class="small" style="font-size:14px">Mailgi. One POST, no human at any point, shared or your own domain on the same API. This is the case we exist for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">What should you look for in an email API for an AI agent?</span><span class="mark"></span></summary>
+        <p class="a">Not deliverability — the established transactional providers are all good at it and it rarely separates them. Four things decide an agent build instead. Whether inbound arrives as a mailbox the agent can read and re-read, or as a webhook you must catch and store yourself. Whether a program can obtain credentials without a human completing a signup or reading a code. How long received mail is retained, because an agent that can't recall an earlier message can't hold a conversation. And whether you send from a shared platform domain or your own, which determines whose sending reputation you depend on.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Is a webhook good enough for receiving an agent's email?</span><span class="mark"></span></summary>
+        <p class="a">It depends on whether the agent ever needs to look backwards. A webhook is a push of one message to an endpoint you host — so you must run a public HTTPS service, handle retries and duplicates, and store the message yourself if it'll be needed again. Fine for a one-shot trigger like a verification code. Wrong shape for a support agent that needs the whole thread, because you end up rebuilding a mailbox around the webhook.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Do AI agents need their own email domain?</span><span class="mark"></span></summary>
+        <p class="a">Not to start. A shared platform domain gets an agent working in seconds and is appropriate for prototypes, internal tooling and receiving verification codes. Move to your own domain before an agent writes to customers, for two reasons: recipients trust a company address more than an unfamiliar shared one, and on your own domain your sending reputation is yours alone rather than shared with every other agent on the platform.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell inline-split" style="padding-top:88px;padding-bottom:88px;gap:40px">
+    <div style="flex:1;min-width:320px">
+      <h2 style="font-size:clamp(28px,4vw,38px);margin-bottom:10px">Want the <em class="accent">actual numbers</em>?</h2>
+      <p class="body" style="max-width:560px">Free tiers, paid entry points, retention and inbound support for every product named here — checked against each vendor's own pages and dated.</p>
+    </div>
+    <a class="btn btn-solid btn-lg" style="flex:none" href="/vs-resend-postmark-mailgun.html">See the comparison →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <span>support: <span class="mono" style="font-size:12px">objective-crocodile@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

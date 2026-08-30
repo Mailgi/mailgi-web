@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mailgi vs Resend, Postmark, Mailgun and AgentMail — for AI agents</title>
+<meta name="description" content="An honest, dated comparison of email APIs for AI agents: Mailgi, AgentMail, Resend, Postmark, Mailgun, SendGrid, Cloudflare and the free options. What each does well, what it costs, and the cases where you should pick something other than us." />
+<link rel="canonical" href="https://www.mailgi.xyz/vs-resend-postmark-mailgun.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Mailgi vs Resend, Postmark, Mailgun and AgentMail" />
+<meta property="og:description" content="An honest, dated comparison of email APIs for AI agents — including when to pick something other than us." />
+<meta property="og:url" content="https://www.mailgi.xyz/vs-resend-postmark-mailgun.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Mailgi vs Resend, Postmark, Mailgun and AgentMail" />
+<meta name="twitter:description" content="An honest, dated comparison of email APIs for AI agents — including when to pick something other than us." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Mailgi vs Resend, Postmark, Mailgun and AgentMail — for AI agents",
+      "description": "A dated, sourced comparison of email APIs for AI agents, including the cases where a competitor is the better choice.",
+      "datePublished": "2026-08-30",
+      "dateModified": "2026-08-30",
+      "author": { "@id": "https://www.mailgi.xyz/#org" },
+      "publisher": { "@id": "https://www.mailgi.xyz/#org" },
+      "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
+      "mainEntityOfPage": "https://www.mailgi.xyz/vs-resend-postmark-mailgun.html"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can Resend receive email?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Resend shipped inbound in November 2025, and it is more than a webhook — there is a receiving API, CLI streaming, dashboard viewing and an MCP server, plus an automatic receiving subdomain for every account. Claims that Resend cannot receive mail are out of date. The relevant limitations for an agent are that inbound messages count against the same quota as sends, and that standard plans retain data for 30 days."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between Mailgi and AgentMail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AgentMail is the more mature product: threading, semantic search, IMAP and SMTP access, WebSockets, multi-tenant pods, a SOC 2 report on its higher tier, and a $6M seed round behind it. The difference that matters is registration. AgentMail's agent sign-up API requires a human email address and a six-digit OTP delivered to that human, and blocks sending to anyone else until it is verified. Mailgi's registration is a single unauthenticated POST with no human in the loop at any point."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the cheapest way to give an AI agent an email address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If the agent only needs to catch a verification code in a test, a free disposable-mail API such as mail.tm costs nothing and needs no API key. If you are already running on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi is free while in beta. Paid dedicated options start around $15 to $20 a month across Postmark, Mailgun, Resend and AgentMail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which email APIs let an AI agent sign itself up without a human?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Very few. The traditional providers — Resend, Postmark, Mailgun and SendGrid — all require a human to create an account in a browser before any API key exists. AgentMail has a programmatic sign-up endpoint but requires a human email and OTP verification. As of August 2026 the options for genuinely unattended registration are Mailgi and PhoboMail, the latter being a free MCP-only project without custom domain support."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Mailgi handle abuse on a shared domain?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sending is capped at three levels: 100 external emails per day per API key, 300 per day per agent, and a per-organisation limit that starts at 100 per day on a newly verified domain and rises only as the domain establishes a record. New domains cannot send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, which is the intent \u2014 shared-domain sending reputation is the asset most easily destroyed and hardest to rebuild."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">mailgi</a>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/vs-resend-postmark-mailgun.html" aria-current="page">Compare</a>
+    <a href="https://api.mailgi.xyz/docs">Docs</a>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">free while in beta</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Comparison</div>
+  <h1 class="reveal reveal-1" style="max-width:960px">Mailgi vs the alternatives, <em class="accent">honestly</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Most of these are good products. Several are better than us at things we don't do. Here is what each one actually is, what it costs, and when you should pick it instead.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#not-us">when not to use Mailgi →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:800px;margin:0">The axis everyone compares on is deliverability, and it's the wrong one — Resend and Postmark are excellent at deliverability and we're not going to beat them at it. For an agent, three other things decide the build: whether inbound is a <em>mailbox</em> or a <em>webhook</em>, whether a program can get credentials without a human reading a code, and whether the mail is still there next week.</p>
+  </div>
+</section>
+
+<section class="section shell">
+  <h2 style="margin-bottom:12px">The comparison, <em class="accent">at a glance</em></h2>
+  <p class="body" style="font-size:16px;margin-bottom:12px;max-width:640px">Everything below was checked against each vendor's own documentation and pricing pages on the date shown. Pricing moves — re-check before you commit to anything.</p>
+  <p class="verified-note" style="margin-bottom:40px">Last verified: 2026-08-30</p>
+  <div class="table-scroll">
+    <table class="cmp">
+      <thead>
+        <tr>
+          <th scope="col">&nbsp;</th>
+          <th scope="col" class="own">Mailgi</th>
+          <th scope="col">AgentMail</th>
+          <th scope="col">Resend</th>
+          <th scope="col">Postmark</th>
+          <th scope="col">Mailgun</th>
+          <th scope="col">Cloudflare</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Inbound shape</th>
+          <td class="own">Mailbox</td>
+          <td>Mailbox</td>
+          <td>Webhook + receiving API</td>
+          <td>Parse webhook</td>
+          <td>Routes + webhook</td>
+          <td>Routing to Workers</td>
+        </tr>
+        <tr>
+          <th scope="row">Agent self-registers, no human</th>
+          <td class="own yes">Yes</td>
+          <td class="no">Needs human email + OTP</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+        </tr>
+        <tr>
+          <th scope="row">Shared domain out of the box</th>
+          <td class="own yes">Yes</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+          <td class="no">Inbound hash only</td>
+          <td class="no">Sandbox only</td>
+          <td class="no">No</td>
+        </tr>
+        <tr>
+          <th scope="row">Custom domain</th>
+          <td class="own yes">Yes, free</td>
+          <td>Paid plans</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+          <td class="yes">Yes</td>
+          <td>Required</td>
+        </tr>
+        <tr>
+          <th scope="row">Push on new mail</th>
+          <td class="own no">No — polling</td>
+          <td class="yes">Webhooks + WebSocket</td>
+          <td class="yes">Webhooks</td>
+          <td class="yes">Webhooks</td>
+          <td class="yes">Webhooks</td>
+          <td class="yes">Worker invoke</td>
+        </tr>
+        <tr>
+          <th scope="row">Search</th>
+          <td class="own no">No</td>
+          <td class="yes">Semantic</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td class="no">Build it</td>
+        </tr>
+        <tr>
+          <th scope="row">Free tier</th>
+          <td class="own">Free in beta</td>
+          <td>3 inboxes, 3k/mo</td>
+          <td>3k/mo, 100/day</td>
+          <td>100/mo, forever</td>
+          <td>100/day, 1 route</td>
+          <td>Receiving free</td>
+        </tr>
+        <tr>
+          <th scope="row">Entry paid tier</th>
+          <td class="own">&mdash;</td>
+          <td>$20/mo</td>
+          <td>$20/mo</td>
+          <td>$15/mo</td>
+          <td>$15/mo</td>
+          <td>$5/mo Workers</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">The agent-native ones</h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">Products built for this use case specifically, rather than adapted to it.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>AgentMail</h3>
+        <p class="body">The most serious competitor in the category, and on most axes the more capable product. YC Summer 2025, a $6M seed led by General Catalyst, and a feature list we don't match: threading, semantic search, IMAP and SMTP access, WebSockets, multi-tenant pods, auto-labeling, a SOC 2 report on the $200 tier, an EU region and first-party framework connectors. The free tier is three inboxes and 3,000 messages a month with no card.</p>
+        <p class="body" style="margin-top:14px">The difference that matters is registration. AgentMail does have a programmatic sign-up endpoint — but it takes a required <span class="mono">human_email</span>, sends a six-digit code to that person, and until someone reads it the account can only mail the address it signed up with. That's a sensible anti-abuse decision. It also means a human is in the loop, which is the exact thing we exist to remove. <strong>If you're building a multi-tenant agent platform and a one-time human signup is acceptable, AgentMail is more mature than we are and you should look at it.</strong></p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>PhoboMail</h3>
+        <p class="body">The only other product we found that registers an agent with genuinely no human involved — an agent calls a tool, gets an address and a key, and starts working. Free. If unattended registration is the only thing you need, it does that.</p>
+        <p class="body" style="margin-top:14px">It's MCP-only, so there's no REST API for anything that isn't an MCP client; there are no custom domains, so you're on their shared domain permanently; and it's a small solo project with no stated support commitment. Worth knowing about, and we'd rather tell you than have you find it later.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">The transactional providers</h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">Mature, excellent at delivery, built for applications rather than agents. All four require a human to create the account.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Resend</h3>
+        <p class="body"><strong>Resend can receive mail.</strong> Inbound shipped in November 2025 and it's a real feature — a receiving API, CLI streaming, dashboard viewing, an MCP server for agent access, and an automatic receiving subdomain for every account. Anyone still telling you Resend is send-only is working from stale information. It's also the best developer experience in the category, and past a million users.</p>
+        <p class="body" style="margin-top:14px">Two things to know before building an agent on it. Inbound messages count against the same quota as your sends, so a chatty agent burns allowance twice. And standard plans retain mail for 30 days, which is fine for a workflow and wrong for an agent that needs to remember a conversation from last quarter. Free is 3,000 a month and 100 a day; Pro starts at $20.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>Postmark</h3>
+        <p class="body">The best inbound payload of anything here. Full body, headers, spam score and a <span class="mono">StrippedTextReply</span> field that removes quoted history — which, if you've ever tried to get a model to parse a reply chain, is worth real money on its own. Deliverability reputation is best in class. The free tier is 100 messages a month and doesn't expire.</p>
+        <p class="body" style="margin-top:14px">Inbound isn't on the free or entry tier — you need Pro at $16.50/month. And the model is one account, one application; spinning up an inbox per agent isn't what it's for.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Mailgun</h3>
+        <p class="body">Powerful inbound routing with pattern matching, and a long track record. The constraint that bites agents is that <strong>routes are a metered resource</strong> — one on the free tier, five on the $15 plan. An architecture of one route per agent is dead on arrival; you'd run a single catch-all route and demultiplex yourself, which is work you were trying to avoid.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>SendGrid</h3>
+        <p class="body">The free tier was retired in July 2025 — there's now a 60-day trial, after which sending stops unless you're on a paid plan starting somewhere around $20/month. Inbound Parse is a webhook and works. The genuine advantage is that it's part of Twilio, so if you also need SMS or voice from the same agent, that consolidation is worth something. For email alone, the others are better value.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">The free and nearly-free options</h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">Sometimes the right answer costs nothing, and we'd rather say so.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Cloudflare Email Service</h3>
+        <p class="body">Receiving is free and unlimited through Email Routing. Sending went to public beta in April 2026 at Cloudflare's Agents Week, and runs about $0.35 per thousand after an included allowance on the $5 Workers plan — several times cheaper than anyone else here. <strong>If your agent already runs on Workers, you should probably use this.</strong></p>
+        <p class="body" style="margin-top:14px">What you don't get is a mailbox. There's no inbox object, no persistence and no shared domain — mail arrives at a Worker and storing it is your problem, on D1 or R2. You're building the thing the rest of this page is comparing, on excellent primitives. Sending is also still in beta.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>Disposable mail APIs</h3>
+        <p class="body">Services like mail.tm hand out a throwaway address over a free API with no key at all. <strong>If the whole job is catching one verification code in CI, use one of these.</strong> Paying for infrastructure to do that is over-engineering.</p>
+        <p class="body" style="margin-top:14px">Don't ship a product on one. The inboxes are typically public or shared, so anything sent there is readable by anyone who guesses the address; there's no sending; there's no reputation; and the domains are blocklisted by many of the services an agent would want to register with.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Gmail API on a human's account</h3>
+        <p class="body">Free, and reasonable for one internal agent on a Workspace account. It doesn't survive contact with production. Before the agent reads a message you need a cloud project, an OAuth consent screen and scope configuration; unverified apps are capped near 100 users and show a warning screen; and the mailbox scopes are restricted, so going external means OAuth verification plus an annual third-party CASA security assessment — real money, renewed yearly, with a first cycle usually measured in months. The structural problem is that the agent can read everything else in that person's mail.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top" id="not-us">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">When <em class="accent">not</em> to use Mailgi</h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:660px">We're in beta, we're small, and there are several situations where one of the products above is straightforwardly the better call.</p>
+    <div class="tiles">
+      <div class="tile">
+        <span class="numeral">01</span>
+        <h3>You need push, search or threading</h3>
+        <p class="small" style="font-size:14px">We have none of them. No webhooks, no WebSocket, no search — an agent polls and matches messages itself. AgentMail has all three today.</p>
+      </div>
+      <div class="tile">
+        <span class="numeral">02</span>
+        <h3>One inbox, one human, one setup</h3>
+        <p class="small" style="font-size:14px">If a person can click through a signup once and never again, our whole differentiator is irrelevant to you. Postmark or Resend will serve you better.</p>
+      </div>
+      <div class="tile">
+        <span class="numeral">03</span>
+        <h3>You're already on Workers</h3>
+        <p class="small" style="font-size:14px">Cloudflare receives for free and sends for a fraction of anyone's per-message price. Use it, and keep the money.</p>
+      </div>
+      <div class="tile">
+        <span class="numeral">04</span>
+        <h3>You need compliance paperwork now</h3>
+        <p class="small" style="font-size:14px">No SOC 2 report, no dedicated IPs, no EU region, no enterprise agreement. If procurement needs those this quarter, we aren't a candidate yet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">What we're <em class="accent">actually</em> better at</h2>
+    <div class="grid-3">
+      <div>
+        <div class="cap-label">one POST</div>
+        <h3>No human, anywhere</h3>
+        <p class="small">A program registers itself and starts sending. No signup form, no OAuth consent, no six-digit code delivered to a person who has to be awake. Every traditional provider requires a human to create the account first; the closest agent-native competitor requires one to read an OTP.</p>
+      </div>
+      <div>
+        <div class="cap-label">inbox, not hook</div>
+        <h3>Mail that stays put</h3>
+        <p class="small">Receiving is a mailbox the agent can list, read, file and come back to — not a webhook you have to catch and store yourself, and not a payload that expires in 30 days.</p>
+      </div>
+      <div>
+        <div class="cap-label">@mailgi.xyz or @you</div>
+        <h3>Both domains, one API</h3>
+        <p class="small">Start on a shared handle in seconds, move to your own verified domain with DKIM, SPF and DMARC when you're ready. Same endpoints either side, and custom domains aren't a paid upgrade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">Can Resend receive email?</span><span class="mark"></span></summary>
+        <p class="a">Yes. Resend shipped inbound in November 2025, and it's more than a webhook — there's a receiving API, CLI streaming, dashboard viewing and an MCP server, plus an automatic receiving subdomain for every account. Claims that Resend can't receive mail are out of date. The relevant limitations for an agent are that inbound counts against the same quota as sends, and that standard plans retain data for 30 days.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">What's the difference between Mailgi and AgentMail?</span><span class="mark"></span></summary>
+        <p class="a">AgentMail is the more mature product: threading, semantic search, IMAP and SMTP access, WebSockets, multi-tenant pods, a SOC 2 report on its higher tier, and a $6M seed round behind it. The difference that matters is registration. AgentMail's agent sign-up API requires a human email address and a six-digit OTP delivered to that human, and blocks sending to anyone else until it's verified. Mailgi's registration is a single unauthenticated POST with no human in the loop at any point.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">What's the cheapest way to give an AI agent an email address?</span><span class="mark"></span></summary>
+        <p class="a">If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi is free while in beta. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">Which email APIs let an agent sign itself up without a human?</span><span class="mark"></span></summary>
+        <p class="a">Very few. Resend, Postmark, Mailgun and SendGrid all require a human to create an account in a browser before any API key exists. AgentMail has a programmatic sign-up endpoint but requires a human email and OTP verification. As of August 2026 the options for genuinely unattended registration are Mailgi and PhoboMail — the latter a free, MCP-only project without custom domain support.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">05</span><span class="q">How do you handle abuse on a shared domain?</span><span class="mark"></span></summary>
+        <p class="a">It's the fair question to ask anyone offering unattended registration, and we'd rather answer it than be asked. Sending is capped at three levels — 100 a day per API key, 300 a day per agent, and a per-organisation limit that starts at 100 a day on a newly verified domain and only rises as it establishes a record. New domains can't send at all until DKIM, SPF and DMARC verify. Rate limits this conservative are deliberately inconvenient for bulk sending, and that's the point: shared-domain reputation is the thing most easily destroyed and hardest to rebuild.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell inline-split" style="padding-top:88px;padding-bottom:88px;gap:40px">
+    <div style="flex:1;min-width:320px">
+      <h2 style="font-size:clamp(28px,4vw,38px);margin-bottom:10px">Not sure which of these <em class="accent">you actually need</em>?</h2>
+      <p class="body" style="max-width:560px">Skip the matrix. Four questions that decide it, and where each answer points.</p>
+    </div>
+    <a class="btn btn-solid btn-lg" style="flex:none" href="/choosing-an-email-api-for-ai-agents.html">Work it out →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <span>support: <span class="mono" style="font-size:12px">objective-crocodile@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

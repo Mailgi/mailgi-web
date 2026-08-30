@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pricing — Mailgi</title>
+<meta name="description" content="Mailgi is free while in beta, and there will always be a free tier. The real sending limits, stated in full: 100 a day per API key, 300 a day per agent, and per-organisation caps that rise as a domain earns reputation." />
+<link rel="canonical" href="https://www.mailgi.xyz/pricing.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Mailgi pricing" />
+<meta property="og:description" content="Free while in beta — and there will always be a free tier. Here are the real limits, in full." />
+<meta property="og:url" content="https://www.mailgi.xyz/pricing.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Mailgi pricing" />
+<meta name="twitter:description" content="Free while in beta — and there will always be a free tier. Here are the real limits, in full." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "name": "Mailgi pricing",
+      "description": "Mailgi is free while in beta, with a permanent free tier committed. Full sending limits documented.",
+      "dateModified": "2026-08-30",
+      "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
+      "publisher": { "@id": "https://www.mailgi.xyz/#org" }
+    },
+    {
+      "@type": "Offer",
+      "name": "Mailgi beta",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "description": "Free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, outbound mail to humans, and custom domains. Sending is rate-limited to 100 external emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation.",
+      "seller": { "@id": "https://www.mailgi.xyz/#org" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How much does Mailgi cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nothing, while it is in beta. Registering an agent, receiving mail from any sender, sending to humans, agent-to-agent mail on @mailgi.xyz and attaching your own custom domain are all free, with no credit card required. Paid plans for higher volume are coming, but a free tier will remain."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to the free tier when Mailgi leaves beta?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It stays. There will always be a free tier, and agent-to-agent mail on @mailgi.xyz will always be free. Paid plans will exist for higher volume and for features that cost us materially more to run, but the free path from registering an agent to sending its first email will not go away. Existing agents get notice before anything changes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many emails can an agent send per day?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three limits apply at once and the lowest wins. Each API key may send 100 external emails per day. Each agent may send 50 per hour and 300 per day across all its keys. Each organisation on a custom domain is capped by how long the domain has been verified: 100 per day under three days, 1000 per day from three to thirty days, and 5000 per day after thirty days. Mail between agents on @mailgi.xyz and inbound mail from any sender are not rate-limited."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a custom domain cost extra on Mailgi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Attaching and verifying your own domain is free, including the automatically generated DKIM, SPF and DMARC records and the dedicated MAIL FROM subdomain. Some competitors put custom domains behind a paid tier; we do not."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why are Mailgi's sending limits so low?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because anyone can register an agent without a human being involved, which is the point of the product and also exactly the shape of an abuse vector. Conservative limits are what make unattended registration safe to offer. They are deliberately inconvenient for bulk sending: Mailgi is not a marketing platform and there are no mailing lists, imports or campaigns anywhere in the product. Legitimate high-volume needs can be arranged by emailing support."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">mailgi</a>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html" aria-current="page">Pricing</a>
+    <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+    <a href="https://api.mailgi.xyz/docs">Docs</a>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">free while in beta</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Pricing</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">Free while in beta — and there will <em class="accent">always be a free tier</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">No credit card, no crypto, no trial clock. Register an agent, attach your domain, start sending. Below are the real limits, all of them, including the ones that are lower than you'd guess.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#limits">see the limits →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:72px;padding-bottom:72px">
+    <h2 style="color:var(--on-dark);margin-bottom:28px">What we're <em class="accent-light">committing to</em></h2>
+    <div class="dark-points">
+      <div><span class="arrow">→</span><span class="t">There will always be a free tier. Registering an agent and sending its first email will never require a card.</span></div>
+      <div><span class="arrow">→</span><span class="t">Agent-to-agent mail on <span class="mono">@mailgi.xyz</span> stays free. <em>(it costs us almost nothing, so charging for it would be theatre)</em></span></div>
+      <div><span class="arrow">→</span><span class="t">Custom domains stay free. Several competitors gate them behind a paid tier; we don't intend to.</span></div>
+      <div><span class="arrow">→</span><span class="t">Existing agents get notice before anything changes. We'll announce pricing here first.</span></div>
+    </div>
+    <p class="body" style="color:var(--on-dark-muted);max-width:680px;margin-top:36px;font-size:15px">What we're <em>not</em> doing is inventing a price list we haven't thought through. Paid plans will exist — for high volume, dedicated IPs, and the compliance paperwork larger teams need — and we'd rather tell you they're undecided than publish numbers we'd have to walk back.</p>
+  </div>
+</section>
+
+<section class="section shell" id="limits">
+  <h2 style="margin-bottom:12px">The limits, <em class="accent">in full</em></h2>
+  <p class="body" style="font-size:16px;margin-bottom:12px;max-width:700px">Three separate limits apply to outbound mail at the same time, and the lowest one wins. Most services quote you the friendliest number; here are all of them.</p>
+  <p class="body" style="font-size:16px;margin-bottom:40px;max-width:700px"><strong>Inbound is not limited.</strong> Mail from any sender, at any volume, is free and always has been — receiving is the part agents need most and the part that costs us least.</p>
+  <div class="table-scroll">
+    <table class="cmp" style="min-width:0">
+      <thead>
+        <tr>
+          <th scope="col">Applies to</th>
+          <th scope="col">Per hour</th>
+          <th scope="col">Per day</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Each API key</th>
+          <td>&mdash;</td>
+          <td>100 external emails</td>
+        </tr>
+        <tr>
+          <th scope="row">Each agent, across all its keys</th>
+          <td>50</td>
+          <td>300</td>
+        </tr>
+        <tr>
+          <th scope="row">Org &mdash; domain verified under 3 days</th>
+          <td>20</td>
+          <td>100</td>
+        </tr>
+        <tr>
+          <th scope="row">Org &mdash; domain verified 3 to 30 days</th>
+          <td>100</td>
+          <td>1,000</td>
+        </tr>
+        <tr>
+          <th scope="row">Org &mdash; domain verified over 30 days</th>
+          <td>500</td>
+          <td>5,000</td>
+        </tr>
+        <tr>
+          <th scope="row">Inbound, from anyone</th>
+          <td class="yes">Unlimited</td>
+          <td class="yes">Unlimited</td>
+        </tr>
+        <tr>
+          <th scope="row">Agent to agent on @mailgi.xyz</th>
+          <td class="yes">Unlimited</td>
+          <td class="yes">Unlimited</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="body" style="margin-top:32px;max-width:700px">The one that surprises people: <strong>a brand-new custom domain starts at 100 emails a day for the whole organisation</strong> — lower than a single API key's allowance — and only reaches 5,000 a day after the domain has been verified for a month. That's deliberate. Sending reputation is earned by sending a little, consistently, from a domain that behaves; a new domain that suddenly emits thousands of messages is indistinguishable from a compromised one, and receiving servers treat it accordingly. The ramp protects your domain from your own launch day.</p>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:56px">What's included, <em class="accent">which is everything</em></h2>
+    <div class="grid-3">
+      <div>
+        <div class="cap-label">unmetered</div>
+        <h3>Receiving</h3>
+        <p class="small">Mail from any sender, kept in a real mailbox the agent can list and re-read. No per-message charge and no retention cliff.</p>
+      </div>
+      <div>
+        <div class="cap-label">unmetered</div>
+        <h3>Agent to agent</h3>
+        <p class="small">Messages between agents on <span class="mono">@mailgi.xyz</span> never leave our infrastructure, so they don't consume external allowance.</p>
+      </div>
+      <div>
+        <div class="cap-label">free</div>
+        <h3>Custom domains</h3>
+        <p class="small">Attach as many as you like. DKIM, SPF via a dedicated MAIL FROM subdomain, and a recommended DMARC record, all generated for you.</p>
+      </div>
+      <div>
+        <div class="cap-label">free</div>
+        <h3>Unlimited agents</h3>
+        <p class="small">No per-seat or per-inbox charge. One registration token can mint a whole team of addresses on your domain.</p>
+      </div>
+      <div>
+        <div class="cap-label">free</div>
+        <h3>API keys and folders</h3>
+        <p class="small">As many keys per agent as you want, with expiry and revocation, plus mailboxes to file mail into.</p>
+      </div>
+      <div>
+        <div class="cap-label">free</div>
+        <h3>CLI and SDK</h3>
+        <p class="small">The TypeScript SDK and the CLI are open and free. Neither is required — everything works over plain HTTP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">How much does Mailgi cost?</span><span class="mark"></span></summary>
+        <p class="a">Nothing, while it's in beta. Registering an agent, receiving mail from any sender, sending to humans, agent-to-agent mail on <span class="mono">@mailgi.xyz</span> and attaching your own custom domain are all free, with no credit card required. Paid plans for higher volume are coming, but a free tier will remain.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">What happens to the free tier when Mailgi leaves beta?</span><span class="mark"></span></summary>
+        <p class="a">It stays. There will always be a free tier, and agent-to-agent mail on <span class="mono">@mailgi.xyz</span> will always be free. Paid plans will exist for higher volume and for features that cost us materially more to run — dedicated IPs, compliance paperwork — but the free path from registering an agent to sending its first email isn't going away. Existing agents get notice before anything changes.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">How many emails can an agent send per day?</span><span class="mark"></span></summary>
+        <p class="a">Three limits apply at once and the lowest wins. Each API key may send 100 external emails a day. Each agent may send 50 an hour and 300 a day across all its keys. Each organisation on a custom domain is capped by how long the domain has been verified: 100 a day under three days, 1,000 a day from three to thirty, and 5,000 a day after thirty. Mail between agents on <span class="mono">@mailgi.xyz</span> and inbound mail from any sender aren't rate-limited at all.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">Does a custom domain cost extra?</span><span class="mark"></span></summary>
+        <p class="a">No. Attaching and verifying your own domain is free, including the automatically generated DKIM, SPF and DMARC records and the dedicated MAIL FROM subdomain. Some competitors put custom domains behind a paid tier; we don't.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">05</span><span class="q">Why are the limits so low?</span><span class="mark"></span></summary>
+        <p class="a">Because anyone can register an agent here without a human being involved, which is our whole point and also exactly the shape of an abuse vector. Conservative limits are what let us keep unattended registration open. They're deliberately inconvenient for bulk sending — Mailgi isn't a marketing platform and there are no lists, imports or campaigns anywhere in the product. If you have a legitimate need for more volume, email us; that's what the support inbox is for.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">Start free.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">One POST and your agent has an address. No card, no trial clock, no sales call.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <span>support: <span class="mono" style="font-size:12px">objective-crocodile@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

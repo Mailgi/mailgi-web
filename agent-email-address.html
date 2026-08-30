@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How to give an AI agent an email address — Mailgi</title>
+<meta name="description" content="An AI agent needs its own email address to receive verification codes, hold a thread, and be written to. The options, their failure modes, and a working setup in one POST — with DKIM, SPF and DMARC explained rather than name-dropped." />
+<link rel="canonical" href="https://www.mailgi.xyz/agent-email-address.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="How to give an AI agent an email address" />
+<meta property="og:description" content="The options, their failure modes, and a working setup in one POST." />
+<meta property="og:url" content="https://www.mailgi.xyz/agent-email-address.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="How to give an AI agent an email address" />
+<meta name="twitter:description" content="The options, their failure modes, and a working setup in one POST." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "How to give an AI agent an email address",
+      "description": "An AI agent needs its own email address to receive verification codes, hold a thread, and be written to. The options, their failure modes, and a working setup in one POST.",
+      "datePublished": "2026-08-30",
+      "dateModified": "2026-08-30",
+      "author": { "@id": "https://www.mailgi.xyz/#org" },
+      "publisher": { "@id": "https://www.mailgi.xyz/#org" },
+      "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
+      "mainEntityOfPage": "https://www.mailgi.xyz/agent-email-address.html"
+    },
+    {
+      "@type": "HowTo",
+      "name": "Give an AI agent its own email address",
+      "description": "Register a real, deliverable mailbox for an AI agent over HTTP, then read and send mail from it as JSON.",
+      "totalTime": "PT5M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Register the address",
+          "text": "POST to https://api.mailgi.xyz/v1/agents/register with an optional label. No signup form, no OAuth flow, no human. The response returns an address like buzzing-falcon@mailgi.xyz and an API key shown exactly once — store it before doing anything else."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Read the inbox",
+          "text": "GET https://api.mailgi.xyz/v1/mail with the API key as a Bearer token to list messages, then GET /v1/mail/<id> for a full body as JSON. Mail from any sender is accepted. There is no push delivery today, so poll on an interval that suits the task."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Send mail",
+          "text": "POST to https://api.mailgi.xyz/v1/mail/send with to, subject and textBody or htmlBody. Wait a few seconds after registering before the first send, while the mailbox finishes provisioning."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Move to your own domain",
+          "text": "Attach a domain in the dashboard at https://app.mailgi.xyz and publish the DNS records it generates for you — DKIM, a MAIL FROM subdomain for SPF alignment, and a recommended DMARC record. Once the domain verifies, issue a registration token so agents can self-register addresses like support@yourdomain.com."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can an AI agent receive a verification code by email?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, if the agent has a real mailbox rather than a send-only API. Register an address, trigger the signup, then poll GET /v1/mail until the message arrives and read the code out of the body. This is the most common reason an agent needs an address of its own: most services will not accept a disposable domain, and an agent borrowing a human's inbox can read everything else in it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why not just use the Gmail API on a human's account?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It works for one agent and one account, but it does not scale and it is not free to operate. You need a Google Cloud project, an OAuth consent screen and scope configuration before the agent reads a single message. Unverified apps are capped at roughly 100 users and show a warning screen. Most Gmail scopes are restricted, so production requires OAuth app verification and an annual third-party CASA security assessment. The deeper problem is blast radius: an agent with mailbox access can read the human's entire correspondence."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does an agent's email need DKIM, SPF and DMARC?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To send to strangers, yes. SPF says which servers may send for your domain, DKIM cryptographically signs each message so it cannot be forged in transit, and DMARC tells receiving servers what to do when the first two fail. Without them, mail from a new domain lands in spam or is rejected outright. On a shared platform domain this is already handled; on your own domain Mailgi generates the records and you publish them."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does an agent know when new mail arrives?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By polling. Mailgi has no webhooks or WebSocket push today — an agent calls GET /v1/mail on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Push delivery is planned but not shipped, and any guide that tells you to register a webhook URL with Mailgi is describing something that does not exist yet."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">mailgi</a>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+    <a href="https://api.mailgi.xyz/docs">Docs</a>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">free while in beta</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Guide</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">How to give an AI agent <em class="accent">an email address</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">An address is the one identity the rest of the internet already knows how to talk to. Here is why an agent needs its own, what the options cost you, and how to get a working one.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#setup">skip to the setup →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">The short version: an AI agent needs an email address of its own because email is the last universal identifier — every service on the internet will send to one, and almost none will send to an API endpoint. Give the agent a real mailbox it controls, not a borrowed seat in a human's inbox, and not a send-only relay that can talk but never listen.</p>
+  </div>
+</section>
+
+<section class="section shell">
+  <h2 style="margin-bottom:12px">Why an agent needs <em class="accent">its own</em> address</h2>
+  <p class="body" style="font-size:16px;margin-bottom:48px;max-width:620px">Three things break without one, and they break in ways that are hard to work around.</p>
+  <div class="rows">
+    <div class="row">
+      <div class="numeral">01</div>
+      <h3>It can't sign up for anything</h3>
+      <p class="body">This is the wall most people hit first. An agent asked to research a tool, file an expense or book a service needs to create an account, and creating an account means receiving a verification code. Without a mailbox the agent stops dead at the first confirmation email — and disposable-address services are widely blocked by exactly the sites worth signing up for.</p>
+    </div>
+    <div class="row">
+      <div class="numeral">02</div>
+      <h3>Nobody can reply to it</h3>
+      <p class="body">An agent that only sends is a broadcaster, not a correspondent. Real work — a support request, a scheduling back-and-forth, a supplier question — is a thread. Threads need an address that accepts mail, keeps it, and lets the agent read what came back. A webhook that fires once and forgets is not a mailbox.</p>
+    </div>
+    <div class="row">
+      <div class="numeral">03</div>
+      <h3>Its actions aren't attributable</h3>
+      <p class="body">If the agent works out of a person's inbox, every message it sends is from that person, and every message they receive is readable by it. Separating the agent onto its own address gives you an audit trail, a blast radius you can reason about, and a credential you can revoke without locking a human out of their own mail.</p>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">The options, and <em class="accent">what each one costs</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:620px">Four approaches people actually try. All of them work in some situation; three of them fail in ways that only show up later.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>The human's inbox, over Gmail or IMAP</h3>
+        <p class="body">Free and immediate for a single agent, and genuinely fine for an internal tool on a Workspace account. It stops being fine at scale. The Gmail API wants a cloud project, an OAuth consent screen and scope configuration before the agent reads one message; unverified apps are capped at roughly 100 users and show a warning screen; and the mailbox scopes are restricted, so shipping externally means OAuth app verification and an annual third-party CASA security assessment — weeks of calendar time and real money, renewed yearly. Raw IMAP skips the paperwork but hands you connection management, MIME parsing and someone else's deliverability. The problem underneath both is blast radius: the agent can read everything.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>A transactional send API</h3>
+        <p class="body">Excellent at the thing they are built for. If the agent's job is 95% sending, a transactional provider is the right answer and we would tell you to use one. The catch is that receiving is usually a different shape of product — a webhook you must host, sometimes a plan tier above the free one, sometimes with retention measured in weeks — so the agent gets a payload pushed at it rather than a mailbox it can go and read. That distinction stops mattering the moment the agent needs to look back at what arrived last Tuesday.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>A disposable or temporary address</h3>
+        <p class="body">Free, instant, no key required, and exactly right for catching one verification code in a test suite. Do not build a product on it. The inboxes are commonly public or shared, so anything sent there is readable; the domains are widely blocklisted by the services you most want to sign up for; there is no sending, no reputation and no persistence. It is a testing tool that looks like infrastructure.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>Run your own mail server</h3>
+        <p class="body">Complete control, no per-message cost, and an ongoing operational commitment most teams underestimate. You are now responsible for spam filtering, TLS, blocklist monitoring, bounce handling, IP warm-up and the reputation of every agent you host. Worth it if mail is your product. An expensive detour if mail is a feature of your agent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top" id="setup">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">A working address, <em class="accent">in one POST</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:620px">This is the Mailgi path. No signup form, no OAuth flow, no human reading a code — the program registers itself and gets a real, deliverable mailbox.</p>
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">Register</h3>
+        <p class="body">One unauthenticated POST returns an address and an API key. The key is shown exactly once, so store it before the process exits. The address is a readable handle rather than a UUID, because humans have to be willing to write to it.</p>
+        <p class="body" style="margin-top:18px">Pass no <span class="mono">label</span> and you still get an address; pass one and it shows up in your dashboard so you can tell your agents apart later.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># Register — no auth, no signup form
+curl -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" \
+  -d '{"label":"research-agent"}'
+
+# =&gt; {
+#      "emailAddress": "buzzing-falcon@mailgi.xyz",
+#      "aliasAddress": "x7k3mwf2qr5b@mailgi.xyz",
+#      "apiKey": "amb_..."          # shown once — store it
+#    }</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">Receive, and read</h3>
+        <p class="body">Mail from any sender lands in the inbox and is readable over the API seconds later. List messages, then fetch one by id for the full body as JSON — no MIME parsing on your side.</p>
+        <p class="body" style="margin-top:18px"><strong>There is no push delivery today.</strong> No webhooks, no WebSocket — an agent finds out about new mail by asking. Poll fast for a verification code, slowly for a support inbox. There is also no search: page through the list and match messages yourself.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># Wait for a verification code to arrive
+for i in $(seq 1 20); do
+  BODY=$(curl -s https://api.mailgi.xyz/v1/mail \
+    -H "Authorization: Bearer $KEY")
+  echo "$BODY" | grep -q "verify" &amp;&amp; break
+  sleep 3
+done
+
+# Fetch one message in full
+curl -s https://api.mailgi.xyz/v1/mail/&lt;id&gt; \
+  -H "Authorization: Bearer $KEY"</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">Send</h3>
+        <p class="body">Plain text or HTML, to one recipient or several, from the address you just registered. Replies come back to the same mailbox.</p>
+        <p class="body" style="margin-top:18px">Give it a few seconds after registering before the first send. The mailbox is provisioned asynchronously and sending in the same breath can fail while that finishes — retry once and it goes through.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># Let provisioning settle, then send
+sleep 3
+
+curl -X POST https://api.mailgi.xyz/v1/mail/send \
+  -H "Authorization: Bearer $KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "to": ["alice@example.com"],
+        "subject": "Following up",
+        "textBody": "Hello from an agent."
+      }'
+
+# =&gt; { "messageId": "..." }</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">What actually makes mail <em class="accent">arrive</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:660px">Three DNS records decide whether a stranger's mail server trusts you. They get name-dropped constantly and explained rarely, so — briefly.</p>
+    <div class="grid-3">
+      <div>
+        <div class="cap-label">SPF</div>
+        <h3>Who may send</h3>
+        <p class="small">A DNS record listing the servers allowed to send mail for your domain. A receiving server checks the connecting server against that list. It answers "is this machine allowed to claim your name?"</p>
+      </div>
+      <div>
+        <div class="cap-label">DKIM</div>
+        <h3>Proof it wasn't altered</h3>
+        <p class="small">A cryptographic signature added to each message, verifiable against a public key you publish in DNS. It proves the message really came from your domain and wasn't tampered with on the way.</p>
+      </div>
+      <div>
+        <div class="cap-label">DMARC</div>
+        <h3>What to do on failure</h3>
+        <p class="small">A policy record saying how a receiving server should treat mail that fails the other two — ignore, quarantine, or reject — and where to send reports. Without it, failures are handled at each recipient's discretion.</p>
+      </div>
+    </div>
+    <p class="body" style="margin-top:40px;max-width:660px">Skip them and mail from a new domain goes to spam or is refused outright. On a shared <span class="mono">@mailgi.xyz</span> handle this is already done for you. On your own domain, Mailgi generates the full record set and verifies each one as you publish it — you still have to put them in DNS, because nobody else can write to your zone.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Moving to <em class="accent">your own domain</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:620px">A handle like <span class="mono">buzzing-falcon@mailgi.xyz</span> is fine for a prototype and wrong for a customer-facing agent. The upgrade path keeps the same API.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Attach the domain</h3>
+        <p class="body">A human does this part, once, in the dashboard — it needs a signed-in session, not an API key. Publish the TXT and MX records shown, and inbound mail starts arriving.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>Publish the outbound records</h3>
+        <p class="body">Once inbound verifies, the DKIM, MAIL FROM and DMARC records appear, generated for you. Sending stays disabled until they verify — a deliberate gate, so an unauthenticated domain can't damage its own reputation on the first send.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Hand agents a registration token</h3>
+        <p class="body">Create a token in the dashboard and give it to an agent. It self-registers the address you tell it to claim — <span class="mono">support@yourdomain.com</span> — with the same POST as before, plus <span class="mono">domainToken</span> and <span class="mono">localPart</span>. One token can mint a whole team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">Can an AI agent receive a verification code by email?</span><span class="mark"></span></summary>
+        <p class="a">Yes, if the agent has a real mailbox rather than a send-only API. Register an address, trigger the signup, then poll <span class="mono">GET /v1/mail</span> until the message arrives and read the code out of the body. This is the most common reason an agent needs an address of its own: most services won't accept a disposable domain, and an agent borrowing a human's inbox can read everything else in it.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Why not just use the Gmail API on a human's account?</span><span class="mark"></span></summary>
+        <p class="a">It works for one agent and one account, but it doesn't scale and it isn't free to operate. You need a Google Cloud project, an OAuth consent screen and scope configuration before the agent reads a single message. Unverified apps are capped at roughly 100 users and show a warning screen. Most Gmail scopes are restricted, so production requires OAuth app verification and an annual third-party CASA security assessment. The deeper problem is blast radius — an agent with mailbox access can read the human's entire correspondence.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Does an agent's email need DKIM, SPF and DMARC?</span><span class="mark"></span></summary>
+        <p class="a">To send to strangers, yes. SPF says which servers may send for your domain, DKIM signs each message so it can't be forged in transit, and DMARC tells receiving servers what to do when the first two fail. Without them, mail from a new domain lands in spam or is rejected outright. On a shared platform domain this is already handled; on your own domain Mailgi generates the records and you publish them.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">How does an agent know when new mail arrives?</span><span class="mark"></span></summary>
+        <p class="a">By polling. Mailgi has no webhooks or WebSocket push today — an agent calls <span class="mono">GET /v1/mail</span> on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Push delivery is planned but not shipped, and any guide that tells you to register a webhook URL with Mailgi is describing something that doesn't exist yet.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell inline-split" style="padding-top:88px;padding-bottom:88px;gap:40px">
+    <div style="flex:1;min-width:320px">
+      <h2 style="font-size:clamp(28px,4vw,38px);margin-bottom:10px">Still deciding <em class="accent">which one to use</em>?</h2>
+      <p class="body" style="max-width:560px">We wrote an honest comparison of the alternatives — including the cases where you should pick something other than us.</p>
+    </div>
+    <a class="btn btn-solid btn-lg" style="flex:none" href="/choosing-an-email-api-for-ai-agents.html">Compare the options →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <span>support: <span class="mono" style="font-size:12px">objective-crocodile@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

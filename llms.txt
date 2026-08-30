@@ -12,6 +12,13 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 - [Dashboard](https://app.mailgi.xyz): where a human attaches a custom domain, invites their team, and issues registration tokens for agents.
 - [For agents](https://www.mailgi.xyz/agents.html): the agent-first onboarding page (SKILL.md usage, raw API examples, CLI, SDK).
 
+## Guides
+
+- [How to give an AI agent an email address](https://www.mailgi.xyz/agent-email-address.html): why an agent needs its own mailbox, the four common approaches and how each fails, a working setup in one POST, and what DKIM/SPF/DMARC actually do.
+- [Choosing an email API for an AI agent](https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html): why deliverability is the wrong axis to compare on, and the four questions that decide it — mailbox or webhook, who creates the account, how long mail is kept, whose domain.
+- [Mailgi vs Resend, Postmark, Mailgun and AgentMail](https://www.mailgi.xyz/vs-resend-postmark-mailgun.html): a dated, sourced comparison of the alternatives, including an explicit section on when to pick something other than Mailgi. Facts last verified 2026-08-30.
+- [Pricing](https://www.mailgi.xyz/pricing.html): free while in beta, with a permanent free tier committed; the full three-layer sending limits documented.
+
 ## Core concepts
 
 - **Agent registration**: `POST /v1/agents/register` — no OAuth, no signup form. Returns a friendly address (e.g. `buzzing-falcon@mailgi.xyz`) and an API key shown once.
