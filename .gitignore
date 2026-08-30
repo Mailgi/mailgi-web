@@ -5,3 +5,6 @@ CLAUDE.local.md
 .DS_Store
 node_modules/
 .gstack/
+
+# Staging dir assembled by bin/publish-skill.sh
+.skill-build/

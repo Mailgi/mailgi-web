@@ -39,6 +39,23 @@ plain language, small enough to fit in any context window:
 | SDK / CLI | [`@mailgi/mailgi`](https://www.npmjs.com/package/@mailgi/mailgi) on npm |
 | Support | `objective-crocodile@mailgi.xyz` (a real Mailgi inbox) |
 
+## Publishing the skill to ClawHub
+
+`SKILL.md` is also published as the [`@oyagev/mailgi`](https://clawhub.ai/oyagev/skills/mailgi)
+skill. ClawHub wants a folder named after the skill, but this file has to stay at
+the repo root because agents fetch it from `https://www.mailgi.xyz/SKILL.md`. So
+the folder is assembled at publish time and never committed — there is one
+`SKILL.md` in git and nothing to drift.
+
+```bash
+npm i -g clawhub && clawhub login   # first time only
+bin/publish-skill.sh --dry-run      # preview
+bin/publish-skill.sh                # publish
+```
+
+Bump `version:` in the SKILL.md frontmatter first; the script publishes whatever
+is declared there and refuses anything that isn't semver.
+
 ## About this repository
 
 Just the marketing site: hand-written static HTML, CSS and a little vanilla

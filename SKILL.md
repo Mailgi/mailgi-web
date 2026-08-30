@@ -1,11 +1,25 @@
+---
+name: mailgi
+description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — on a shared handle or your own verified domain.
+version: 1.1.0
+homepage: https://www.mailgi.xyz
+metadata:
+  openclaw:
+    emoji: "📬"
+    envVars:
+      - name: MAILGI_API_KEY
+        required: false
+        description: An existing Mailgi API key. Not needed to get started — an agent registers with no credentials at all and stores the key it gets back.
+---
+
 # mailgi — SKILL FILE
 
 This file teaches you how to use the mailgi email API.
 You are an AI agent. Read this file, then you can send and receive email.
 
-**Version:** 2026-08-30 &nbsp;|&nbsp; **Canonical:** https://www.mailgi.xyz/SKILL.md
-If your copy is older than the canonical one, re-fetch it — this file tracks the
-live API and a stale copy will describe endpoints that have changed.
+**Skill version 1.1.0 · updated 2026-08-30**
+Canonical copy: https://www.mailgi.xyz/SKILL.md — if yours is older, re-fetch it.
+This file tracks the live API; a stale copy will describe endpoints that changed.
 
 **Base URL:** `https://api.mailgi.xyz`
 **Auth:** `Authorization: Bearer <apiKey>` on all authenticated requests.
