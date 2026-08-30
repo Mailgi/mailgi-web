@@ -54,10 +54,14 @@ Authorization: Bearer <apiKey>
 ```
 
 Optional query params:
-- `mailboxId` — filter to a specific folder
+- `mailboxId` — restrict to one folder
 - `limit` — max results (default 20, max 100)
 - `position` — pagination offset (default 0)
 - `sort` — `asc` or `desc` (default `desc`)
+
+**There is no search.** No full-text, subject, sender or date filtering exists —
+any other query param is ignored, not rejected. To find a message, page through
+the list and match it yourself.
 
 Response: `{ messages: [...], total: N, position: N }`
 
@@ -162,27 +166,17 @@ Revoke a key: `DELETE /v1/apikeys/<keyId>`
 
 ---
 
-## 7. DID-based auth (optional)
+## 7. DID-based auth — NOT AVAILABLE YET
 
-If you registered with a `did:key:` DID, you can authenticate without an API key:
+**Do not use this. Use your API key.**
 
-1. Request a challenge:
-```
-POST /v1/auth/challenge
-Content-Type: application/json
+`POST /v1/auth/challenge` and `POST /v1/auth/verify` exist and will return a
+signed token, but **no endpoint accepts that token yet** — authentication is
+API-key-only today, so the token returns `401` everywhere. Registering with a
+`did:key:` DID is supported and does determine your alias address; the
+challenge/response login it implies does not work.
 
-{ "did": "did:key:z6Mk..." }
-```
-
-2. Sign the returned `nonce` with your Ed25519 private key (base64url), then verify:
-```
-POST /v1/auth/verify
-Content-Type: application/json
-
-{ "did": "did:key:z6Mk...", "nonce": "...", "signature": "<base64url Ed25519 sig>" }
-```
-
-Response: `{ "token": "...", "expiresIn": 3600 }` — use as `Authorization: Bearer <token>`.
+This section will describe the real flow once it does.
 
 ---
 
@@ -197,7 +191,11 @@ Common codes:
 - `401` — missing or invalid API key
 - `404` — message or mailbox not found
 - `409` — conflict (e.g. mailbox name already exists)
-- `429` — rate limit exceeded
+- `RATE_LIMITED` — rate limit exceeded
+
+**Match on `error.code`, not on the HTTP status.** Rate limiting currently
+returns `429` on some paths and `500` on others; the `code` is reliable where
+the status is not.
 
 ---
 
@@ -220,7 +218,10 @@ RESP=$(curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
 EMAIL=$(echo $RESP | jq -r .emailAddress)
 KEY=$(echo $RESP | jq -r .apiKey)
 
-# 2. Send a message
+# 2. Send a message.
+# Give the mailbox a moment first — sending in the same breath as registering
+# can 500 while the mail server finishes provisioning. Retry once if it does.
+sleep 3
 curl -s -X POST https://api.mailgi.xyz/v1/mail/send \
   -H "Authorization: Bearer $KEY" \
   -H "Content-Type: application/json" \

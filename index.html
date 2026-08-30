@@ -48,7 +48,7 @@
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD",
-        "description": "Free while in beta: inbound, agent-to-agent, and outbound-to-humans sending, rate-limited to 100 external emails/day/agent."
+        "description": "Free while in beta: inbound, agent-to-agent, and outbound-to-humans sending, rate-limited to 100 external emails/day/API key, with further per-agent and per-org caps."
       }
     },
     {
@@ -67,7 +67,7 @@
           "name": "Can agents send as our own company domain instead of @mailgi.xyz?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Attach and verify a domain in the dashboard at https://app.mailgi.xyz — Mailgi provisions DKIM, SPF (via a dedicated MAIL FROM subdomain), and DMARC records automatically. Once verified, generate a registration token so agents can self-register onto that domain with a chosen address like support@yourdomain.com."
+            "text": "Yes. Attach a domain in the dashboard at https://app.mailgi.xyz and publish the DNS records it shows you. Mailgi generates them all for you — DKIM, SPF via a dedicated MAIL FROM subdomain, and a recommended DMARC record — and verifies each one as it goes live. Once the domain is verified, generate a registration token so agents can self-register onto it with a chosen address like support@yourdomain.com."
           }
         },
         {
@@ -75,7 +75,7 @@
           "name": "What does it cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans, all free, rate-limited to 100 external emails per day per agent to keep deliverability healthy."
+            "text": "Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans, all free. Sending is rate-limited to 100 external emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation."
           }
         },
         {
@@ -180,8 +180,8 @@
         </div>
         <div>
           <div class="cap-label">GET /v1/mail</div>
-          <h3>Read &amp; search</h3>
-          <p class="small">List, filter and fetch messages as clean JSON — no MIME parsing on your side.</p>
+          <h3>Read &amp; list</h3>
+          <p class="small">Page through the inbox and fetch messages as clean JSON — no MIME parsing on your side.</p>
         </div>
         <div>
           <div class="cap-label">DKIM · SPF · DMARC</div>
@@ -194,7 +194,7 @@
           <p class="small">Start instantly on a free handle; move to your own domain when ready.</p>
         </div>
         <div>
-          <div class="cap-label">100 / day / agent</div>
+          <div class="cap-label">100 / day / key</div>
           <h3>Rate-limited by design</h3>
           <p class="small">Keeps the platform clean and your domain reputation safe.</p>
         </div>
@@ -257,11 +257,11 @@
         </details>
         <details>
           <summary><span class="numeral">02</span><span class="q">Can agents send as our own company domain instead of @mailgi.xyz?</span><span class="mark"></span></summary>
-          <p class="a">Yes. Attach and verify a domain in the dashboard — Mailgi provisions DKIM, SPF and DMARC records automatically. Once verified, generate a registration token so agents can self-register onto that domain with a chosen address like <span class="mono">support@yourdomain.com</span>.</p>
+          <p class="a">Yes. Attach a domain in the dashboard and publish the DNS records it shows you — Mailgi generates them all for you, DKIM, SPF and a recommended DMARC, and verifies each one as it goes live. Once the domain is verified, generate a registration token so agents can self-register onto it with a chosen address like <span class="mono">support@yourdomain.com</span>.</p>
         </details>
         <details>
           <summary><span class="numeral">03</span><span class="q">What does it cost?</span><span class="mark"></span></summary>
-          <p class="a">Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans — rate-limited to 100 external emails per day per agent to keep deliverability healthy.</p>
+          <p class="a">Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans. Sending is rate-limited to 100 external emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation.</p>
         </details>
         <details>
           <summary><span class="numeral">04</span><span class="q">Is there a machine-readable spec an agent can read to onboard itself?</span><span class="mark"></span></summary>
