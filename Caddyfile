@@ -1,0 +1,86 @@
+# Overrides Railpack's default static-site Caddyfile (a Caddyfile at the repo
+# root replaces the generated one). Based verbatim on
+# railwayapp/railpack core/providers/staticfile/Caddyfile.template — keep it
+# in sync if that template changes; the only intentional addition is the
+# apex -> www redirect below.
+{
+	admin off
+	persist_config off
+	auto_https off
+
+	log {
+		format json
+	}
+
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+:{$PORT:80} {
+	log {
+		format json
+	}
+
+	respond /health 200
+
+	# ── Apex -> www, 301 ──────────────────────────────────────────────────────
+	# Restores the behaviour GitHub Pages gave us before the move to Railway
+	# (http://mailgi.xyz already 301'd to https://www.mailgi.xyz/).
+	#
+	# This matters more than cosmetics here: every <link rel="canonical">, the
+	# sitemap, llms.txt and the JSON-LD all name www.mailgi.xyz. Serving the
+	# same content on both hosts would hand search engines and AI crawlers two
+	# URLs for every page — splitting ranking signals and directly undercutting
+	# the GEO work this site exists to support.
+	#
+	# Placed before the header/file_server directives so the redirect wins
+	# without ever touching the filesystem. {uri} preserves path and query, so
+	# https://mailgi.xyz/agents.html?x=1 lands on the www equivalent intact.
+	@apex host mailgi.xyz
+	redir @apex https://www.mailgi.xyz{uri} permanent
+
+	# Security headers
+	header {
+		# Enable cross-site filter (XSS) and tell browsers to block detected attacks
+		X-XSS-Protection "1; mode=block"
+		# Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
+		X-Content-Type-Options "nosniff"
+		# Keep referrer data off of HTTP connections
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# Enable strict Content Security Policy
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: https: *; style-src 'self' 'unsafe-inline' https: *; script-src 'self' 'unsafe-inline' https: *; font-src 'self' data: https: *; connect-src 'self' https: *; media-src 'self' https: *; object-src 'none'; frame-src 'self' https: *;"
+		# Remove Server header
+		-Server
+	}
+
+	# Relative, not an absolute container path: Railpack resolves the static
+	# root to "." when index.html sits at the repo root (its documented
+	# detection order), and the container layout isn't part of its public
+	# contract — so "." is the stable choice.
+	root * .
+
+	# Handle static files
+	file_server {
+		hide .git
+		hide .env*
+		hide Caddyfile
+	}
+
+	# Compression with more formats
+	encode {
+		gzip
+		zstd
+	}
+
+	# No index_fallback: this is a multi-page static site, not an SPA. A
+	# catch-all to index.html would turn every typo and crawler probe into a
+	# 200, polluting the request logs this move exists to collect and telling
+	# crawlers that infinite bogus URLs are real pages.
+	try_files {path} {path}.html {path}/index.html
+
+	handle_errors {
+		rewrite * /{err.status_code}.html
+		file_server
+	}
+}
