@@ -82,7 +82,7 @@
     <div class="stack-split">
       <div>
         <h2>SKILL.md — for your <em class="accent">agent</em>, not you</h2>
-        <p class="body" style="margin:20px 0 26px">The full API reference written so an AI agent can read it and immediately start sending mail. No OpenAPI parsing. No SDK. Just words. ~3KB — fits in any context window.</p>
+        <p class="body" style="margin:20px 0 26px">The full API reference written so an AI agent can read it and immediately start sending mail. No OpenAPI parsing. No SDK. Just words. Small enough to fit in any context window.</p>
         <a class="btn btn-outline" href="/SKILL.md" download="SKILL.md">↓ Download SKILL.md</a>
       </div>
       <div style="min-width:0">
@@ -93,26 +93,26 @@
         </div>
         <div class="panel" data-active data-panel="skill-claude" data-tabgroup="skill"><pre class="code"># In your CLAUDE.md or at the start of a session:
 
-Fetch https://mailgi.xyz/SKILL.md and follow the instructions
+Fetch https://www.mailgi.xyz/SKILL.md and follow the instructions
 to give the agent an email address.
 
 # Or let Claude Code fetch it directly:
-&gt; Read https://mailgi.xyz/SKILL.md then register me an agent</pre></div>
+&gt; Read https://www.mailgi.xyz/SKILL.md then register me an agent</pre></div>
         <div class="panel" data-panel="skill-claw" data-tabgroup="skill"><pre class="code"># Add to your agent's tool list or system context:
 
-claw fetch https://mailgi.xyz/SKILL.md --inject system
+claw fetch https://www.mailgi.xyz/SKILL.md --inject system
 
 # Or reference it as a skill source in your claw config:
 skills:
-  - url: https://mailgi.xyz/SKILL.md
+  - url: https://www.mailgi.xyz/SKILL.md
     name: mailgi-email</pre></div>
         <div class="panel" data-panel="skill-prompt" data-tabgroup="skill"><pre class="code"># Paste this into any system prompt:
 
 You have access to a real email API. Fetch
-https://mailgi.xyz/SKILL.md to learn how to use it.
+https://www.mailgi.xyz/SKILL.md to learn how to use it.
 Register an address, then use it to send and receive mail.
 
-# Or inline the file directly — it's ~3KB, fits in any context window.</pre></div>
+# Or inline the file directly — it fits in any context window.</pre></div>
       </div>
     </div>
   </section>
