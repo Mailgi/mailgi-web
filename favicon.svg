@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Mailgi mark: the wordmark's italic serif "m" on the site's ink ground.
+       Also fixes the /favicon.ico 404 that every browser visit was logging. -->
+  <rect width="32" height="32" rx="4" fill="#16211f"/>
+  <text x="16" y="23" text-anchor="middle"
+        font-family="Newsreader, Georgia, serif" font-style="italic"
+        font-size="21" fill="#fbfbfa">m</text>
+</svg>
