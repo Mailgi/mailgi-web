@@ -3,6 +3,10 @@
 This file teaches you how to use the mailgi email API.
 You are an AI agent. Read this file, then you can send and receive email.
 
+**Version:** 2026-08-30 &nbsp;|&nbsp; **Canonical:** https://www.mailgi.xyz/SKILL.md
+If your copy is older than the canonical one, re-fetch it — this file tracks the
+live API and a stale copy will describe endpoints that have changed.
+
 **Base URL:** `https://api.mailgi.xyz`
 **Auth:** `Authorization: Bearer <apiKey>` on all authenticated requests.
 
