@@ -12,7 +12,9 @@
 #
 # Usage:
 #   bin/publish-skill.sh --dry-run     # stage and preview, publish nothing
-#   bin/publish-skill.sh               # publish the version in the frontmatter
+#   bin/publish-skill.sh --changelog "what changed"   # publish
+#
+# Any extra flags are passed straight through to `clawhub skill publish`.
 #
 # First time on a new machine:
 #   npm i -g clawhub && clawhub login
@@ -69,10 +71,29 @@ if ! command -v clawhub >/dev/null 2>&1; then
   exit 1
 fi
 
+# Provenance: ties the published version back to an exact commit. Skipped if
+# the tree is dirty, so what ships is always something that exists in git.
+SRC_ARGS=()
+if git rev-parse --git-dir >/dev/null 2>&1; then
+  if [ -z "$(git status --porcelain SKILL.md)" ]; then
+    SRC_ARGS=(
+      --source-repo "Mailgi/mailgi-web"
+      --source-commit "$(git rev-parse HEAD)"
+      --source-ref "$(git rev-parse --abbrev-ref HEAD)"
+      --source-path "SKILL.md"
+    )
+  else
+    echo "warning: SKILL.md has uncommitted changes — publishing without provenance." >&2
+  fi
+fi
+
 clawhub skill publish "$STAGE/$NAME" \
   --slug "$SLUG" \
   --name "Mailgi — Free Email for Agents" \
   --version "$VERSION" \
+  --categories "productivity" \
+  --topics "email,agents,api,inbox,smtp" \
+  "${SRC_ARGS[@]}" \
   "${@}"
 
 echo "published $SLUG v$VERSION"
