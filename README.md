@@ -1,76 +1,46 @@
-# mailgi — website
+# Mailgi — email infrastructure for AI agents
 
-Source for **[mailgi.xyz](https://www.mailgi.xyz)** — email for AI agents.
+Source for **[www.mailgi.xyz](https://www.mailgi.xyz)**.
 
----
-
-- **Website**: https://www.mailgi.xyz
-- **API docs**: https://api.mailgi.xyz/docs
-- **npm**: https://www.npmjs.com/package/@mailgi/mailgi
-- **SKILL.md**: https://www.mailgi.xyz/SKILL.md — plain-language API reference for AI agents
-
----
-
-## CLI
+Mailgi gives an AI agent a real, deliverable email address — a genuine inbox
+and outbox over a REST API, with DKIM, SPF and DMARC handled per domain. An
+agent registers itself in one POST; no OAuth flow, no signup form, no browser.
 
 ```bash
-npm install -g @mailgi/mailgi
-
-# Register an agent (saves credentials to ~/.mailgi/config.json)
-mailgi register --label my-agent
-
-# Add an existing agent by API key
-mailgi login --agent buzzing-falcon@mailgi.xyz --apikey amb_...
-
-# Send an email
-mailgi send --agent buzzing-falcon --to alice@example.com --subject "Hi" --body "Hello"
-
-# Read inbox
-mailgi inbox --agent buzzing-falcon
-
-# Read a message
-mailgi read --agent buzzing-falcon <message-id>
-```
-
-## SDK
-
-```typescript
-import { AgentMailboxClient } from '@mailgi/mailgi';
-
-const client = AgentMailboxClient.withApiKey(
-  'https://api.mailgi.xyz',
-  process.env.MAILGI_API_KEY,
-);
-
-// Send an email
-await client.mail.send({
-  to: ['alice@example.com'],
-  subject: 'Hi',
-  textBody: 'Hello from my agent.',
-});
-
-// Read inbox
-const { messages } = await client.mail.list({ limit: 20, sort: 'desc' });
-const email = await client.mail.get(messages[0].id);
-console.log(email.subject, email.textBody);
-```
-
-## cURL
-
-```bash
-# Register — get an email address and API key
 curl -X POST https://api.mailgi.xyz/v1/agents/register \
   -H "Content-Type: application/json" \
   -d '{"label":"my-agent"}'
 # => { "emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_..." }
-
-# Send an email
-curl -X POST https://api.mailgi.xyz/v1/mail/send \
-  -H "Authorization: Bearer $KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"to":["alice@example.com"],"subject":"Hi","textBody":"Hello"}'
-
-# Read inbox
-curl https://api.mailgi.xyz/v1/mail \
-  -H "Authorization: Bearer $KEY"
 ```
+
+Free while in beta — inbound, agent-to-agent and outbound-to-humans, rate
+limited to 100 external emails per day per agent.
+
+## For AI agents
+
+If you are an agent (or driving one), start here — it is the whole API in
+plain language, small enough to fit in any context window:
+
+**<https://www.mailgi.xyz/SKILL.md>**
+
+`https://www.mailgi.xyz/llms.txt` is the site-level summary for LLMs.
+
+## Links
+
+| | |
+|---|---|
+| Website | <https://www.mailgi.xyz> |
+| Dashboard | <https://app.mailgi.xyz> — attach a domain, create inboxes, invite your team |
+| API docs | <https://api.mailgi.xyz/docs> · [OpenAPI spec](https://api.mailgi.xyz/openapi.json) |
+| SDK / CLI | [`@mailgi/mailgi`](https://www.npmjs.com/package/@mailgi/mailgi) on npm |
+| Support | `objective-crocodile@mailgi.xyz` (a real Mailgi inbox) |
+
+## About this repository
+
+Just the marketing site: hand-written static HTML, CSS and a little vanilla
+JavaScript. No build step and no framework — deliberately, because AI crawlers
+read raw HTML and don't execute JS, and being readable by them is the point.
+
+Deployed to Railway on push to `main`.
+
+The API, dashboard and infrastructure live in a separate private repository.

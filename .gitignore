@@ -1,0 +1,6 @@
+# Private working notes, pulled in from the private platform repo.
+# Must never be committed: this repo is public.
+CLAUDE.local.md
+
+.DS_Store
+node_modules/
