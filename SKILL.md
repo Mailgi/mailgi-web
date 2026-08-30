@@ -23,6 +23,11 @@ Content-Type: application/json
 { "label": "my-agent" }
 ```
 
+Optional fields:
+- `label` — a name for your own reference; shows up in the owner's dashboard.
+- `did` — a W3C DID in `did:key:` format. Only affects which deterministic
+  alias you get. It does **not** enable password-free login (see section 7).
+
 Response:
 ```json
 {
@@ -71,6 +76,11 @@ Response: `{ messages: [...], total: N, position: N }`
 
 Each message has: `id`, `subject`, `from`, `to`, `receivedAt`, `preview`, `seen`.
 
+**There is no push delivery.** No webhooks, no WebSocket, no long-poll. The only
+way to learn about new mail is to call `GET /v1/mail` again. Poll every few
+seconds when waiting for something specific (a verification code), and every
+minute or two for a background inbox.
+
 **Get full body of a message:**
 
 ```
@@ -102,7 +112,17 @@ Optional fields: `cc`, `bcc`, `htmlBody`, `replyTo`.
 
 Response: `{ "messageId": "..." }`
 
-Sending is free. Rate limit: 100 external emails per day per API key.
+Sending is free. Rate limit: 100 external emails per day per API key, plus
+50/hour and 300/day per agent across all its keys. On a custom domain your
+organisation is also capped by domain age: 100/day under three days, 1000/day
+up to thirty, 5000/day after that.
+
+**Attachments are not supported.** There is no `attachments` field — sending one
+does nothing. Send links instead.
+
+**Sending right after registering can fail.** The mailbox is provisioned
+asynchronously; wait a couple of seconds after `register` before your first
+send, and retry once on a 5xx.
 
 ---
 
@@ -141,6 +161,21 @@ Authorization: Bearer <apiKey>
 Content-Type: application/json
 
 { "seen": true }
+```
+
+Rename a folder:
+```
+PATCH /v1/mailboxes/<id>
+Authorization: Bearer <apiKey>
+Content-Type: application/json
+
+{ "name": "Archive" }
+```
+
+Delete a folder:
+```
+DELETE /v1/mailboxes/<id>
+Authorization: Bearer <apiKey>
 ```
 
 Delete a message (moves to Trash):
@@ -203,7 +238,23 @@ the status is not.
 
 ---
 
-## 9. Health
+## 9. Deleting your account
+
+```
+DELETE /v1/agents/me
+Authorization: Bearer <apiKey>
+```
+
+Revokes every API key and removes the mailbox. Returns `204`.
+
+**This is permanent, and it burns the address.** A deleted address can never be
+registered again — not by you, not by anyone. There is no undo and no support
+path to reverse it. Do not call this to "reset" or "start clean": register a
+second agent instead and simply stop using the first.
+
+---
+
+## 10. Health
 
 ```
 GET /health        — liveness (always 200 if server is up)
@@ -238,7 +289,7 @@ curl -s https://api.mailgi.xyz/v1/mail \
 
 ---
 
-## 10. TypeScript / Node.js SDK
+## 11. TypeScript / Node.js SDK
 
 Install:
 ```bash
@@ -291,7 +342,7 @@ try {
 
 ---
 
-## 11. CLI
+## 12. CLI
 
 Install globally:
 ```bash
@@ -350,7 +401,7 @@ mailgi inbox --agent buzzing-falcon --json
 
 ---
 
-## 12. Custom domains & registration tokens
+## 13. Custom domains & registration tokens
 
 Everything above registers your agent on the shared `@mailgi.xyz` domain.
 If a human wants their agents to send as `you@theircompany.com` instead,
