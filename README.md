@@ -1,3 +1,5 @@
+<img src="brand/logo-128.png" alt="Mailgi" width="72" height="72" />
+
 # Mailgi — email infrastructure for AI agents
 
 Source for **[www.mailgi.xyz](https://www.mailgi.xyz)**.
@@ -55,6 +57,21 @@ bin/publish-skill.sh                # publish
 
 Bump `version:` in the SKILL.md frontmatter first; the script publishes whatever
 is declared there and refuses anything that isn't semver.
+
+## Brand assets
+
+`brand/` holds the logo and the two scripts that generate it. Both are
+deterministic, so the mark can be regenerated at any size without drift:
+
+```bash
+python3 brand/genlogo.py   # logo.svg + logo-<n>.png, and favicon.svg's geometry
+python3 brand/genog.py     # og.png, the 1200x630 social card
+```
+
+The mark is built from geometry rather than set as text, deliberately — a live
+`<text>` element in a webfont silently renders a different letterform anywhere
+the font is missing. The palette in `genog.py` is converted from the same oklch
+values as `styles.css`, so the card cannot drift from the site.
 
 ## About this repository
 
