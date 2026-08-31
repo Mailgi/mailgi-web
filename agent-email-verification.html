@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How an AI agent receives a verification code — Mailgi</title>
+<meta name="description" content="Your agent needs to confirm an email address to finish a signup. Register a real inbox in one POST, poll for the message, pull the code out of the body. Working code, and the mistakes that make it flaky." />
+<link rel="canonical" href="https://www.mailgi.xyz/agent-email-verification.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="How an AI agent receives a verification code" />
+<meta property="og:description" content="Register an inbox, poll for the message, pull out the code. Working code end to end." />
+<meta property="og:url" content="https://www.mailgi.xyz/agent-email-verification.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="How an AI agent receives a verification code" />
+<meta name="twitter:description" content="Register an inbox, poll for the message, pull out the code. Working code end to end." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "How an AI agent receives a verification code by email",
+      "description": "Register a real inbox for an AI agent, poll it for the confirmation message, and extract the code — with the failure modes that make naive implementations flaky.",
+      "datePublished": "2026-08-31",
+      "dateModified": "2026-08-31",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/agent-email-verification.html"
+    },
+    {
+      "@type": "HowTo",
+      "name": "Receive an email verification code with an AI agent",
+      "description": "Give an AI agent a real mailbox so it can complete signups that require email confirmation.",
+      "totalTime": "PT10M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Register an inbox",
+          "text": "POST to https://api.mailgi.xyz/v1/agents/register with no authentication. You get back a real deliverable address and an API key shown once. Wait two or three seconds before using it — the mailbox is provisioned asynchronously."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Record the current message count",
+          "text": "Call GET /v1/mail and note the total before triggering the signup. Polling for any message rather than a new one is the most common source of flakiness, because a welcome email can arrive first and be mistaken for the code."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Trigger the signup",
+          "text": "Submit the agent's address to whatever service requires confirmation."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Poll the inbox",
+          "text": "Call GET /v1/mail every two or three seconds until a message from the expected sender appears. There is no push delivery, so polling is the only option. Give up after about ninety seconds rather than looping forever."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Extract the code",
+          "text": "Fetch the message with GET /v1/mail/<id>, resolve the body through bodyValues using the partId from textBody, and match the code with a regular expression anchored to nearby words rather than to any six-digit run."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can an AI agent sign up for a service on its own?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, if it has a real mailbox. The blocker is almost never the signup form — it is the confirmation email, because an agent with no address cannot receive one. Give the agent its own inbox and the flow completes without a human. Note that some services deliberately prohibit automated signups in their terms; check before automating one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why not use a temporary or disposable email service for verification codes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For a throwaway test it is a reasonable choice and costs nothing. For anything real there are three problems. Disposable domains are widely blocklisted by exactly the services worth signing up for, so the signup is often rejected outright. The inboxes are usually public, meaning anyone who guesses the address can read the code. And there is no sending, so the agent can receive the confirmation but never reply to anything afterwards."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long should an agent wait for a verification email?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Poll every two to three seconds for about ninety seconds. Most confirmation mail arrives within ten seconds; anything past a minute usually means the signup silently failed or the message was filtered rather than that it is still in flight. Always bound the loop and fail with a clear error rather than polling indefinitely."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my agent read the wrong verification code?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Two causes account for nearly all of it. First, matching any six-digit number in the body, which will happily match a year, an order number or a phone extension — anchor the pattern to nearby words like code or verification instead. Second, reading the newest message without checking that it is newer than the messages that existed before the signup was triggered, so a welcome email gets parsed instead of the code."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can one agent handle signups for several services at once?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, though one agent per service is the cleaner pattern. Registration is a single unauthenticated POST with no quota on how many agents you create, so a dedicated address per signup keeps inboxes trivially separable and removes the need to filter by sender. It also limits the blast radius if one address ends up on a marketing list."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">mailgi</a>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/guides.html">Guides</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+    <a href="https://api.mailgi.xyz/docs">Docs</a>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">free while in beta</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Guide · Signups &amp; verification</div>
+  <h1 class="reveal reveal-1" style="max-width:920px">How an agent receives <em class="accent">a verification code</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">The wall almost every agent hits first. It can fill in the form, then a service emails a six-digit code to an address it doesn't have. Here is the whole loop, in code that runs.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#code">jump to the code →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:780px;margin:0">The shape of it: register an inbox, note how many messages are already in it, trigger the signup, poll until something new arrives from the sender you expect, then pull the code out of the body. Five steps, about twenty lines. The interesting part is the four ways it goes wrong.</p>
+  </div>
+</section>
+
+<section class="section shell" id="code">
+  <h2 style="margin-bottom:12px">The whole loop, <em class="accent">in one script</em></h2>
+  <p class="body" style="font-size:16px;margin-bottom:40px;max-width:660px">Every call here was run against the live API. Nothing is elided and nothing is aspirational.</p>
+  <div class="stack-split">
+    <div>
+      <h3 style="margin-bottom:14px">1 · Get an inbox</h3>
+      <p class="body">Unauthenticated POST. You get a real, deliverable address and a key shown exactly once.</p>
+      <p class="body" style="margin-top:18px"><strong>Sleep before you use it.</strong> The mailbox is provisioned asynchronously and using the key in the same breath can fail. Two or three seconds is enough.</p>
+    </div>
+    <div style="min-width:0">
+<pre class="code">RESP=$(curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" \
+  -d '{"label":"signup-bot"}')
+
+KEY=$(echo "$RESP" | jq -r .apiKey)
+ADDR=$(echo "$RESP" | jq -r .emailAddress)
+
+sleep 3          # let provisioning finish
+
+echo "$ADDR"     # =&gt; blank-reindeer@mailgi.xyz</pre>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">2 · Mark your place, then sign up</h3>
+        <p class="body">Record how many messages exist <em>before</em> you trigger anything. This one line prevents the most common bug on this page — parsing a welcome email that arrived ahead of the code.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">BEFORE=$(curl -s https://api.mailgi.xyz/v1/mail \
+  -H "Authorization: Bearer $KEY" | jq '.total')
+
+# ... now submit $ADDR to the service that
+#     needs confirming ...</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">3 · Poll until it lands</h3>
+        <p class="body">There is no push delivery — no webhooks, no WebSocket. Asking repeatedly is the only mechanism, and for this use case it is entirely adequate: confirmation mail is usually readable within ten seconds.</p>
+        <p class="body" style="margin-top:18px">Bound the loop. Ninety seconds is generous; past a minute the signup has usually failed rather than being slow.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">for i in $(seq 1 30); do
+  sleep 3
+  LIST=$(curl -s https://api.mailgi.xyz/v1/mail \
+    -H "Authorization: Bearer $KEY")
+
+  # only look if something NEW arrived
+  [ "$(echo "$LIST" | jq '.total')" -gt "$BEFORE" ] || continue
+
+  ID=$(echo "$LIST" | jq -r '
+    .messages
+    | map(select(.from[0].email | test("example\\.com$")))
+    | first | .id // empty')
+
+  [ -n "$ID" ] &amp;&amp; break
+done
+
+[ -z "$ID" ] &amp;&amp; { echo "no code arrived" &gt;&amp;2; exit 1; }</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">4 · Read the body, take the code</h3>
+        <p class="body">Bodies come back as JMAP parts. <span class="mono">textBody</span> is an array; each entry has a <span class="mono">partId</span>, and the text itself lives in <span class="mono">bodyValues</span> under that id. It looks indirect and it is one line of jq.</p>
+        <p class="body" style="margin-top:18px">Anchor the pattern to a nearby word. Matching any six digits will eventually match a year or an order number.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">MSG=$(curl -s https://api.mailgi.xyz/v1/mail/$ID \
+  -H "Authorization: Bearer $KEY")
+
+BODY=$(echo "$MSG" | jq -r '
+  .bodyValues[.textBody[0].partId].value')
+
+# anchored — not just any 6 digits
+CODE=$(echo "$BODY" | grep -oiE \
+  '(code|verification)[^0-9]{0,20}[0-9]{6}' \
+  | grep -oE '[0-9]{6}' | head -1)
+
+echo "$CODE"     # =&gt; 481902</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Four ways this <em class="accent">goes wrong</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">In rough order of how often we have seen each one.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Reading the wrong message</h3>
+        <p class="body">The agent polls for <em>any</em> message and grabs the newest. A welcome email, a "someone signed up" notice, or a leftover message from an earlier attempt gets parsed instead of the code. Record the count before triggering the signup and require a genuinely new message, then filter by sender.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>A regex that matches anything</h3>
+        <p class="body"><span class="mono">[0-9]{6}</span> matches a year, an invoice number, part of a phone number and the middle of a tracking ID. Anchor to the words around the code. If the service sends a confirmation <em>link</em> rather than a digit code, match the URL instead and request it — many services accept either.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Sending before provisioning finishes</h3>
+        <p class="body">Registering and immediately calling another endpoint can fail while the mailbox is still being created. It is a race, so it passes in testing and fails in production. Sleep two or three seconds after registering, and retry once on a 5xx.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>Treating <span class="mono">from</span> as a string</h3>
+        <p class="body">It is an array of objects. The address is at <span class="mono">msg.from[0].email</span>, and the <span class="mono">name</span> beside it is frequently an empty string. Comparing <span class="mono">msg.from</span> to a string silently never matches, so the loop times out and the failure looks like the mail never arrived.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">Can an AI agent sign up for a service on its own?</span><span class="mark"></span></summary>
+        <p class="a">Yes, if it has a real mailbox. The blocker is almost never the signup form — it's the confirmation email, because an agent with no address can't receive one. Give the agent its own inbox and the flow completes without a human. Worth noting that some services deliberately prohibit automated signups in their terms; check before automating one.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Why not use a disposable email service for this?</span><span class="mark"></span></summary>
+        <p class="a">For a throwaway test it's a reasonable choice and costs nothing. For anything real there are three problems: disposable domains are widely blocklisted by exactly the services worth signing up for, so the signup is often rejected outright; the inboxes are usually public, so anyone who guesses the address reads the code; and there's no sending, so the agent can receive the confirmation but never reply to anything afterwards.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">How long should an agent wait for a verification email?</span><span class="mark"></span></summary>
+        <p class="a">Poll every two to three seconds for about ninety seconds. Most confirmation mail is readable within ten; anything past a minute usually means the signup silently failed or the message was filtered, not that it's still in flight. Always bound the loop and fail with a clear error rather than polling forever.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">Why does my agent read the wrong code?</span><span class="mark"></span></summary>
+        <p class="a">Two causes account for nearly all of it. Matching any six-digit number, which will happily match a year, an order number or a phone extension — anchor the pattern to nearby words like "code" or "verification" instead. And reading the newest message without checking it's newer than what existed before the signup, so a welcome email gets parsed instead.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">05</span><span class="q">Can one agent handle signups for several services at once?</span><span class="mark"></span></summary>
+        <p class="a">Yes, and the cleaner pattern is one agent per service. Registration is a single unauthenticated POST with no quota on how many agents you create, so spinning up a dedicated address per signup keeps the inboxes trivially separable and means you never have to filter by sender. It also limits the blast radius if one address ends up on a marketing list.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell inline-split" style="padding-top:88px;padding-bottom:88px;gap:40px">
+    <div style="flex:1;min-width:320px">
+      <h2 style="font-size:clamp(28px,4vw,38px);margin-bottom:10px">Now make it <em class="accent">answer back</em></h2>
+      <p class="body" style="max-width:560px">Receiving a code is the narrow case. The same inbox can run a support queue or coordinate with other agents.</p>
+    </div>
+    <a class="btn btn-solid btn-lg" style="flex:none" href="/guides.html">All the guides →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <span>support: <span class="mono" style="font-size:12px">objective-crocodile@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

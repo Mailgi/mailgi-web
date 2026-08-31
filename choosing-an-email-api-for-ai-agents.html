@@ -31,9 +31,15 @@
       "description": "Deliverability is the wrong axis to compare on. Four questions that actually decide which email API an AI agent needs, and where each answer points.",
       "datePublished": "2026-08-30",
       "dateModified": "2026-08-30",
-      "author": { "@id": "https://www.mailgi.xyz/#org" },
-      "publisher": { "@id": "https://www.mailgi.xyz/#org" },
-      "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
       "mainEntityOfPage": "https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html"
     },
     {
@@ -62,6 +68,30 @@
             "@type": "Answer",
             "text": "Not to start. A shared platform domain gets an agent working in seconds and is appropriate for prototypes, internal tooling and receiving verification codes. Move to your own domain before an agent writes to customers, for two reasons: recipients trust a company address more than an unfamiliar shared one, and on your own domain your sending reputation is yours alone rather than shared with every other agent on the platform."
           }
+        },
+        {
+          "@type": "Question",
+          "name": "Should each AI agent have its own email address or share one?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Its own, in almost every case. Separate addresses give you a per-agent audit trail, a credential you can revoke without affecting anything else, and inboxes that need no filtering because everything in them belongs to that agent. The usual objection is cost, which does not apply where registration is free and unlimited. Share an address only when several workers genuinely act as one identity, such as a support queue, and even then expect to coordinate them in your own code."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need webhooks for an agent email API?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only if latency below about a minute matters. Webhooks push a message to an endpoint you host, which means running a public HTTPS service, verifying signatures, and handling retries and duplicates. Polling needs none of that and is usually adequate: for a verification code you poll every few seconds for a minute, and for a support queue a minute of latency is invisible against what customers expect from email. Webhooks earn their complexity for real-time conversation, not for background work."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should I check before committing to an email API for agents?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Six things, in this order. Whether inbound is a mailbox or a webhook. Whether a program can get credentials without a human. How long received mail is retained. Whether a custom domain is included or a paid tier. Whether attachments are supported in the direction you need. And what the real sending limits are, including any ramp on a newly verified domain, since several providers quote a headline number well above what a new domain may actually send on day one."
+          }
         }
       ]
     }
@@ -78,6 +108,7 @@
   <div class="nav-links">
     <a href="/">Product</a>
     <a href="/agents.html">For agents</a>
+    <a href="/guides.html">Guides</a>
     <a href="/pricing.html">Pricing</a>
     <a href="/vs-resend-postmark-mailgun.html">Compare</a>
     <a href="https://api.mailgi.xyz/docs">Docs</a>
@@ -208,6 +239,18 @@
       <details>
         <summary><span class="numeral">03</span><span class="q">Do AI agents need their own email domain?</span><span class="mark"></span></summary>
         <p class="a">Not to start. A shared platform domain gets an agent working in seconds and is appropriate for prototypes, internal tooling and receiving verification codes. Move to your own domain before an agent writes to customers, for two reasons: recipients trust a company address more than an unfamiliar shared one, and on your own domain your sending reputation is yours alone rather than shared with every other agent on the platform.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">Should each AI agent have its own email address or share one?</span><span class="mark"></span></summary>
+        <p class="a">Its own, in almost every case. Separate addresses give a per-agent audit trail, a credential you can revoke in isolation, and inboxes that need no filtering. The usual objection is cost, which doesn't apply where registration is free and unlimited. Share an address only when several workers genuinely act as one identity — a support queue — and expect to coordinate them yourself.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">05</span><span class="q">Do I need webhooks for an agent email API?</span><span class="mark"></span></summary>
+        <p class="a">Only if latency below about a minute matters. Webhooks push a message to an endpoint you host — a public HTTPS service, signature verification, retries and duplicates. Polling needs none of that and is usually adequate: a few seconds for a verification code, a minute for a support queue. Webhooks earn their complexity for real-time conversation, not background work.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">06</span><span class="q">What should I check before committing to an email API for agents?</span><span class="mark"></span></summary>
+        <p class="a">Six things, in order: whether inbound is a mailbox or a webhook; whether a program can get credentials without a human; how long mail is retained; whether a custom domain is included or a paid tier; whether attachments work in the direction you need; and the real sending limits, including any ramp on a newly verified domain — several providers quote a headline number well above what a new domain may send on day one.</p>
       </details>
     </div>
   </div>

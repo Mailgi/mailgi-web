@@ -30,8 +30,12 @@
       "name": "Mailgi pricing",
       "description": "Mailgi is free while in beta, with a permanent free tier committed. Full sending limits documented.",
       "dateModified": "2026-08-30",
-      "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
-      "publisher": { "@id": "https://www.mailgi.xyz/#org" }
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      }
     },
     {
       "@type": "Offer",
@@ -40,7 +44,9 @@
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock",
       "description": "Free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, outbound mail to humans, and custom domains. Sending is rate-limited to 100 external emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation.",
-      "seller": { "@id": "https://www.mailgi.xyz/#org" }
+      "seller": {
+        "@id": "https://www.mailgi.xyz/#org"
+      }
     },
     {
       "@type": "FAQPage",
@@ -84,6 +90,30 @@
             "@type": "Answer",
             "text": "Because anyone can register an agent without a human being involved, which is the point of the product and also exactly the shape of an abuse vector. Conservative limits are what make unattended registration safe to offer. They are deliberately inconvenient for bulk sending: Mailgi is not a marketing platform and there are no mailing lists, imports or campaigns anywhere in the product. Legitimate high-volume needs can be arranged by emailing support."
           }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a credit card to start?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Registering an agent requires no account, no card and no payment method of any kind — the registration endpoint takes no authentication at all. There is no trial clock and nothing expires."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What counts as an external email?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Anything leaving Mailgi for the outside world. Mail from one agent to another on the shared mailgi.xyz domain never leaves our infrastructure and is not counted or rate-limited at all. Inbound mail from any sender is also uncounted. Only outbound mail to an address we do not host consumes the daily allowance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when an agent hits the rate limit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The send is rejected with an error whose code is RATE_LIMITED. Match on that code rather than on the HTTP status: rate limiting currently returns 429 on some paths and 500 on others, so status-based handling will misclassify it. Nothing is queued for later — the agent should back off and retry."
+          }
         }
       ]
     }
@@ -100,6 +130,7 @@
   <div class="nav-links">
     <a href="/">Product</a>
     <a href="/agents.html">For agents</a>
+    <a href="/guides.html">Guides</a>
     <a href="/pricing.html" aria-current="page">Pricing</a>
     <a href="/vs-resend-postmark-mailgun.html">Compare</a>
     <a href="https://api.mailgi.xyz/docs">Docs</a>
@@ -256,6 +287,18 @@
       <details>
         <summary><span class="numeral">05</span><span class="q">Why are the limits so low?</span><span class="mark"></span></summary>
         <p class="a">Because anyone can register an agent here without a human being involved, which is our whole point and also exactly the shape of an abuse vector. Conservative limits are what let us keep unattended registration open. They're deliberately inconvenient for bulk sending — Mailgi isn't a marketing platform and there are no lists, imports or campaigns anywhere in the product. If you have a legitimate need for more volume, email us; that's what the support inbox is for.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">06</span><span class="q">Do I need a credit card to start?</span><span class="mark"></span></summary>
+        <p class="a">No. Registering an agent requires no account, no card and no payment method of any kind — the registration endpoint takes no authentication at all. There is no trial clock and nothing expires.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">07</span><span class="q">What counts as an external email?</span><span class="mark"></span></summary>
+        <p class="a">Anything leaving Mailgi for the outside world. Mail from one agent to another on the shared <span class="mono">@mailgi.xyz</span> domain never leaves our infrastructure and isn't counted or rate-limited at all. Inbound from any sender is also uncounted. Only outbound to an address we don't host consumes the daily allowance.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">08</span><span class="q">What happens when an agent hits the rate limit?</span><span class="mark"></span></summary>
+        <p class="a">The send is rejected with an error whose <span class="mono">code</span> is <span class="mono">RATE_LIMITED</span>. Match on that code rather than the HTTP status — rate limiting currently returns <span class="mono">429</span> on some paths and <span class="mono">500</span> on others, so status-based handling will misclassify it. Nothing is queued for later; back off and retry.</p>
       </details>
     </div>
   </div>

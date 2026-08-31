@@ -31,9 +31,15 @@
       "description": "A dated, sourced comparison of email APIs for AI agents, including the cases where a competitor is the better choice.",
       "datePublished": "2026-08-30",
       "dateModified": "2026-08-30",
-      "author": { "@id": "https://www.mailgi.xyz/#org" },
-      "publisher": { "@id": "https://www.mailgi.xyz/#org" },
-      "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
       "mainEntityOfPage": "https://www.mailgi.xyz/vs-resend-postmark-mailgun.html"
     },
     {
@@ -76,7 +82,23 @@
           "name": "How does Mailgi handle abuse on a shared domain?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sending is capped at three levels: 100 external emails per day per API key, 300 per day per agent, and a per-organisation limit that starts at 100 per day on a newly verified domain and rises only as the domain establishes a record. New domains cannot send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, which is the intent \u2014 shared-domain sending reputation is the asset most easily destroyed and hardest to rebuild."
+            "text": "Sending is capped at three levels: 100 external emails per day per API key, 300 per day per agent, and a per-organisation limit that starts at 100 per day on a newly verified domain and rises only as the domain establishes a record. New domains cannot send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, which is the intent — shared-domain sending reputation is the asset most easily destroyed and hardest to rebuild."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Mailgi support email attachments?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not yet, in either direction. The send endpoint has no attachments field, and a message arriving with a file attached is delivered but the agent sees only the text. If your workflow depends on sending or receiving files, this is the constraint with no workaround, and Postmark, Resend and Mailgun all handle attachments today."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does Mailgi not have that the alternatives do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Attachments, search, push delivery via webhooks or WebSocket, message threading headers, dedicated IPs, a SOC 2 report and an EU region. AgentMail has all of the first four plus semantic search and IMAP access. Resend and Postmark have attachments, webhooks and years of deliverability tuning. The single thing Mailgi does that they do not is let a program register itself with no human reading a verification code."
           }
         }
       ]
@@ -94,6 +116,7 @@
   <div class="nav-links">
     <a href="/">Product</a>
     <a href="/agents.html">For agents</a>
+    <a href="/guides.html">Guides</a>
     <a href="/pricing.html">Pricing</a>
     <a href="/vs-resend-postmark-mailgun.html" aria-current="page">Compare</a>
     <a href="https://api.mailgi.xyz/docs">Docs</a>
@@ -375,6 +398,14 @@
       <details>
         <summary><span class="numeral">05</span><span class="q">How do you handle abuse on a shared domain?</span><span class="mark"></span></summary>
         <p class="a">It's the fair question to ask anyone offering unattended registration, and we'd rather answer it than be asked. Sending is capped at three levels — 100 a day per API key, 300 a day per agent, and a per-organisation limit that starts at 100 a day on a newly verified domain and only rises as it establishes a record. New domains can't send at all until DKIM, SPF and DMARC verify. Rate limits this conservative are deliberately inconvenient for bulk sending, and that's the point: shared-domain reputation is the thing most easily destroyed and hardest to rebuild.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">06</span><span class="q">Does Mailgi support email attachments?</span><span class="mark"></span></summary>
+        <p class="a">Not yet, in either direction. The send endpoint has no <span class="mono">attachments</span> field, and a message arriving with a file is delivered but the agent sees only the text. If your workflow depends on files, this is the constraint with no workaround — Postmark, Resend and Mailgun all handle attachments today.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">07</span><span class="q">What does Mailgi not have that the alternatives do?</span><span class="mark"></span></summary>
+        <p class="a">Attachments, search, push delivery, threading headers, dedicated IPs, a SOC 2 report and an EU region. AgentMail has the first four plus semantic search and IMAP. Resend and Postmark have attachments, webhooks and years of deliverability tuning. The one thing we do that they don't is let a program register itself with no human reading a code.</p>
       </details>
     </div>
   </div>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Running a support inbox with an AI agent — Mailgi</title>
+<meta name="description" content="Put an AI agent on support@yourdomain.com — a real mailbox it can read, triage, file and reply from over a REST API. Working code, the custom-domain setup, and an honest account of what this API can't do yet." />
+<link rel="canonical" href="https://www.mailgi.xyz/agent-support-inbox.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Running a support inbox with an AI agent" />
+<meta property="og:description" content="A real mailbox at support@yourdomain.com that an agent can read, triage, file and reply from." />
+<meta property="og:url" content="https://www.mailgi.xyz/agent-support-inbox.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Running a support inbox with an AI agent" />
+<meta name="twitter:description" content="A real mailbox at support@yourdomain.com that an agent can read, triage, file and reply from." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Running a support inbox with an AI agent",
+      "description": "Put an AI agent on support@yourdomain.com with a real mailbox it can read, triage, file and reply from over a REST API.",
+      "datePublished": "2026-08-31",
+      "dateModified": "2026-08-31",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/agent-support-inbox.html"
+    },
+    {
+      "@type": "HowTo",
+      "name": "Run a customer support inbox with an AI agent",
+      "description": "Attach a domain, register support@ to an agent, and run a poll-triage-reply loop over the Mailgi REST API.",
+      "totalTime": "PT30M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Attach your domain",
+          "text": "In the dashboard at https://app.mailgi.xyz, attach the domain and publish the DNS records it generates: a TXT and MX pair for inbound, then DKIM, a MAIL FROM subdomain and a recommended DMARC record for outbound. Sending stays disabled until those verify."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Register the support address",
+          "text": "Create a registration token in the dashboard and hand it to the agent. The agent claims the address by calling POST /v1/agents/register with domainToken and localPart set to support."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Create triage folders",
+          "text": "POST to /v1/mailboxes for each queue the agent should file into, for example Answered, Escalated and Waiting. Each returns an id used later when moving messages."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Poll and triage",
+          "text": "Call GET /v1/mail?mailboxId=<inbox> on an interval of a minute or two, fetch each unseen message in full, decide what to do, then reply, mark it seen with PATCH /v1/mail/<id>/flags and file it with PATCH /v1/mail/<id>/move."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can an AI agent reply to customer emails in a thread?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It can reply, but Mailgi does not currently set threading headers. The send endpoint accepts to, cc, bcc, subject, textBody, htmlBody and replyTo, and nothing else — there is no inReplyTo or references field, and passing one is silently ignored rather than rejected. In practice you send a new message with Re: prefixed to the subject, which most mail clients group by subject and participants, so it looks correct to the customer. A strict client will show it as a separate message."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does an agent know a new support email has arrived?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By polling GET /v1/mail on an interval. Mailgi has no webhooks and no WebSocket push today, so there is no way to be notified. For a support queue this is rarely a real constraint — polling every sixty to ninety seconds is well within what customers expect from an email response, and it costs nothing because reading mail is unmetered."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you keep an AI support agent from sending a bad reply?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Separate deciding from sending. Have the agent classify each message and draft a response, then apply a rule about which classes may be sent automatically — order status yes, refund request no. Anything outside that set gets filed into an Escalated folder for a human, unanswered. This is a policy decision in your own code rather than a Mailgi feature, and it is the single most useful safeguard because an unhelpful automated reply costs more goodwill than a slower human one."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can several agents share one support inbox?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not as a shared mailbox, and it is usually the wrong shape anyway. A cleaner pattern is one address per queue — support@, billing@ and sales@ each registered as its own agent from the same registration token, each with its own key and its own inbox. If you do want several workers on one address, issue multiple API keys to that single agent and have your own code hand out work, because the API has no locking or claim mechanism to stop two workers processing the same message."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to support mail that arrives before the domain is verified?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Inbound starts working as soon as the TXT and MX records verify, which is the first half of setup. Outbound stays blocked until DKIM, SPF and DMARC verify separately, so there is a window where the agent can receive and read support mail but cannot answer it. Publish the full record set before announcing the address, or you will accumulate a queue you cannot reply to."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">mailgi</a>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/guides.html">Guides</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+    <a href="https://api.mailgi.xyz/docs">Docs</a>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">free while in beta</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Guide · Customer support</div>
+  <h1 class="reveal reveal-1" style="max-width:920px">Running a support inbox <em class="accent">with an agent</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">A real mailbox at <span class="mono">support@yourdomain.com</span> that an agent reads, triages, files and answers — over HTTP, with no IMAP client and no browser.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Attach a domain</a>
+      <a class="link-serif" href="#limits">what this can't do yet →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:800px;margin:0">Support is the use case that justifies a mailbox rather than a webhook. A ticket is not one message — it is a conversation the agent has to be able to re-read, and often re-read days later. Read <a href="#limits" style="color:var(--accent-light);text-decoration:underline">what this API can't do yet</a> before you build: the honest constraints shape the design.</p>
+  </div>
+</section>
+
+<section class="section shell">
+  <h2 style="margin-bottom:12px">Setting it up, <em class="accent">once</em></h2>
+  <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">The domain half is a human in a browser. Everything after that is the agent.</p>
+  <div class="rows">
+    <div class="row">
+      <div class="numeral">01</div>
+      <h3>Attach the domain</h3>
+      <p class="body">In the dashboard, add the domain and publish the TXT and MX records it shows you. That turns on inbound. Once those verify, the outbound set appears — DKIM, a MAIL FROM subdomain for SPF alignment, and a recommended DMARC record.</p>
+      <p class="body">Sending stays disabled until the outbound records verify. That is deliberate: it stops an unauthenticated domain damaging its own reputation on the first send.</p>
+    </div>
+    <div class="row">
+      <div class="numeral">02</div>
+      <h3>Hand the agent a token</h3>
+      <p class="body">Create a registration token in the dashboard — it needs a signed-in session, not an API key — and give it to the agent out of band. One token can mint a whole team of addresses.</p>
+    </div>
+    <div class="row">
+      <div class="numeral">03</div>
+      <h3>The agent claims support@</h3>
+      <p class="body">Same registration call as a shared handle, plus the token and the local part it should take. The response shape is identical; only the address is different.</p>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">Claim the address, build the queues</h3>
+        <p class="body">The local part must be lowercase alphanumeric, up to 64 characters, and not a reserved name like <span class="mono">postmaster</span> or <span class="mono">abuse</span>.</p>
+        <p class="body" style="margin-top:18px">Folders are how you keep state. There is no ticket status field, so a message's folder <em>is</em> its status.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># agent claims support@yourdomain.com
+RESP=$(curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" \
+  -d '{"domainToken":"'"$TOKEN"'","localPart":"support"}')
+
+KEY=$(echo "$RESP" | jq -r .apiKey)
+sleep 3
+
+# one folder per queue — the folder is the status
+for q in Answered Escalated Waiting; do
+  curl -s -X POST https://api.mailgi.xyz/v1/mailboxes \
+    -H "Authorization: Bearer $KEY" \
+    -H "Content-Type: application/json" \
+    -d "{\"name\":\"$q\"}"
+done
+
+# =&gt; {"id":"h","name":"Answered","parentId":null}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">The triage loop</h3>
+        <p class="body">Poll the inbox, take what is unseen, fetch each in full, decide, act. Reading is unmetered, so polling costs nothing but the request.</p>
+        <p class="body" style="margin-top:18px">Note the two <span class="mono">PATCH</span> calls at the end. Marking seen is what stops the next pass picking the message up again; moving it is what records the outcome. Both return <span class="mono">204</span> with no body.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">INBOX=a   # role "inbox" — from GET /v1/mailboxes
+
+while true; do
+  curl -s "https://api.mailgi.xyz/v1/mail?mailboxId=$INBOX&amp;limit=25" \
+    -H "Authorization: Bearer $KEY" \
+  | jq -r '.messages[] | select(.seen == false) | .id' \
+  | while read -r ID; do
+
+      MSG=$(curl -s https://api.mailgi.xyz/v1/mail/$ID \
+        -H "Authorization: Bearer $KEY")
+
+      FROM=$(echo "$MSG" | jq -r '.from[0].email')
+      SUBJ=$(echo "$MSG" | jq -r '.subject')
+      BODY=$(echo "$MSG" | jq -r '
+        .bodyValues[.textBody[0].partId].value')
+
+      # your model decides: answer | escalate | wait
+      ACTION=$(classify "$SUBJ" "$BODY")
+
+      if [ "$ACTION" = "answer" ]; then
+        REPLY=$(draft "$SUBJ" "$BODY")
+        curl -s -X POST https://api.mailgi.xyz/v1/mail/send \
+          -H "Authorization: Bearer $KEY" \
+          -H "Content-Type: application/json" \
+          -d "$(jq -n --arg t "$FROM" --arg s "Re: $SUBJ" \
+                      --arg b "$REPLY" \
+                '{to:[$t],subject:$s,textBody:$b}')"
+      fi
+
+      # seen = processed;  folder = outcome
+      curl -s -X PATCH https://api.mailgi.xyz/v1/mail/$ID/flags \
+        -H "Authorization: Bearer $KEY" \
+        -H "Content-Type: application/json" -d '{"seen":true}'
+
+      curl -s -X PATCH https://api.mailgi.xyz/v1/mail/$ID/move \
+        -H "Authorization: Bearer $KEY" \
+        -H "Content-Type: application/json" \
+        -d "{\"mailboxId\":\"$(box_for "$ACTION")\"}"
+    done
+  sleep 60
+done</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface" id="limits">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">What this <em class="accent">can't do yet</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:680px">Four real constraints. None is fatal for a support queue, but all four change how you build, and you should know them before you start rather than after.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Replies don't thread properly</h3>
+        <p class="body">The send endpoint takes <span class="mono">to</span>, <span class="mono">cc</span>, <span class="mono">bcc</span>, <span class="mono">subject</span>, <span class="mono">textBody</span>, <span class="mono">htmlBody</span> and <span class="mono">replyTo</span> — and nothing else. There is no <span class="mono">inReplyTo</span>, and passing one is <strong>silently ignored</strong>: you get a normal <span class="mono">200</span> and a message id, so it looks like it worked.</p>
+        <p class="body">In practice you send a new message with <span class="mono">Re: </span> on the subject. Gmail and most clients group by subject and participants, so the customer usually sees a normal thread. A strict client will show it separately.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>No push — you poll</h3>
+        <p class="body">No webhooks, no WebSocket. The agent finds out about mail by asking. For support this is mostly a non-issue: a minute of latency is invisible against email expectations, and reading is unmetered so the polling itself is free.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>No search</h3>
+        <p class="body">The only filter is <span class="mono">mailboxId</span> — which folder. There is no subject, sender or full-text search, and unknown query parameters are ignored rather than rejected, so a search attempt returns the whole inbox and looks like it worked. To find a customer's history, page through and match yourself, or keep your own index as you triage.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>No attachments</h3>
+        <p class="body">Not supported in either direction today. A customer who sends a screenshot gets their message delivered, but the agent sees only the text. If your support flow depends on receiving files, this is the constraint that should stop you — it is the one with no workaround.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:56px">Worth doing <em class="accent">from the start</em></h2>
+    <div class="grid-3">
+      <div>
+        <div class="cap-label">policy</div>
+        <h3>Separate deciding from sending</h3>
+        <p class="small">Classify and draft every message, but only auto-send the classes you have decided are safe. Everything else goes to an Escalated folder, unanswered. One bad automated reply costs more than a slow human one.</p>
+      </div>
+      <div>
+        <div class="cap-label">honesty</div>
+        <h3>Say it's an agent</h3>
+        <p class="small">A signature line naming the agent and offering a route to a human. Customers forgive a machine that says so and resent one that pretended. It also reduces the chance of a reply being reported as spam.</p>
+      </div>
+      <div>
+        <div class="cap-label">headroom</div>
+        <h3>Watch the domain ramp</h3>
+        <p class="small">A newly verified domain is capped at 100 sends a day for the whole organisation, rising to 5,000 after thirty days. Launching a support queue on a fresh domain means the cap is lowest exactly when volume is highest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">Can an AI agent reply to customer emails in a thread?</span><span class="mark"></span></summary>
+        <p class="a">It can reply, but Mailgi doesn't set threading headers. The send endpoint accepts <span class="mono">to</span>, <span class="mono">cc</span>, <span class="mono">bcc</span>, <span class="mono">subject</span>, <span class="mono">textBody</span>, <span class="mono">htmlBody</span> and <span class="mono">replyTo</span> and nothing else — there's no <span class="mono">inReplyTo</span>, and passing one is silently ignored rather than rejected. In practice you send a new message with <span class="mono">Re: </span> prefixed, which most clients group by subject and participants, so it looks right to the customer. A strict client will show it as separate.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">How does an agent know a new support email arrived?</span><span class="mark"></span></summary>
+        <p class="a">By polling <span class="mono">GET /v1/mail</span> on an interval. There are no webhooks and no WebSocket today, so there's no way to be notified. For a support queue this is rarely a real constraint — every sixty to ninety seconds is well within what customers expect from email, and it costs nothing because reading is unmetered.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">How do you stop an AI agent sending a bad reply?</span><span class="mark"></span></summary>
+        <p class="a">Separate deciding from sending. Have the agent classify each message and draft a response, then apply a rule about which classes may go out automatically — order status yes, refund request no. Anything outside that set gets filed for a human, unanswered. That's a policy decision in your own code rather than a Mailgi feature, and it's the single most useful safeguard you can add.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">Can several agents share one support inbox?</span><span class="mark"></span></summary>
+        <p class="a">Not as a shared mailbox, and it's usually the wrong shape anyway. Cleaner is one address per queue — <span class="mono">support@</span>, <span class="mono">billing@</span>, <span class="mono">sales@</span> each registered as its own agent from the same token, each with its own key and inbox. If you do want several workers on one address, issue multiple API keys to that agent and hand out work in your own code: the API has no locking to stop two workers grabbing the same message.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">05</span><span class="q">What happens to mail that arrives before the domain verifies?</span><span class="mark"></span></summary>
+        <p class="a">Inbound starts working as soon as the TXT and MX records verify, which is the first half of setup. Outbound stays blocked until DKIM, SPF and DMARC verify separately — so there's a window where the agent can receive and read support mail but not answer it. Publish the full record set before announcing the address, or you'll accumulate a queue you can't reply to.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell inline-split" style="padding-top:88px;padding-bottom:88px;gap:40px">
+    <div style="flex:1;min-width:320px">
+      <h2 style="font-size:clamp(28px,4vw,38px);margin-bottom:10px">Ready to <em class="accent">attach a domain</em>?</h2>
+      <p class="body" style="max-width:560px">The DNS half takes about ten minutes, and the dashboard verifies each record as it goes live.</p>
+    </div>
+    <a class="btn btn-solid btn-lg" style="flex:none" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <span>support: <span class="mono" style="font-size:12px">objective-crocodile@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

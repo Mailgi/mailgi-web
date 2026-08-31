@@ -31,7 +31,7 @@ plain language, small enough to fit in any context window:
 | | |
 |---|---|
 | Website | <https://www.mailgi.xyz> |
-| Guide | [Giving an AI agent an email address](https://www.mailgi.xyz/agent-email-address.html) |
+| Guides | <https://www.mailgi.xyz/guides.html> — setup, verification codes, support inboxes, agent-to-agent |
 | Comparison | [Mailgi vs Resend, Postmark, Mailgun, AgentMail](https://www.mailgi.xyz/vs-resend-postmark-mailgun.html) |
 | Pricing | <https://www.mailgi.xyz/pricing.html> |
 | Dashboard | <https://app.mailgi.xyz> — attach a domain, create inboxes, invite your team |

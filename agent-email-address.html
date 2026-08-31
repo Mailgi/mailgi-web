@@ -31,9 +31,15 @@
       "description": "An AI agent needs its own email address to receive verification codes, hold a thread, and be written to. The options, their failure modes, and a working setup in one POST.",
       "datePublished": "2026-08-30",
       "dateModified": "2026-08-30",
-      "author": { "@id": "https://www.mailgi.xyz/#org" },
-      "publisher": { "@id": "https://www.mailgi.xyz/#org" },
-      "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
       "mainEntityOfPage": "https://www.mailgi.xyz/agent-email-address.html"
     },
     {
@@ -98,6 +104,30 @@
             "@type": "Answer",
             "text": "By polling. Mailgi has no webhooks or WebSocket push today — an agent calls GET /v1/mail on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Push delivery is planned but not shipped, and any guide that tells you to register a webhook URL with Mailgi is describing something that does not exist yet."
           }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need my own domain to give an agent an email address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Registering with no arguments gives the agent an address on the shared mailgi.xyz domain, which is a fully deliverable mailbox and free. A custom domain matters when an agent writes to customers, both because people trust a company address and because your sending reputation is then yours alone rather than shared with every other agent on the platform."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can one agent have more than one address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every agent gets two automatically: a readable handle and a deterministic alias, both delivering to the same inbox. Beyond that, an agent is one mailbox — for more addresses, register more agents. Since registration is a single unauthenticated call with no quota, one agent per role or per task is a normal and cheap pattern rather than an extravagance."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an agent delete its own email address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, with DELETE /v1/agents/me, which revokes every API key and removes the mailbox. It is permanent and it burns the address: a deleted local part can never be registered again, by anyone, and there is no support path to reverse it. Do not use it to reset or start clean — register a second agent and stop using the first."
+          }
         }
       ]
     }
@@ -114,6 +144,7 @@
   <div class="nav-links">
     <a href="/">Product</a>
     <a href="/agents.html">For agents</a>
+    <a href="/guides.html">Guides</a>
     <a href="/pricing.html">Pricing</a>
     <a href="/vs-resend-postmark-mailgun.html">Compare</a>
     <a href="https://api.mailgi.xyz/docs">Docs</a>
@@ -344,6 +375,18 @@ curl -X POST https://api.mailgi.xyz/v1/mail/send \
       <details>
         <summary><span class="numeral">04</span><span class="q">How does an agent know when new mail arrives?</span><span class="mark"></span></summary>
         <p class="a">By polling. Mailgi has no webhooks or WebSocket push today — an agent calls <span class="mono">GET /v1/mail</span> on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Push delivery is planned but not shipped, and any guide that tells you to register a webhook URL with Mailgi is describing something that doesn't exist yet.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">05</span><span class="q">Do I need my own domain to give an agent an email address?</span><span class="mark"></span></summary>
+        <p class="a">No. Registering with no arguments gives the agent an address on the shared <span class="mono">@mailgi.xyz</span> domain, which is a fully deliverable mailbox and free. Your own domain matters when an agent writes to customers — partly because people trust a company address, mostly because your sending reputation is then yours alone rather than shared with every other agent on the platform.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">06</span><span class="q">Can one agent have more than one address?</span><span class="mark"></span></summary>
+        <p class="a">Every agent gets two automatically — a readable handle and a deterministic alias, both delivering to the same inbox. Beyond that, an agent is one mailbox: for more addresses, register more agents. Registration is a single unauthenticated call with no quota, so one agent per role or per task is a normal, cheap pattern.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">07</span><span class="q">Can an agent delete its own email address?</span><span class="mark"></span></summary>
+        <p class="a">Yes — <span class="mono">DELETE /v1/agents/me</span> revokes every key and removes the mailbox. <strong>It's permanent and it burns the address:</strong> a deleted local part can never be registered again, by anyone, and there's no support path to reverse it. Don't use it to "reset" — register a second agent and stop using the first.</p>
       </details>
     </div>
   </div>

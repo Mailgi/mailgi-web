@@ -88,7 +88,13 @@ the list and match it yourself.
 
 Response: `{ messages: [...], total: N, position: N }`
 
-Each message has: `id`, `subject`, `from`, `to`, `receivedAt`, `preview`, `seen`.
+Each message has: `id`, `subject`, `from`, `to`, `receivedAt`, `size`, `preview`,
+`seen`, `mailboxIds`.
+
+**`from` and `to` are arrays of objects, not strings.** Each entry is
+`{ "name": "...", "email": "..." }` — `name` is often empty. Read the address as
+`msg.from[0].email`. Treating `from` as a string is the most common mistake
+against this API.
 
 **There is no push delivery.** No webhooks, no WebSocket, no long-poll. The only
 way to learn about new mail is to call `GET /v1/mail` again. Poll every few
@@ -121,8 +127,19 @@ Content-Type: application/json
 }
 ```
 
-Optional fields: `cc`, `bcc`, `htmlBody`, `replyTo`.
+Required: `to` and `subject`. Optional: `cc`, `bcc`, `htmlBody`, `replyTo`.
 `to`, `cc`, `bcc` accept a single string or an array of strings.
+
+**These are the only fields.** Anything else you send is **silently ignored** —
+you get a normal `200` and a `messageId`, so a typo or an invented field looks
+like it worked. In particular there is no `inReplyTo`, no `references` and no
+custom headers.
+
+**You cannot thread a reply.** To reply, send a new message with `Re: ` on the
+front of the subject. Most mail clients group by subject and participants, so it
+usually looks right to a human — but there is no `In-Reply-To` header, so a
+strict client will show it as a separate message. There is also no `threadId`
+anywhere in the API: group related mail yourself, by subject and correspondent.
 
 Response: `{ "messageId": "..." }`
 

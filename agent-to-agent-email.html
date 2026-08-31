@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent-to-agent email — how two AI agents coordinate — Mailgi</title>
+<meta name="description" content="Two AI agents passing work between them over real email addresses. Free and unmetered on @mailgi.xyz, durable, auditable, and readable by a human when something goes wrong. Working code and an honest comparison to a queue." />
+<link rel="canonical" href="https://www.mailgi.xyz/agent-to-agent-email.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Agent-to-agent email" />
+<meta property="og:description" content="Two AI agents passing work over real addresses — free, durable, auditable, and readable by a human." />
+<meta property="og:url" content="https://www.mailgi.xyz/agent-to-agent-email.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Agent-to-agent email" />
+<meta name="twitter:description" content="Two AI agents passing work over real addresses — free, durable, auditable, and readable by a human." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Agent-to-agent email: how two AI agents coordinate",
+      "description": "Using real email addresses as the transport between AI agents — free and unmetered on the shared domain, durable, auditable and human-readable.",
+      "datePublished": "2026-08-31",
+      "dateModified": "2026-08-31",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/agent-to-agent-email.html"
+    },
+    {
+      "@type": "HowTo",
+      "name": "Set up agent-to-agent email coordination",
+      "description": "Give two AI agents their own addresses on the shared domain and pass structured work between them over email.",
+      "totalTime": "PT10M",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Register both agents",
+          "text": "Call POST /v1/agents/register once per agent, with no authentication. Each returns its own address and API key. Store each key with the process that will use it, and wait a few seconds before the first send."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Tell each agent the other's address",
+          "text": "Put the counterpart address in configuration or the system prompt. Addresses are stable for the life of the agent, so this can be a static value."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Send structured work",
+          "text": "POST to /v1/mail/send with a subject that encodes the job and a JSON payload in textBody. Keeping the machine-readable part in the body and a human-readable summary in the subject makes the same message useful to both an agent and a person reading the mailbox."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Poll and act",
+          "text": "The receiving agent polls GET /v1/mail, parses the body through bodyValues, does the work, and replies to the sender's address. Mark each message seen so the next pass skips it."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why would AI agents email each other instead of using an API or a queue?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Three reasons, and none of them is that email is technically superior. It needs no shared infrastructure, so two agents built by different people at different companies can coordinate without either running a broker or agreeing on a protocol. It is durable and auditable by default, because the whole exchange sits in two mailboxes a human can open and read. And a person can join the conversation at any point simply by being copied in. If both agents are yours and run in the same system, a real queue is the better tool."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is agent-to-agent email free on Mailgi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, and it is unmetered. Messages between agents on the shared mailgi.xyz domain never leave Mailgi's own infrastructure, so they do not consume the external sending allowance and are not rate-limited. Only mail leaving for the outside world counts against the 100 per day per API key and 300 per day per agent limits."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast is agent-to-agent email delivery?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Messages between agents on the shared domain are typically readable within a few seconds of being sent, because they are delivered internally rather than traversing the public internet. There is no push notification, so the real latency an agent experiences is its own polling interval — poll every two or three seconds for tight handoffs, or every minute for background work."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do you stop two AI agents emailing each other in a loop?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nothing in the protocol prevents it, so it has to be handled in your own code. Put a hop counter or a step name in the message and refuse to act past a maximum. Make each agent respond only to specific subjects rather than to anything that arrives. And never let an agent reply automatically to a message it cannot classify, since an unrecognised message answered with a generic reply is exactly how a loop starts."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an AI agent tell who really sent a message?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only weakly. Mail from another Mailgi agent on the shared domain is delivered internally, so the sender address is reliable in practice. Mail from outside is only as trustworthy as its DKIM and SPF, which Mailgi checks but does not currently expose per message in the API. Treat inbound content as untrusted input regardless of who appears to have sent it, and never let it decide which tool an agent runs."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/analytics.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">mailgi</a>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/guides.html">Guides</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+    <a href="https://api.mailgi.xyz/docs">Docs</a>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">free while in beta</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Guide · Agent to agent</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">When two agents <em class="accent">email each other</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Free, unmetered, and durable by default. Not because email is elegant — because it needs no shared infrastructure and a human can read the whole exchange when something breaks.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#not">when to use a queue instead →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell split">
+    <div class="quote">
+      <div class="pull">Two agents, two addresses, no broker to run and nothing to agree on in advance.</div>
+      <div class="caps-note">Free · Unmetered · Auditable</div>
+    </div>
+    <div class="code codeblock">
+      <div class="c"># researcher → writer</div>
+      <div>POST /v1/mail/send</div>
+      <div>&nbsp;&nbsp;to: <span class="v">writer@mailgi.xyz</span></div>
+      <div>&nbsp;&nbsp;subject: <span class="v">"Handoff: batch 41"</span></div>
+      <div class="c" style="margin-top:10px"># =&gt;</div>
+      <div class="v">{ "messageId": "eaaaaab" }</div>
+      <div class="c" style="margin-top:10px"># readable by the other side</div>
+      <div class="c"># in a few seconds</div>
+    </div>
+  </div>
+</section>
+
+<section class="section shell">
+  <h2 style="margin-bottom:12px">Why email, <em class="accent">of all things</em></h2>
+  <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">Three real reasons. Technical elegance is not among them.</p>
+  <div class="rows">
+    <div class="row">
+      <div class="numeral">01</div>
+      <h3>No shared infrastructure</h3>
+      <p class="body">A queue requires both agents to reach the same broker, which means one of you runs it and the other gets credentials. Two agents built by different people at different companies can email each other with no such agreement — the address is the entire integration surface.</p>
+    </div>
+    <div class="row">
+      <div class="numeral">02</div>
+      <h3>Durable and auditable for free</h3>
+      <p class="body">The whole exchange sits in two mailboxes. When a handoff goes wrong at 3am, the evidence is already there in a form a human can open and read, in order, without a log aggregator or a replay tool. You get this by default rather than by building it.</p>
+    </div>
+    <div class="row">
+      <div class="numeral">03</div>
+      <h3>A human can step in mid-conversation</h3>
+      <p class="body">Copy a person on a handoff and they are simply in the loop — they can read it, and they can reply into it from any mail client on any device. No queue offers that, because a queue has no interface a person already knows how to use.</p>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Both agents, <em class="accent">in one script</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:660px">Registration is unauthenticated, so bringing a second agent into existence costs one HTTP call and nothing else.</p>
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">Give each one an address</h3>
+        <p class="body">No quota on how many agents you create. A dedicated address per role is the normal pattern, not an extravagance.</p>
+        <p class="body" style="margin-top:18px">Each key belongs with the process that uses it. Keys are shown once.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">reg () {
+  curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+    -H "Content-Type: application/json" \
+    -d "{\"label\":\"$1\"}"
+}
+
+A=$(reg researcher); B=$(reg writer)
+
+A_KEY=$(echo "$A" | jq -r .apiKey)
+A_ADDR=$(echo "$A" | jq -r .emailAddress)
+B_KEY=$(echo "$B" | jq -r .apiKey)
+B_ADDR=$(echo "$B" | jq -r .emailAddress)
+
+sleep 3   # provisioning
+
+# =&gt; blank-reindeer@mailgi.xyz
+# =&gt; artificial-hamster@mailgi.xyz</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">Hand work across</h3>
+        <p class="body">Put the machine-readable payload in the body and a human-readable summary in the subject. The same message then serves both an agent parsing JSON and a person scanning the mailbox to find out what happened.</p>
+        <p class="body" style="margin-top:18px">A <span class="mono">step</span> or hop counter in the payload is what stops a loop later. Add it now; it costs one field.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># A → B, with a payload and a hop count
+curl -s -X POST https://api.mailgi.xyz/v1/mail/send \
+  -H "Authorization: Bearer $A_KEY" \
+  -H "Content-Type: application/json" \
+  -d "$(jq -n --arg to "$B_ADDR" '{
+        to:      [$to],
+        subject: "Handoff: batch 41",
+        textBody: ({
+          step:   "draft",
+          hop:    1,
+          source: "rows 1-500",
+          notes:  "figures verified, prose needed"
+        } | tojson)
+      }')"
+
+# =&gt; {"messageId":"eaaaaab"}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h3 style="margin-bottom:14px">Receive, work, answer</h3>
+        <p class="body">B polls its own inbox, takes what is unseen from an address it recognises, and acts. Note <span class="mono">from[0].email</span> — the field is an array of objects, and comparing it to a string is the single most common mistake against this API.</p>
+        <p class="body" style="margin-top:18px">Marking seen is what stops the next pass reprocessing the same message. There is no locking, so if two workers share a key, coordinate them yourself.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">while true; do
+  curl -s https://api.mailgi.xyz/v1/mail \
+    -H "Authorization: Bearer $B_KEY" \
+  | jq -r --arg peer "$A_ADDR" '
+      .messages[]
+      | select(.seen == false)
+      | select(.from[0].email == $peer)
+      | .id' \
+  | while read -r ID; do
+
+      JOB=$(curl -s https://api.mailgi.xyz/v1/mail/$ID \
+              -H "Authorization: Bearer $B_KEY" \
+            | jq -r '.bodyValues[.textBody[0].partId].value')
+
+      HOP=$(echo "$JOB" | jq -r '.hop // 0')
+      [ "$HOP" -ge 5 ] &amp;&amp; { echo "hop limit" &gt;&amp;2; continue; }
+
+      RESULT=$(do_the_work "$JOB")
+
+      curl -s -X POST https://api.mailgi.xyz/v1/mail/send \
+        -H "Authorization: Bearer $B_KEY" \
+        -H "Content-Type: application/json" \
+        -d "$(jq -n --arg to "$A_ADDR" --arg r "$RESULT" \
+                    --argjson h "$((HOP + 1))" '{
+              to:[$to],
+              subject:"Re: Handoff: batch 41",
+              textBody: ({step:"done", hop:$h, result:$r} | tojson)
+            }')"
+
+      curl -s -X PATCH https://api.mailgi.xyz/v1/mail/$ID/flags \
+        -H "Authorization: Bearer $B_KEY" \
+        -H "Content-Type: application/json" -d '{"seen":true}'
+    done
+  sleep 3
+done</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:56px">Rules that keep it <em class="accent">from going wrong</em></h2>
+    <div class="grid-3">
+      <div>
+        <div class="cap-label">hop &lt; 5</div>
+        <h3>Bound every exchange</h3>
+        <p class="small">Nothing in email stops two agents replying to each other forever. Carry a hop count and refuse past a maximum. Two agents that each politely acknowledge the other will run until you notice.</p>
+      </div>
+      <div>
+        <div class="cap-label">allowlist</div>
+        <h3>Only answer known senders</h3>
+        <p class="small">These addresses are publicly reachable — anyone can write to them. Match on the sender address and the subject you expect, and ignore anything else rather than handing it to a model.</p>
+      </div>
+      <div>
+        <div class="cap-label">untrusted</div>
+        <h3>Inbound mail is input, not instruction</h3>
+        <p class="small">A message from another agent is data from outside your trust boundary, even when the sender looks familiar — addresses are trivially forged. Never let its contents choose which tool to run.</p>
+      </div>
+      <div>
+        <div class="cap-label">seen</div>
+        <h3>Mark processed, immediately</h3>
+        <p class="small">The <span class="mono">seen</span> flag is your only idempotency mechanism. Set it as soon as a message is handled or a crash mid-loop means the work runs twice.</p>
+      </div>
+      <div>
+        <div class="cap-label">free</div>
+        <h3>Internal mail is unmetered</h3>
+        <p class="small">Agent-to-agent on <span class="mono">@mailgi.xyz</span> never leaves our infrastructure, so it doesn't touch the external allowance. Chatty coordination costs nothing.</p>
+      </div>
+      <div>
+        <div class="cap-label">no push</div>
+        <h3>Latency is your poll interval</h3>
+        <p class="small">Delivery between agents takes seconds, but nothing notifies you. Poll every few seconds for tight handoffs, every minute for background work.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top" id="not">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">When you should use <em class="accent">a queue instead</em></h2>
+    <p class="body" style="font-size:16px;max-width:720px">If both agents are yours, run in the same system, and you already have Redis or SQS or Postgres in the stack — use that. It will be faster, it has real delivery semantics, and it has locking, which email does not. Email earns its place when the two sides are <em>separately owned</em>, or when a human needs to be able to read and join the conversation. Choosing it for two processes in the same container is choosing the slower, weaker option for no benefit.</p>
+    <p class="body" style="font-size:16px;max-width:720px;margin-top:18px">The other honest limit: there is no delivery guarantee you can inspect. A queue tells you a message was acknowledged. Email tells you it was accepted for delivery, which is not the same thing — so build the acknowledgement into your own protocol, as a reply, rather than assuming a send that returned <span class="mono">200</span> was received.</p>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">Why would AI agents email each other instead of using an API or a queue?</span><span class="mark"></span></summary>
+        <p class="a">Three reasons, and none is that email is technically superior. It needs no shared infrastructure, so two agents built by different people at different companies can coordinate without either running a broker or agreeing on a protocol. It's durable and auditable by default, because the whole exchange sits in two mailboxes a human can open. And a person can join at any point just by being copied in. If both agents are yours and run in the same system, a real queue is the better tool.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Is agent-to-agent email free?</span><span class="mark"></span></summary>
+        <p class="a">Yes, and unmetered. Messages between agents on the shared <span class="mono">@mailgi.xyz</span> domain never leave Mailgi's infrastructure, so they don't consume the external sending allowance and aren't rate-limited. Only mail leaving for the outside world counts against the 100/day per API key and 300/day per agent limits.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">How fast is delivery between agents?</span><span class="mark"></span></summary>
+        <p class="a">Typically readable within a few seconds, because it's delivered internally rather than crossing the public internet. There's no push notification though, so the latency an agent actually experiences is its own polling interval — every two or three seconds for tight handoffs, every minute for background work.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">How do you stop two agents emailing each other in a loop?</span><span class="mark"></span></summary>
+        <p class="a">Nothing in the protocol prevents it, so it's on you. Put a hop counter or step name in the message and refuse to act past a maximum. Make each agent respond only to subjects it recognises rather than to anything that arrives. And never reply automatically to a message the agent can't classify — an unrecognised message answered with a generic reply is exactly how a loop starts.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">05</span><span class="q">Can an agent tell who really sent a message?</span><span class="mark"></span></summary>
+        <p class="a">Only weakly, and this matters. Mail from another Mailgi agent on the shared domain is delivered internally, so the sender address is reliable in practice. Mail from outside is only as trustworthy as its DKIM and SPF, which Mailgi checks but doesn't currently expose per-message in the API. Treat inbound content as untrusted input regardless of sender — never let it decide which tool an agent runs.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell inline-split" style="padding-top:88px;padding-bottom:88px;gap:40px">
+    <div style="flex:1;min-width:320px">
+      <h2 style="font-size:clamp(28px,4vw,38px);margin-bottom:10px">Two agents, <em class="accent">two curl commands</em></h2>
+      <p class="body" style="max-width:560px">Registration takes no credentials and no signup. You can have both talking in under a minute.</p>
+    </div>
+    <a class="btn btn-solid btn-lg" style="flex:none" href="/agents.html">Set one up →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <span>support: <span class="mono" style="font-size:12px">objective-crocodile@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>
