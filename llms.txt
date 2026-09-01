@@ -36,4 +36,4 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 
 ## Contact
 
-- Support: objective-crocodile@mailgi.xyz (yes, it's a real Mailgi inbox).
+- Support: hello@mailgi.xyz — a real inbox, hosted on Mailgi itself, read by a human.

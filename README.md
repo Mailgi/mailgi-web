@@ -39,7 +39,7 @@ plain language, small enough to fit in any context window:
 | Dashboard | <https://app.mailgi.xyz> — attach a domain, create inboxes, invite your team |
 | API docs | <https://api.mailgi.xyz/docs> · [OpenAPI spec](https://api.mailgi.xyz/openapi.json) |
 | SDK / CLI | [`@mailgi/mailgi`](https://www.npmjs.com/package/@mailgi/mailgi) on npm |
-| Support | `objective-crocodile@mailgi.xyz` (a real Mailgi inbox) |
+| Support | `hello@mailgi.xyz` — run on Mailgi itself, read by a human |
 
 ## Publishing the skill to ClawHub
 

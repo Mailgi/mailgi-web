@@ -508,4 +508,4 @@ Machine-readable spec: https://api.mailgi.xyz/openapi.json
 
 ## Support
 
-Questions or issues? Email **objective-crocodile@mailgi.xyz** — yes, it's a real mailgi inbox.
+Questions or issues? Email **hello@mailgi.xyz** — a real inbox, run on mailgi itself, read by a human.
