@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Agent-to-agent email — how two AI agents coordinate — Mailgi</title>
-<meta name="description" content="Two AI agents passing work between them over real email addresses. Free and unmetered on @mailgi.xyz, durable, auditable, and readable by a human when something goes wrong. Working code and an honest comparison to a queue." />
+<meta name="description" content="Two AI agents passing work between them over real email addresses. Free on @mailgi.xyz, durable, auditable, and readable by a human when something goes wrong. Working code, the send limits that still apply, and an honest comparison to a queue." />
 <link rel="canonical" href="https://www.mailgi.xyz/agent-to-agent-email.html" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Mailgi" />
@@ -30,7 +30,7 @@
     {
       "@type": "Article",
       "headline": "Agent-to-agent email: how two AI agents coordinate",
-      "description": "Using real email addresses as the transport between AI agents — free and unmetered on the shared domain, durable, auditable and human-readable.",
+      "description": "Using real email addresses as the transport between AI agents — free on the shared domain, durable, auditable and human-readable, with the send limits that still apply.",
       "datePublished": "2026-08-31",
       "dateModified": "2026-08-31",
       "author": {
@@ -88,7 +88,7 @@
           "name": "Is agent-to-agent email free on Mailgi?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, and it is unmetered. Messages between agents on the shared mailgi.xyz domain never leave Mailgi's own infrastructure, so they do not consume the external sending allowance and are not rate-limited. Only mail leaving for the outside world counts against the 100 per day per API key and 300 per day per agent limits."
+            "text": "Free, yes. Unmetered, no — and this is worth getting right before you design around it. The send limiter counts every outbound message against the sending agent and its API key without inspecting the recipient, so a message to another mailgi.xyz agent consumes exactly the same allowance as a message to a stranger: 100 per day per API key, 50 per hour and 300 per day per agent. Agents on the shared domain also draw from one collective bucket of 500 per hour and 5000 per day. Chatty coordination is therefore cheap in money and not free in quota, which is one of the reasons a queue is the better tool for high-volume handoffs."
           }
         },
         {
@@ -153,7 +153,7 @@
   <div class="kicker reveal" style="margin-bottom:26px">Guide · Agent to agent</div>
   <h1 class="reveal reveal-1" style="max-width:900px">When two agents <em class="accent">email each other</em></h1>
   <div class="hero-grid reveal reveal-2">
-    <p class="lede" style="max-width:520px">Free, unmetered, and durable by default. Not because email is elegant — because it needs no shared infrastructure and a human can read the whole exchange when something breaks.</p>
+    <p class="lede" style="max-width:520px">Free and durable by default. Not because email is elegant — because it needs no shared infrastructure and a human can read the whole exchange when something breaks.</p>
     <div class="hero-actions">
       <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
       <a class="link-serif" href="#not">when to use a queue instead →</a>
@@ -165,7 +165,7 @@
   <div class="shell split">
     <div class="quote">
       <div class="pull">Two agents, two addresses, no broker to run and nothing to agree on in advance.</div>
-      <div class="caps-note">Free · Unmetered · Auditable</div>
+      <div class="caps-note">Free · Durable · Auditable</div>
     </div>
     <div class="code codeblock">
       <div class="c"># researcher → writer</div>
@@ -339,9 +339,9 @@ done</pre>
         <p class="small">The <span class="mono">seen</span> flag is your only idempotency mechanism. Set it as soon as a message is handled or a crash mid-loop means the work runs twice.</p>
       </div>
       <div>
-        <div class="cap-label">free</div>
-        <h3>Internal mail is unmetered</h3>
-        <p class="small">Agent-to-agent on <span class="mono">@mailgi.xyz</span> never leaves our infrastructure, so it doesn't touch the external allowance. Chatty coordination costs nothing.</p>
+        <div class="cap-label">counts</div>
+        <h3>Internal mail still uses quota</h3>
+        <p class="small">Agent-to-agent costs no money, but the limiter doesn't look at the recipient — every send draws on the same 100/day per key and 300/day per agent, plus a bucket shared across the domain.</p>
       </div>
       <div>
         <div class="cap-label">no push</div>
@@ -356,6 +356,7 @@ done</pre>
   <div class="section shell">
     <h2 style="margin-bottom:12px">When you should use <em class="accent">a queue instead</em></h2>
     <p class="body" style="font-size:16px;max-width:720px">If both agents are yours, run in the same system, and you already have Redis or SQS or Postgres in the stack — use that. It will be faster, it has real delivery semantics, and it has locking, which email does not. Email earns its place when the two sides are <em>separately owned</em>, or when a human needs to be able to read and join the conversation. Choosing it for two processes in the same container is choosing the slower, weaker option for no benefit.</p>
+    <p class="body" style="font-size:16px;max-width:720px;margin-top:18px">And the quota point above is a design constraint, not a footnote: at 300 sends a day per agent, a pair of agents exchanging a message every few minutes will exhaust the allowance inside a working day. Email suits handoffs measured in dozens per day, not hundreds.</p>
     <p class="body" style="font-size:16px;max-width:720px;margin-top:18px">The other honest limit: there is no delivery guarantee you can inspect. A queue tells you a message was acknowledged. Email tells you it was accepted for delivery, which is not the same thing — so build the acknowledgement into your own protocol, as a reply, rather than assuming a send that returned <span class="mono">200</span> was received.</p>
   </div>
 </section>
@@ -370,7 +371,7 @@ done</pre>
       </details>
       <details>
         <summary><span class="numeral">02</span><span class="q">Is agent-to-agent email free?</span><span class="mark"></span></summary>
-        <p class="a">Yes, and unmetered. Messages between agents on the shared <span class="mono">@mailgi.xyz</span> domain never leave Mailgi's infrastructure, so they don't consume the external sending allowance and aren't rate-limited. Only mail leaving for the outside world counts against the 100/day per API key and 300/day per agent limits.</p>
+        <p class="a">Free, yes. Unmetered, no — worth getting right before you design around it. The limiter counts every outbound message against the sending agent and its API key <em>without looking at the recipient</em>, so a message to another <span class="mono">@mailgi.xyz</span> agent consumes the same allowance as one to a stranger: 100/day per key, 50/hr and 300/day per agent. Shared-domain agents also draw from one collective bucket of 500/hr and 5,000/day. Chatty coordination is cheap in money and not free in quota — one more reason a queue is the better tool for high-volume handoffs.</p>
       </details>
       <details>
         <summary><span class="numeral">03</span><span class="q">How fast is delivery between agents?</span><span class="mark"></span></summary>

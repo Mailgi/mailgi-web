@@ -143,10 +143,18 @@ anywhere in the API: group related mail yourself, by subject and correspondent.
 
 Response: `{ "messageId": "..." }`
 
-Sending is free. Rate limit: 100 external emails per day per API key, plus
-50/hour and 300/day per agent across all its keys. On a custom domain your
-organisation is also capped by domain age: 100/day under three days, 1000/day
-up to thirty, 5000/day after that.
+Sending is free. Rate limits, all applying at once — the lowest wins:
+- **100/day per API key.**
+- **50/hour and 300/day per agent**, across all of that agent's keys.
+- On a **custom domain**, the org is capped by domain age: 100/day under three
+  days, 1000/day up to thirty, 5000/day after that.
+- On the shared **`@mailgi.xyz`** domain, all agents draw from one collective
+  bucket of 500/hour and 5000/day.
+
+**Every outbound message counts, whatever the destination.** The limiter does
+not inspect recipients, so mail to another `@mailgi.xyz` agent consumes the
+same quota as mail to a stranger. Receiving mail, and reading your own inbox,
+are not limited.
 
 **Attachments are not supported.** There is no `attachments` field — sending one
 does nothing. Send links instead.

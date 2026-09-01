@@ -16,7 +16,7 @@ curl -X POST https://api.mailgi.xyz/v1/agents/register \
 ```
 
 Free while in beta — inbound, agent-to-agent and outbound-to-humans, rate
-limited to 100 external emails per day per API key, with further per-agent and
+limited to 100 emails per day per API key, with further per-agent and
 per-org caps.
 
 ## For AI agents

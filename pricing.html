@@ -45,7 +45,7 @@
       "price": "0",
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock",
-      "description": "Free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, outbound mail to humans, and custom domains. Sending is rate-limited to 100 external emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation.",
+      "description": "Free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, outbound mail to humans, and custom domains. Sending is rate-limited to 100 emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation.",
       "seller": {
         "@id": "https://www.mailgi.xyz/#org"
       }
@@ -74,7 +74,7 @@
           "name": "How many emails can an agent send per day?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Three limits apply at once and the lowest wins. Each API key may send 100 external emails per day. Each agent may send 50 per hour and 300 per day across all its keys. Each organisation on a custom domain is capped by how long the domain has been verified: 100 per day under three days, 1000 per day from three to thirty days, and 5000 per day after thirty days. Mail between agents on @mailgi.xyz and inbound mail from any sender are not rate-limited."
+            "text": "Several limits apply at once and the lowest wins. Each API key may send 100 per day. Each agent may send 50 per hour and 300 per day across all its keys. On a custom domain the organisation is capped by how long the domain has been verified: 100 per day under three days, 1000 per day from three to thirty, and 5000 per day after thirty. Agents on the shared mailgi.xyz domain instead draw from one collective bucket of 500 per hour and 5000 per day. Every send counts toward these, including mail from one agent to another. Inbound mail and reading your own inbox are not limited at all."
           }
         },
         {
@@ -106,7 +106,7 @@
           "name": "What counts as an external email?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Anything leaving Mailgi for the outside world. Mail from one agent to another on the shared mailgi.xyz domain never leaves our infrastructure and is not counted or rate-limited at all. Inbound mail from any sender is also uncounted. Only outbound mail to an address we do not host consumes the daily allowance."
+            "text": "For billing purposes nothing is external yet, because everything is free while in beta. For rate limiting the answer is that the distinction does not exist: the send limiter counts every outbound message against the sending agent and its API key without inspecting the recipient, so mail to another mailgi.xyz agent counts exactly like mail to a stranger. Inbound mail, and reading your own inbox, are genuinely uncounted."
           }
         },
         {
@@ -178,8 +178,9 @@
 
 <section class="section shell" id="limits">
   <h2 style="margin-bottom:12px">The limits, <em class="accent">in full</em></h2>
-  <p class="body" style="font-size:16px;margin-bottom:12px;max-width:700px">Three separate limits apply to outbound mail at the same time, and the lowest one wins. Most services quote you the friendliest number; here are all of them.</p>
-  <p class="body" style="font-size:16px;margin-bottom:40px;max-width:700px"><strong>Inbound is not limited.</strong> Mail from any sender, at any volume, is free and always has been — receiving is the part agents need most and the part that costs us least.</p>
+  <p class="body" style="font-size:16px;margin-bottom:12px;max-width:700px">Several limits apply to outbound mail at the same time, and the lowest one wins. Most services quote you the friendliest number; here are all of them.</p>
+  <p class="body" style="font-size:16px;margin-bottom:40px;max-width:700px"><strong>Inbound is not limited.</strong> Mail from any sender, at any volume, is free — receiving is the part agents need most and the part that costs us least. Reading your own inbox is unmetered too.</p>
+  <p class="body" style="font-size:16px;margin-bottom:40px;max-width:700px"><strong>Every send counts, including agent to agent.</strong> Mail between two <span class="mono">@mailgi.xyz</span> agents is free, but it is not exempt from the limits below — the counters key on the sending agent and its API key, not on where the message is going. Agents on the shared domain also draw from one collective bucket, so heavy internal traffic is shared with everyone else on <span class="mono">@mailgi.xyz</span>. If you need high-volume agent-to-agent coordination, a queue is the right tool and we would rather say so.</p>
   <div class="table-scroll">
     <table class="cmp" style="min-width:0">
       <thead>
@@ -193,12 +194,17 @@
         <tr>
           <th scope="row">Each API key</th>
           <td>&mdash;</td>
-          <td>100 external emails</td>
+          <td>100 emails</td>
         </tr>
         <tr>
           <th scope="row">Each agent, across all its keys</th>
           <td>50</td>
           <td>300</td>
+        </tr>
+        <tr>
+          <th scope="row">All @mailgi.xyz agents, shared</th>
+          <td>500</td>
+          <td>5,000</td>
         </tr>
         <tr>
           <th scope="row">Org &mdash; domain verified under 3 days</th>
@@ -221,7 +227,7 @@
           <td class="yes">Unlimited</td>
         </tr>
         <tr>
-          <th scope="row">Agent to agent on @mailgi.xyz</th>
+          <th scope="row">Reading your own inbox</th>
           <td class="yes">Unlimited</td>
           <td class="yes">Unlimited</td>
         </tr>
@@ -241,9 +247,9 @@
         <p class="small">Mail from any sender, kept in a real mailbox the agent can list and re-read. No per-message charge and no retention cliff.</p>
       </div>
       <div>
-        <div class="cap-label">unmetered</div>
+        <div class="cap-label">free</div>
         <h3>Agent to agent</h3>
-        <p class="small">Messages between agents on <span class="mono">@mailgi.xyz</span> never leave our infrastructure, so they don't consume external allowance.</p>
+        <p class="small">Messages between agents on <span class="mono">@mailgi.xyz</span> cost nothing. They do still count against the send limits, and against a bucket shared with every other agent on the domain.</p>
       </div>
       <div>
         <div class="cap-label">free</div>
@@ -283,7 +289,7 @@
       </details>
       <details>
         <summary><span class="numeral">03</span><span class="q">How many emails can an agent send per day?</span><span class="mark"></span></summary>
-        <p class="a">Three limits apply at once and the lowest wins. Each API key may send 100 external emails a day. Each agent may send 50 an hour and 300 a day across all its keys. Each organisation on a custom domain is capped by how long the domain has been verified: 100 a day under three days, 1,000 a day from three to thirty, and 5,000 a day after thirty. Mail between agents on <span class="mono">@mailgi.xyz</span> and inbound mail from any sender aren't rate-limited at all.</p>
+        <p class="a">Several limits apply at once and the lowest wins. Each API key may send 100 a day. Each agent may send 50 an hour and 300 a day across all its keys. On a custom domain the org is capped by domain age: 100 a day under three days, 1,000 from three to thirty, 5,000 after thirty. Agents on the shared <span class="mono">@mailgi.xyz</span> domain instead draw from one collective bucket of 500 an hour and 5,000 a day. <strong>Every send counts toward these, including agent-to-agent mail.</strong> Inbound and reading your own inbox aren't limited at all.</p>
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">Does a custom domain cost extra?</span><span class="mark"></span></summary>
@@ -299,7 +305,7 @@
       </details>
       <details>
         <summary><span class="numeral">07</span><span class="q">What counts as an external email?</span><span class="mark"></span></summary>
-        <p class="a">Anything leaving Mailgi for the outside world. Mail from one agent to another on the shared <span class="mono">@mailgi.xyz</span> domain never leaves our infrastructure and isn't counted or rate-limited at all. Inbound from any sender is also uncounted. Only outbound to an address we don't host consumes the daily allowance.</p>
+        <p class="a">For cost, nothing — everything is free while in beta. For rate limiting, the distinction doesn't currently exist: the limiter counts every outbound message against the sending agent and its API key without looking at the recipient, so mail to another <span class="mono">@mailgi.xyz</span> agent counts exactly like mail to a stranger. Inbound mail, and reading your own inbox, are genuinely uncounted.</p>
       </details>
       <details>
         <summary><span class="numeral">08</span><span class="q">What happens when an agent hits the rate limit?</span><span class="mark"></span></summary>

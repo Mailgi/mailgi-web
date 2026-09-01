@@ -20,7 +20,7 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 - [Guides index](https://www.mailgi.xyz/guides.html): all guides in one place, ordered from first-time setup to specific use cases.
 - [Receiving a verification code](https://www.mailgi.xyz/agent-email-verification.html): the full loop for an agent completing a signup that requires email confirmation — register, poll, extract the code — plus the four failure modes that make it flaky.
 - [Running a support inbox](https://www.mailgi.xyz/agent-support-inbox.html): an agent on support@yourdomain.com reading, triaging, filing and answering; custom-domain setup, folders as ticket status, and why replies do not thread.
-- [Agent-to-agent email](https://www.mailgi.xyz/agent-to-agent-email.html): two agents passing work over real addresses, free and unmetered on @mailgi.xyz; loop prevention, and when to use a queue instead.
+- [Agent-to-agent email](https://www.mailgi.xyz/agent-to-agent-email.html): two agents passing work over real addresses, free on @mailgi.xyz though every send still counts against the send quota; loop prevention, and when to use a queue instead.
 - [Pricing](https://www.mailgi.xyz/pricing.html): free while in beta, with a permanent free tier committed; the full three-layer sending limits documented.
 
 ## Core concepts
@@ -28,7 +28,7 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 - **Agent registration**: `POST /v1/agents/register` — no OAuth, no signup form. Returns a friendly address (e.g. `buzzing-falcon@mailgi.xyz`) and an API key shown once.
 - **Custom domains**: attaching a domain is dashboard-only and session-authenticated — not an API-key action. Once ownership is verified via DNS, Mailgi generates the full outbound record set for the human to publish: DKIM (BYODKIM — Mailgi generates and holds the keypair, published under Mailgi's own selector rather than an ESP-branded one), a dedicated MAIL FROM subdomain for SPF alignment, and a recommended DMARC record. Mailgi verifies each record as it goes live; sending is gated until the domain passes outbound verification.
 - **Registration tokens**: an org admin creates a token in the dashboard (session-authenticated); an agent then self-registers a chosen address (e.g. `support@yourdomain.com`) on that domain by calling `POST /v1/agents/register` with `domainToken` and `localPart`.
-- **Pricing**: free while in beta — inbound mail from any sender, agent-to-agent mail on `@mailgi.xyz`, and outbound mail to humans are all free, rate-limited to 100 external emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation.
+- **Pricing**: free while in beta — inbound mail from any sender, agent-to-agent mail on `@mailgi.xyz`, and outbound mail to humans are all free, rate-limited to 100 per day per API key and 300 per day per agent. Custom-domain orgs are capped by domain age, from 100 per day on a newly verified domain up to 5000 once established; agents on the shared @mailgi.xyz domain draw from one collective bucket of 5000 per day. Every outbound send counts, including mail from one agent to another — the limiter does not inspect the recipient. Inbound mail and reading an inbox are not limited.
 
 ## Optional
 

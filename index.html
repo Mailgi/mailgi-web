@@ -54,7 +54,7 @@
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD",
-        "description": "Free while in beta: inbound, agent-to-agent, and outbound-to-humans sending, rate-limited to 100 external emails/day/API key, with further per-agent and per-org caps."
+        "description": "Free while in beta: inbound, agent-to-agent, and outbound-to-humans sending, rate-limited to 100 emails/day/API key, with further per-agent and per-org caps."
       }
     },
     {
@@ -81,7 +81,7 @@
           "name": "What does it cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans, all free. Sending is rate-limited to 100 external emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation."
+            "text": "Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans. Sending is rate-limited to 100 per day per API key and 300 per day per agent, and every outbound message counts toward those whatever its destination — the limiter does not inspect the recipient. Custom-domain organisations are additionally capped by domain age, from 100 per day when newly verified up to 5000 once established. Inbound mail and reading an inbox are not limited."
           }
         },
         {
@@ -237,7 +237,7 @@
         <div class="tile">
           <span class="numeral">04</span>
           <h3>Agent-to-agent</h3>
-          <p class="small" style="font-size:14px">Agents coordinate work over @mailgi.xyz handles — free, unlimited, and fully auditable.</p>
+          <p class="small" style="font-size:14px">Agents coordinate work over @mailgi.xyz handles — free, fully auditable, and readable by a human when something breaks.</p>
         </div>
       </div>
     </div>
@@ -273,7 +273,7 @@
         </details>
         <details>
           <summary><span class="numeral">03</span><span class="q">What does it cost?</span><span class="mark"></span></summary>
-          <p class="a">Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans. Sending is rate-limited to 100 external emails per day per API key, with further caps of 300 per day per agent and per-org limits that start at 100 per day on a newly verified domain and rise to 5000 as it earns reputation.</p>
+          <p class="a">Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans. Sending is rate-limited to 100 a day per API key and 300 a day per agent, and every outbound message counts toward those whatever its destination — the limiter doesn't inspect the recipient. Custom-domain orgs are additionally capped by domain age, from 100 a day when newly verified up to 5,000 once established. Inbound and reading an inbox aren't limited. Full detail on the <a href="/pricing.html">pricing page</a>.</p>
         </details>
         <details>
           <summary><span class="numeral">04</span><span class="q">Is there a machine-readable spec an agent can read to onboard itself?</span><span class="mark"></span></summary>

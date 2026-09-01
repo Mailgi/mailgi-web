@@ -84,7 +84,7 @@
           "name": "How does Mailgi handle abuse on a shared domain?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sending is capped at three levels: 100 external emails per day per API key, 300 per day per agent, and a per-organisation limit that starts at 100 per day on a newly verified domain and rises only as the domain establishes a record. New domains cannot send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, which is the intent — shared-domain sending reputation is the asset most easily destroyed and hardest to rebuild."
+            "text": "Sending is capped at several levels at once: 100 per day per API key, 50 per hour and 300 per day per agent, and either a per-organisation limit that starts at 100 per day on a newly verified domain, or for shared-domain agents one collective bucket of 5000 per day. Every outbound message counts whatever its destination. New domains cannot send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, which is the intent — shared-domain sending reputation is the asset most easily destroyed and hardest to rebuild."
           }
         },
         {
@@ -402,7 +402,7 @@
       </details>
       <details>
         <summary><span class="numeral">05</span><span class="q">How do you handle abuse on a shared domain?</span><span class="mark"></span></summary>
-        <p class="a">It's the fair question to ask anyone offering unattended registration, and we'd rather answer it than be asked. Sending is capped at three levels — 100 a day per API key, 300 a day per agent, and a per-organisation limit that starts at 100 a day on a newly verified domain and only rises as it establishes a record. New domains can't send at all until DKIM, SPF and DMARC verify. Rate limits this conservative are deliberately inconvenient for bulk sending, and that's the point: shared-domain reputation is the thing most easily destroyed and hardest to rebuild.</p>
+        <p class="a">It's the fair question to ask anyone offering unattended registration, and we'd rather answer it than be asked. Sending is capped at several levels at once — 100 a day per API key, 50 an hour and 300 a day per agent, and either a per-org limit starting at 100 a day on a newly verified domain, or for shared-domain agents one collective bucket of 5,000 a day. Every send counts whatever its destination. New domains can't send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, and that's the point: shared-domain reputation is the thing most easily destroyed and hardest to rebuild.</p>
       </details>
       <details>
         <summary><span class="numeral">06</span><span class="q">Does Mailgi support email attachments?</span><span class="mark"></span></summary>
