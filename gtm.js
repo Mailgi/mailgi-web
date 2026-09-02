@@ -31,7 +31,7 @@
   /* Fill in when the container exists, e.g. "GTM-XXXXXXX". While blank this
    * file installs the consent defaults and the dataLayer event bridge, but
    * loads no third-party script and sets no cookie. */
-  var GTM_ID = "";
+  var GTM_ID = "GTM-5M7R9FL4";
 
   window.dataLayer = window.dataLayer || [];
   function gtag() {
