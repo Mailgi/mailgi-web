@@ -1,0 +1,16 @@
+The font files in this directory are licensed under the
+SIL Open Font License, Version 1.1, which permits self-hosting
+and redistribution.
+
+  Newsreader       — Production Type
+                     https://github.com/productiontype/Newsreader
+  Hanken Grotesk   — Hanken Design Co.
+                     https://github.com/hanken-design/HKGrotesk
+  JetBrains Mono   — JetBrains
+                     https://github.com/JetBrains/JetBrainsMono
+
+Full licence text: https://openfontlicense.org/open-font-license-official-text/
+
+Retrieved from Google Fonts and self-hosted deliberately: loading them from
+fonts.googleapis.com sent every visitor's IP address to Google on every page
+load, before any consent could be requested. See platform issue #84.
