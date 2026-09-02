@@ -70,6 +70,10 @@ function makeEnv({ hostname, cookie = "", storage = {}, gtmEnabled = true }) {
     readyState: "complete",
     body,
     createElement: el,
+    /* The banner appends a text node then the policy link, so the stub needs
+       this too — modelling only createElement made the test fail the moment
+       the link was added, which is the harness doing its job. */
+    createTextNode: (t) => ({ nodeType: 3, textContent: t, parentNode: null }),
     addEventListener(ev, fn) { listeners[ev] = fn; },
     getElementById: () => null,
     get cookie() { return cookie; },

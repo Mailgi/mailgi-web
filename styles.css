@@ -373,6 +373,8 @@ pre.code {
 }
 .consent-decline:hover { color: var(--on-dark); border-color: rgba(242, 241, 236, .5); }
 .consent-btn:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
+.consent-link { color: var(--on-dark); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+.consent-link:hover { color: #fff; }
 
 /* ── Prose pages (privacy, and anything else that is mostly text) ────────
    Narrow measure, real paragraph rhythm. The marketing pages are built from
@@ -386,16 +388,6 @@ pre.code {
 .prose li { margin-bottom: 8px; }
 .prose strong { color: var(--ink); font-weight: 600; }
 .prose a { color: var(--accent-dark); text-decoration: underline; text-underline-offset: 2px; }
-
-/* DRAFT ONLY — every one of these must be resolved or removed before this
-   page ships. Deliberately loud: a placeholder that looks like body copy is
-   how a plausible-sounding invention reaches a legal disclosure. */
-.todo {
-  display: block; margin: 0 0 16px; padding: 14px 16px;
-  border-left: 3px solid #a4553a; background: #fdf4f1;
-  font-family: var(--mono); font-size: 13px; line-height: 1.6; color: #7d3f2b;
-}
-.todo b { font-family: var(--sans); font-weight: 700; }
 
 /* ── Responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 900px) {

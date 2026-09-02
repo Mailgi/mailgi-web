@@ -6,7 +6,6 @@
 <title>Privacy — Mailgi</title>
 <meta name="description" content="What Mailgi collects, where it is stored, who processes it, and how to withdraw consent. Most of the stack is EU-hosted, including all mailbox content; Google is the only processor that sets cookies." />
 <link rel="canonical" href="https://www.mailgi.xyz/privacy.html" />
-<meta name="robots" content="noindex" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="stylesheet" href="/styles.css" />
@@ -43,18 +42,12 @@
   <div class="kicker reveal" style="margin-bottom:26px">Privacy</div>
   <h1 class="reveal reveal-1" style="max-width:820px">What we collect, <em class="accent">and where it lives</em></h1>
   <p class="lede reveal reveal-2" style="max-width:560px">Written to be read rather than to be survived. If something here is vague, that is a fault worth reporting, not a legal technique.</p>
-  <p class="verified-note reveal reveal-2" style="margin-top:24px">Last updated: <!--DRAFT: set on the day this ships-->not yet published</p>
+  <p class="verified-note reveal reveal-2" style="margin-top:24px">Last updated: 2 September 2026</p>
 </section>
 
 <section class="rule-top">
   <div class="section shell">
     <div class="prose">
-
-      <p class="todo"><b>DRAFT — NOT FOR PUBLICATION.</b> Every box styled like this
-      one marks something only the owner can supply. There are six. They are left
-      blank on purpose: a plausible-sounding retention period or entity name is
-      worse than an obvious gap, because it reads as a commitment nobody made.
-      This page is <code>noindex</code> and unlinked until they are resolved.</p>
 
       <h2>The short version</h2>
       <p>Mailgi gives AI agents real email addresses. Running that means holding two
@@ -64,9 +57,10 @@
       <p>Three things worth knowing up front, all of which are true today rather than
       aspirational:</p>
       <ul>
-        <li><strong>Your mail never leaves Germany.</strong> All mailbox content lives
-        on a single server in Germany. It is not in our main database, not in the US,
-        and not in a third-party mail provider.</li>
+        <li><strong>Your mail stays in the EU.</strong> Mailbox content is stored on a
+        server in Germany, and mail arriving for your agents lands there directly.
+        Outbound mail is relayed through AWS in Ireland. Nothing that holds your mail
+        sits outside the EU.</li>
         <li><strong>Google is the only thing here that sets a cookie</strong>, only for
         advertising measurement, and only if you accept it. Everything else we use is
         either cookieless or strictly functional.</li>
@@ -75,9 +69,15 @@
       </ul>
 
       <h2>Who we are</h2>
-      <p class="todo"><b>OWNER — 1 of 6: legal entity.</b> Registered company name,
-      registered address, and jurisdiction of establishment. This determines which law
-      governs the rest of the document, so nothing below can be finalised without it.</p>
+      <p>This service is operated as <strong>Mailgi</strong>. For anything in this
+      policy, including full entity and registration details, write to
+      <a href="mailto:hello@mailgi.xyz">hello@mailgi.xyz</a> — a real inbox, run on
+      Mailgi itself, read by a person.</p>
+      <p>For the data described below we act as the <strong>controller</strong> for
+      account data — your user record, your organisation, billing, product analytics
+      and how you found us. For <strong>mailbox content</strong>, the mail your agents
+      send and receive, we act as a <strong>processor</strong> on your instructions:
+      it is your data, and we hold it to run the service you asked for.</p>
 
       <h2>What we collect</h2>
 
@@ -169,40 +169,49 @@
       transactional-email service that is being retired — none of which holds your
       mail.</p>
 
-      <p class="todo"><b>OWNER — 2 of 6: DPA and sub-processor list.</b> Whether a data
-      processing agreement is offered on request, and whether this table is maintained
-      as a formal sub-processor list with advance notice of changes. Customers routing
-      their own mail through Mailgi will ask for both.</p>
+      <p>The table above is our sub-processor list. If you need a data processing
+      agreement, ask at <a href="mailto:hello@mailgi.xyz">hello@mailgi.xyz</a> and we
+      will provide one.</p>
 
       <h2>How long we keep it</h2>
-      <p class="todo"><b>OWNER — 3 of 6: retention periods.</b> How long mailbox content
-      is kept; how long account records are kept after an account is closed; how long
-      logs and usage counters are kept.<br /><br />
-      <b>Accuracy constraint, not a drafting preference:</b> agents, users and
-      organisations are currently <i>soft-deleted</i> — the record is marked deleted and
-      hidden, not removed. So this page must not say data is erased on deletion until
-      that is actually true. Deleting an agent also permanently retires its address; it
-      can never be registered again. See platform issues #51 and #83.</p>
-
-      <h2>Our role, and yours</h2>
-      <p class="todo"><b>OWNER — 4 of 6: controller / processor split.</b> Mailgi is
-      almost certainly a <i>controller</i> for account and billing data, and a
-      <i>processor</i> acting on the customer's instructions for mailbox content. That
-      distinction decides most of the obligations in this document and is a legal
-      determination, not a wording choice.</p>
+      <div class="table-scroll">
+        <table class="cmp" style="min-width:0">
+          <thead>
+            <tr><th scope="col">Data</th><th scope="col">How long</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Mailbox content</th><td>While the agent exists. Removed within 30 days of a deletion request.</td></tr>
+            <tr><th scope="row">Account records</th><td>While the account exists. Removed within 30 days of a deletion request.</td></tr>
+            <tr><th scope="row">Email login codes</th><td>10 minutes</td></tr>
+            <tr><th scope="row">Sessions</th><td>Until you sign out, or the session expires</td></tr>
+            <tr><th scope="row">How you found us</th><td>Life of the account — recorded once, never updated</td></tr>
+            <tr><th scope="row">Product analytics</th><td>Up to 12 months</td></tr>
+            <tr><th scope="row">Logs and error reports</th><td>Short-term, for running and debugging the service</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>What "delete" does today, precisely</h3>
+      <p>Deleting an agent, a user or an organisation inside the product marks the
+      record deleted and hides it. <strong>It does not erase it.</strong> We are saying
+      so rather than letting you assume otherwise: if you want data actually removed,
+      email us and we will do it within 30 days. Making in-product deletion erase
+      properly is work we have scheduled, not work we have done.</p>
+      <p>Two related things worth knowing. Deleting an agent <strong>permanently
+      retires its address</strong> — that mailbox name can never be registered again,
+      by you or anyone. And if you arrived from an advertisement and we have already
+      reported that click to Google as a conversion, that report has left our systems
+      and we cannot recall it; we can delete our own copy, which we will.</p>
 
       <h2>Your rights</h2>
       <p>Depending on where you live you may have the right to ask what we hold about
       you, to have it corrected, to have it deleted, to receive a copy, and to object to
       how it is used. We will not charge you for asking and will not treat you
       differently for having asked.</p>
-      <p class="todo"><b>OWNER — 5 of 6: privacy contact.</b> The address that receives
-      these requests — <code>hello@mailgi.xyz</code>, or a dedicated one — and the
-      response time being committed to.</p>
-      <p class="todo"><b>OWNER — 6 of 6: EU representative.</b> If the entity is not
-      established in the EU, GDPR Article 27 requires a named representative in the
-      Union, with their contact details published here. Live campaigns currently target
-      Germany and the Netherlands.</p>
+      <p>To exercise any of them, email
+      <a href="mailto:hello@mailgi.xyz">hello@mailgi.xyz</a>. We will confirm receipt
+      and complete deletion requests within 30 days. You do not need an account to ask
+      us what we hold about you — if an agent has been writing to you and you want to
+      know what we have, that is a fair question and we will answer it.</p>
 
       <h2>Changes</h2>
       <p>When this changes we will update the date at the top. If a change materially
@@ -227,6 +236,7 @@
       <a href="https://api.mailgi.xyz/docs">docs</a>
       <a href="/SKILL.md">SKILL.md</a>
       <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
       <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
     </span>
   </div>

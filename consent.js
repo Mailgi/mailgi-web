@@ -151,9 +151,18 @@
 
     var text = document.createElement("p");
     text.className = "consent-text";
-    text.textContent =
+    /* Copy is shared verbatim with the dashboard banner (#78). Do not edit it
+       on one surface alone — two wordings of the same notice reads as two
+       products. The policy link was held back until /privacy.html existed
+       (#79); a dead link there would have been worse than none. */
+    text.appendChild(document.createTextNode(
       "We’d like to set cookies to measure our advertising — they tell us " +
-      "which ads bring people here. Declining changes nothing about how the site works.";
+      "which ads bring people here. Declining changes nothing about how the site works. "));
+    var link = document.createElement("a");
+    link.href = "/privacy.html";
+    link.className = "consent-link";
+    link.textContent = "Privacy";
+    text.appendChild(link);
 
     var actions = document.createElement("div");
     actions.className = "consent-actions";
