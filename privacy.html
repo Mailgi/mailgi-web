@@ -115,7 +115,7 @@
       record sessions, do not capture every click, and do not record anything you type.</p>
 
       <h2>Cookies</h2>
-      <p>Four, and only the last two require your consent.</p>
+      <p>These are the cookies this site and the dashboard set. Only the Google ones require your consent, and none of them is set until you give it.</p>
       <div class="table-scroll">
         <table class="cmp" style="min-width:0">
           <thead>
@@ -124,7 +124,8 @@
           <tbody>
             <tr><th scope="row">mailgi_consent</th><td>Mailgi</td><td>Remembers your answer to the cookie banner, so you are not asked again</td><td>12 months</td></tr>
             <tr><th scope="row">session</th><td>Mailgi</td><td>Keeps you signed in to the dashboard</td><td>Session</td></tr>
-            <tr><th scope="row">_ga</th><td>Google</td><td>Analytics</td><td class="no">Only after you accept</td></tr>
+            <tr><th scope="row">_ga</th><td>Google</td><td>Analytics — tells Google Analytics one visitor from another</td><td class="no">Only after you accept</td></tr>
+            <tr><th scope="row">_ga_5NN3R02PEZ</th><td>Google</td><td>Analytics — the same, for this specific site</td><td class="no">Only after you accept</td></tr>
             <tr><th scope="row">_gcl_au</th><td>Google</td><td>Linking ad clicks to signups</td><td class="no">Only after you accept</td></tr>
           </tbody>
         </table>
@@ -160,14 +161,26 @@
             <tr><th scope="row">Railway</th><td>Hosting the API, dashboard and this site, and the Redis holding rate-limit and usage counters</td><td class="yes">EU West</td></tr>
             <tr><th scope="row">Google</th><td>Advertising measurement — consent only</td><td>US</td></tr>
             <tr><th scope="row">Resend</th><td>Sending login-code emails</td><td>US</td></tr>
+            <tr><th scope="row">AWS S3</th><td>Nightly encrypted off-site backups, including mailbox content</td><td>US (us-east-1)</td></tr>
           </tbody>
         </table>
       </div>
-      <p style="margin-top:20px">The pattern is deliberate rather than accidental.
-      Everything that holds message content, account records, logs or error reports is
-      in the EU. The two exceptions are advertising measurement and one
-      transactional-email service that is being retired — neither of which holds your
-      mail.</p>
+      <p style="margin-top:20px">The table above is the list we maintain, and it is
+      what to rely on — a prose summary of it goes out of date, and this one has, three
+      times. Rather than restate it, here are the two things worth pulling out of it
+      explicitly, because you should not have to infer them.</p>
+      <p><strong>Day to day, your mail stays in the EU.</strong> It is stored in
+      Germany, arrives there directly, and is relayed out through Ireland. The
+      processors that sit outside the EU — advertising measurement, and one
+      login-code service being retired — never hold mail content.</p>
+      <p><strong>The nightly backup is the exception, and it is in the US.</strong>
+      Every night a complete encrypted copy of the mail server, mailbox content
+      included, is written to Amazon S3 in <span class="mono">us-east-1</span>. It is
+      encrypted on our own server before it leaves, with a key that is never sent to
+      Amazon, so what Amazon stores is ciphertext it cannot read. That is a real
+      protection and not the same as the data never going there: it is stored in the
+      United States, and we would rather say so than let the summary above imply
+      otherwise. We intend to move this repository to an EU region.</p>
 
       <p>The table above is our sub-processor list. If you need a data processing
       agreement, ask at <a href="mailto:hello@mailgi.xyz">hello@mailgi.xyz</a> and we
@@ -196,6 +209,12 @@
       so rather than letting you assume otherwise: if you want data actually removed,
       email us and we will do it within 30 days. Making in-product deletion erase
       properly is work we have scheduled, not work we have done.</p>
+      <p>Deletion from our live systems does not reach into last night's backup. Those
+      snapshots are kept on a rolling schedule — seven daily and four weekly — so a
+      deleted mailbox ages out of the encrypted backups within about five weeks rather
+      than disappearing the moment it is removed from the running server. We are not
+      going to pretend otherwise; a backup you can selectively edit is not much of a
+      backup.</p>
       <p>Two related things worth knowing. Deleting an agent <strong>permanently
       retires its address</strong> — that mailbox name can never be registered again,
       by you or anyone. And if you arrived from an advertisement and we have already
