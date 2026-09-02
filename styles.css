@@ -389,6 +389,52 @@ pre.code {
 .prose strong { color: var(--ink); font-weight: 600; }
 .prose a { color: var(--accent-dark); text-decoration: underline; text-underline-offset: 2px; }
 
+/* ── Resources submenu (#87) ──────────────────────────────────────────────
+   Native <details> rather than a hover menu or a JS one, for three reasons:
+   every href stays in the served HTML so crawlers see all of them (§2.1), it
+   is keyboard-operable for free, and hover menus are unusable on touch —
+   which is why #87 and #88 were one job. */
+.nav-menu { position: relative; display: inline-block; }
+.nav-menu > summary {
+  list-style: none; cursor: pointer;
+  color: var(--muted-2); display: inline-flex; align-items: center; gap: 5px;
+}
+.nav-menu > summary::-webkit-details-marker { display: none; }
+.nav-menu > summary::after {
+  content: '';
+  width: 5px; height: 5px; margin-top: -3px;
+  border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg); transition: transform .15s;
+}
+.nav-menu[open] > summary::after { transform: rotate(-135deg); margin-top: 2px; }
+.nav-menu > summary:hover { color: var(--ink); }
+.nav-menu > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+/* A page inside the menu marks its own link; surface that on the trigger too,
+   so the header still says where you are. */
+.nav-menu:has(a[aria-current="page"]) > summary { color: var(--ink); }
+
+/* Display is driven off [open] rather than left to the UA. Chrome hides closed
+   <details> content with content-visibility, which an explicit `display` on the
+   child can interact with unpredictably, and Safari and Firefox differ. This is
+   deterministic. The hrefs stay in the served HTML either way — hiding here is
+   CSS, exactly as with the FAQ. */
+.nav-menu-panel { display: none; }
+.nav-menu[open] > .nav-menu-panel {
+  position: absolute; top: calc(100% + 12px); left: -14px; z-index: 40;
+  display: flex; flex-direction: column; min-width: 176px;
+  padding: 8px; gap: 2px;
+  background: var(--bg); border: 1px solid var(--rule-strong); border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(22, 33, 31, .1);
+}
+.nav-menu-panel a {
+  padding: 8px 12px; border-radius: 5px; white-space: nowrap;
+  color: var(--muted);
+}
+.nav-menu-panel a:hover { background: var(--surface); color: var(--ink); }
+.nav-menu-panel a[aria-current="page"] {
+  color: var(--ink); border-bottom: 0; padding-bottom: 8px; background: var(--surface);
+}
+
 /* ── Responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   :root { --gutter: 24px; }
@@ -411,4 +457,54 @@ pre.code {
   .nav { gap: 18px; }
   .nav-links { gap: 16px 18px; }
   .footer-end { margin-left: 0; }
+}
+
+/* ── Phone (#88) ──────────────────────────────────────────────────────────
+   Until now the 900px rules were all that applied below 480px, so nothing was
+   actually designed for a handset. Display type in particular was still
+   asking for 44px on a 390px screen. */
+@media (max-width: 560px) {
+  .nav { gap: 12px; padding-top: 20px; padding-bottom: 20px; }
+  .brand { font-size: 22px; }
+  .brand img { width: 22px; height: 22px; }
+  .nav-links { gap: 14px 16px; font-size: 13.5px; width: 100%; }
+  /* Tap targets: 13px text with no padding is not a touch target. */
+  .nav-links > a, .nav-menu > summary { padding: 6px 0; }
+  /* On a narrow screen an absolutely-positioned panel is worse than one that
+     pushes the page down — it can overflow the viewport edge and there is no
+     room for it to sit beside anything. */
+  .nav-menu { display: block; width: 100%; }
+  .nav-menu[open] > .nav-menu-panel {
+    position: static; box-shadow: none; min-width: 0;
+    margin-top: 8px; background: var(--surface);
+  }
+  .nav-menu-panel a { padding: 10px 12px; }
+  .nav-end { gap: 12px; width: 100%; }
+  .nav-note { display: none; }   /* markup stays; only hidden visually */
+
+  .hero { padding: 44px 0 40px; }
+  h1 { font-size: clamp(30px, 9vw, 40px); }
+  h2 { font-size: clamp(23px, 6.5vw, 28px); }
+  .lede { font-size: 17px; }
+  .section { padding: 44px 0; }
+  .section-sm { padding: 36px 0; }
+
+  /* Long lines are the main overflow risk on this site. They scroll inside
+     their own box; the page body never scrolls sideways. */
+  pre.code { font-size: 11.5px; padding: 16px 14px; overflow-x: auto; }
+  .codeblock { font-size: 11.5px; }
+  .prose h2 { margin: 40px 0 14px; }
+  .prose p, .prose li { font-size: 15px; }
+
+  .row { gap: 14px; }
+  .numeral { font-size: 22px; }
+  .footer-inner { gap: 14px 18px; }
+  .footer-end { gap: 14px; }
+  #consent { padding: 14px var(--gutter); }
+}
+
+/* Very narrow — a 320px iPhone SE still exists. */
+@media (max-width: 360px) {
+  h1 { font-size: 28px; }
+  pre.code { font-size: 11px; }
 }
