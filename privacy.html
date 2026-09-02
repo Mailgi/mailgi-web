@@ -158,17 +158,18 @@
             <tr><th scope="row">AWS SES</th><td>Relaying outbound mail</td><td class="yes">EU (Ireland)</td></tr>
             <tr><th scope="row">PostHog</th><td>Product analytics, cookieless</td><td class="yes">EU</td></tr>
             <tr><th scope="row">AWS CloudWatch</th><td>Application logs</td><td class="yes">EU</td></tr>
+            <tr><th scope="row">Sentry</th><td>Error tracking</td><td class="yes">EU (Germany)</td></tr>
             <tr><th scope="row">Railway</th><td>Hosting the API, dashboard and this site</td><td>US</td></tr>
             <tr><th scope="row">Google</th><td>Advertising measurement — consent only</td><td>US</td></tr>
             <tr><th scope="row">Resend</th><td>Sending login-code emails</td><td>US</td></tr>
-            <tr><th scope="row">Sentry</th><td>Error tracking</td><td><!--DRAFT: region unconfirmed-->To confirm</td></tr>
           </tbody>
         </table>
       </div>
-      <p style="margin-top:20px">The pattern is deliberate rather than accidental:
-      everything holding message content or account records is in the EU. What sits in
-      the US is hosting, advertising measurement, and one transactional-email service
-      that is being retired.</p>
+      <p style="margin-top:20px">The pattern is deliberate rather than accidental.
+      Everything that holds message content, account records, logs or error reports is
+      in the EU. The three exceptions are hosting, advertising measurement, and one
+      transactional-email service that is being retired — none of which holds your
+      mail.</p>
 
       <p class="todo"><b>OWNER — 2 of 6: DPA and sub-processor list.</b> Whether a data
       processing agreement is offered on request, and whether this table is maintained
