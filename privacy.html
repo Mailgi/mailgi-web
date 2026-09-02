@@ -157,7 +157,7 @@
             <tr><th scope="row">PostHog</th><td>Product analytics, cookieless</td><td class="yes">EU</td></tr>
             <tr><th scope="row">AWS CloudWatch</th><td>Application logs</td><td class="yes">EU</td></tr>
             <tr><th scope="row">Sentry</th><td>Error tracking</td><td class="yes">EU (Germany)</td></tr>
-            <tr><th scope="row">Railway</th><td>Hosting the API, dashboard and this site</td><td>US</td></tr>
+            <tr><th scope="row">Railway</th><td>Hosting the API, dashboard and this site, and the Redis holding rate-limit and usage counters</td><td class="yes">EU West</td></tr>
             <tr><th scope="row">Google</th><td>Advertising measurement — consent only</td><td>US</td></tr>
             <tr><th scope="row">Resend</th><td>Sending login-code emails</td><td>US</td></tr>
           </tbody>
@@ -165,8 +165,8 @@
       </div>
       <p style="margin-top:20px">The pattern is deliberate rather than accidental.
       Everything that holds message content, account records, logs or error reports is
-      in the EU. The three exceptions are hosting, advertising measurement, and one
-      transactional-email service that is being retired — none of which holds your
+      in the EU. The two exceptions are advertising measurement and one
+      transactional-email service that is being retired — neither of which holds your
       mail.</p>
 
       <p>The table above is our sub-processor list. If you need a data processing
