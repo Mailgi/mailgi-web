@@ -1,5 +1,10 @@
 /* Website analytics (#55).
  *
+ * Depends on attribution.js, which must be loaded first: it publishes
+ * window.MailgiAttribution, which is registered below as super properties so
+ * every event carries the campaign that produced the visit. Both tags are
+ * `defer`, so document order is the load order -- do not reorder them.
+ *
  * The loader below is PostHog's own current snippet, pasted verbatim from
  * the project's setup page — don't hand-edit it; replace it wholesale if
  * PostHog issues a new one.
@@ -37,16 +42,53 @@
     person_profiles: 'identified_only',
     persistence: 'sessionStorage',
     autocapture: false,
-    capture_pageview: true,
+    // Off here and fired by hand below, purely so the campaign super
+    // properties are registered first. A pageview captured during init()
+    // would be the one event in the session with no attribution on it --
+    // and it is the event that answers "did this ad produce a visit".
+    capture_pageview: false,
     disable_session_recording: true,
   });
 
-  // The two clicks that actually indicate intent, rather than every link.
+  // Campaign parameters from attribution.js, attached to every subsequent
+  // event in this tab session. register() (not register_once) so a visitor
+  // who clicks a second ad is credited to the second campaign, matching the
+  // last-non-direct rule attribution.js applies to its own storage.
+  posthog.register(window.MailgiAttribution || {});
+
+  posthog.capture('$pageview');
+
+  // The clicks that actually indicate intent, rather than every link.
+  //
+  // clicked_dashboard is the site's conversion event: it is the last thing
+  // that happens on this origin before a signup, so it is what paid traffic
+  // is judged on until the dashboard reports back a real signup. It carries
+  // the source page, because "which landing page produced the click" is the
+  // question an ad campaign is actually asking.
   document.addEventListener("click", function (event) {
     var link = event.target && event.target.closest && event.target.closest("a[href]");
     if (!link) return;
     var href = link.getAttribute("href") || "";
-    if (href.indexOf("app.mailgi.xyz") !== -1) posthog.capture("clicked_dashboard");
-    else if (href.indexOf("SKILL.md") !== -1) posthog.capture("clicked_skill_md");
+    if (href.indexOf("app.mailgi.xyz") !== -1) {
+      posthog.capture("clicked_dashboard", { source_page: window.location.pathname });
+    } else if (href.indexOf("SKILL.md") !== -1) {
+      posthog.capture("clicked_skill_md", { source_page: window.location.pathname });
+    }
   });
+
+  // FAQ engagement (website-brief.md gap #4: we saw visits, not whether the
+  // FAQ was used or which questions mattered). The <details> elements are
+  // native and stay in the DOM for crawlers; this only observes them.
+  // Captures the question text, which is our own published copy -- not
+  // anything the visitor typed.
+  document.addEventListener("toggle", function (event) {
+    var el = event.target;
+    if (!el || el.tagName !== "DETAILS" || !el.open) return;
+    var summary = el.querySelector("summary");
+    if (!summary) return;
+    posthog.capture("opened_faq", {
+      question: (summary.textContent || "").trim().slice(0, 120),
+      source_page: window.location.pathname,
+    });
+  }, true);  // capture phase: `toggle` does not bubble.
 })();
