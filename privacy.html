@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy — Mailgi</title>
+<meta name="description" content="What Mailgi collects, where it is stored, who processes it, and how to withdraw consent. Most of the stack is EU-hosted, including all mailbox content; Google is the only processor that sets cookies." />
+<link rel="canonical" href="https://www.mailgi.xyz/privacy.html" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="/styles.css" />
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/guides.html">Guides</a>
+    <a href="/pricing.html">Pricing</a>
+    <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+    <a href="https://api.mailgi.xyz/docs">Docs</a>
+  </div>
+  <div class="nav-end">
+    <span class="nav-note">free while in beta</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Privacy</div>
+  <h1 class="reveal reveal-1" style="max-width:820px">What we collect, <em class="accent">and where it lives</em></h1>
+  <p class="lede reveal reveal-2" style="max-width:560px">Written to be read rather than to be survived. If something here is vague, that is a fault worth reporting, not a legal technique.</p>
+  <p class="verified-note reveal reveal-2" style="margin-top:24px">Last updated: <!--DRAFT: set on the day this ships-->not yet published</p>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <div class="prose">
+
+      <p class="todo"><b>DRAFT — NOT FOR PUBLICATION.</b> Every box styled like this
+      one marks something only the owner can supply. There are six. They are left
+      blank on purpose: a plausible-sounding retention period or entity name is
+      worse than an obvious gap, because it reads as a commitment nobody made.
+      This page is <code>noindex</code> and unlinked until they are resolved.</p>
+
+      <h2>The short version</h2>
+      <p>Mailgi gives AI agents real email addresses. Running that means holding two
+      quite different kinds of data: the account details of the people who sign up,
+      and the mail their agents send and receive. This page separates them, because
+      the answers are different.</p>
+      <p>Three things worth knowing up front, all of which are true today rather than
+      aspirational:</p>
+      <ul>
+        <li><strong>Your mail never leaves Germany.</strong> All mailbox content lives
+        on a single server in Germany. It is not in our main database, not in the US,
+        and not in a third-party mail provider.</li>
+        <li><strong>Google is the only thing here that sets a cookie</strong>, only for
+        advertising measurement, and only if you accept it. Everything else we use is
+        either cookieless or strictly functional.</li>
+        <li><strong>Our product analytics sets no cookies at all</strong> and is hosted
+        in the EU.</li>
+      </ul>
+
+      <h2>Who we are</h2>
+      <p class="todo"><b>OWNER — 1 of 6: legal entity.</b> Registered company name,
+      registered address, and jurisdiction of establishment. This determines which law
+      governs the rest of the document, so nothing below can be finalised without it.</p>
+
+      <h2>What we collect</h2>
+
+      <h3>If you create an account</h3>
+      <p>Your email address, your name and avatar URL if your sign-in provider supplies
+      them, which provider you used and its identifier for you, when you signed up, and
+      when you last signed in.</p>
+      <p>We also store how you arrived: the advertising click identifier if you came
+      from an ad, the campaign parameters on that link, the page you landed on, and the
+      hostname that referred you. This is kept as first-touch only and is not updated
+      if you later click a different ad. It exists so we can tell which advertising
+      works, and it is the reason we can measure a signup without depending on
+      third-party cookies.</p>
+      <p>Login codes sent by email expire after ten minutes. Session tokens and API
+      keys are stored only as one-way hashes — we cannot recover the originals, which
+      also means we cannot email you a key you have lost.</p>
+
+      <h3>Mail your agents send and receive</h3>
+      <p>Complete message content: headers, subjects, bodies, and the addresses of
+      everyone in the conversation. This is what a mailbox is. It is stored on the
+      mail server in Germany, separately from the account database.</p>
+      <p>Mail that arrives for your agent necessarily contains information about the
+      person who sent it, and they did not sign up with us. We treat that content as
+      yours to control, not ours to use: we do not read it, mine it, or train anything
+      on it.</p>
+
+      <h3>Usage and billing</h3>
+      <p>Daily per-agent counters of messages sent and mailbox size, used to enforce the
+      published rate limits and to spot abuse. For accounts using crypto billing, we
+      store deposit addresses and the on-chain transactions against them.</p>
+
+      <h3>Analytics</h3>
+      <p>Which pages are viewed, and three deliberate signals: opening the dashboard
+      link, opening <code>SKILL.md</code>, and opening a question in an FAQ. We do not
+      record sessions, do not capture every click, and do not record anything you type.</p>
+
+      <h2>Cookies</h2>
+      <p>Four, and only the last two require your consent.</p>
+      <div class="table-scroll">
+        <table class="cmp" style="min-width:0">
+          <thead>
+            <tr><th scope="col">Cookie</th><th scope="col">Set by</th><th scope="col">Purpose</th><th scope="col">Lifetime</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">mailgi_consent</th><td>Mailgi</td><td>Remembers your answer to the cookie banner, so you are not asked again</td><td>12 months</td></tr>
+            <tr><th scope="row">session</th><td>Mailgi</td><td>Keeps you signed in to the dashboard</td><td>Session</td></tr>
+            <tr><th scope="row">_ga</th><td>Google</td><td>Analytics</td><td class="no">Only after you accept</td></tr>
+            <tr><th scope="row">_gcl_au</th><td>Google</td><td>Linking ad clicks to signups</td><td class="no">Only after you accept</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:20px">Our product analytics sets no cookies — it keeps an
+      identifier in your browser tab that is discarded when you close it.</p>
+
+      <h3>Changing your mind</h3>
+      <p>Declining costs you nothing: the site and the product work identically either
+      way. You can change your answer at any time, here:</p>
+      <p>
+        <button type="button" id="consent-reset" class="btn btn-outline">Reset my cookie choice</button>
+        <span id="consent-reset-note" class="small" style="margin-left:14px"></span>
+      </p>
+      <p>That clears the record of your choice and asks again on your next page view.
+      Clearing cookies in your browser has the same effect.</p>
+
+      <h2>Who else processes it</h2>
+      <p>We use other companies to run this. Each one only receives what it needs for
+      the job named here.</p>
+      <div class="table-scroll">
+        <table class="cmp" style="min-width:0">
+          <thead>
+            <tr><th scope="col">Processor</th><th scope="col">What for</th><th scope="col">Where</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Hetzner</th><td>The mail server — all mailbox content</td><td class="yes">Germany</td></tr>
+            <tr><th scope="row">Supabase</th><td>Main database — accounts, orgs, usage</td><td class="yes">EU (Frankfurt)</td></tr>
+            <tr><th scope="row">AWS SES</th><td>Relaying outbound mail</td><td class="yes">EU (Ireland)</td></tr>
+            <tr><th scope="row">PostHog</th><td>Product analytics, cookieless</td><td class="yes">EU</td></tr>
+            <tr><th scope="row">AWS CloudWatch</th><td>Application logs</td><td class="yes">EU</td></tr>
+            <tr><th scope="row">Railway</th><td>Hosting the API, dashboard and this site</td><td>US</td></tr>
+            <tr><th scope="row">Google</th><td>Advertising measurement — consent only</td><td>US</td></tr>
+            <tr><th scope="row">Resend</th><td>Sending login-code emails</td><td>US</td></tr>
+            <tr><th scope="row">Sentry</th><td>Error tracking</td><td><!--DRAFT: region unconfirmed-->To confirm</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:20px">The pattern is deliberate rather than accidental:
+      everything holding message content or account records is in the EU. What sits in
+      the US is hosting, advertising measurement, and one transactional-email service
+      that is being retired.</p>
+
+      <p class="todo"><b>OWNER — 2 of 6: DPA and sub-processor list.</b> Whether a data
+      processing agreement is offered on request, and whether this table is maintained
+      as a formal sub-processor list with advance notice of changes. Customers routing
+      their own mail through Mailgi will ask for both.</p>
+
+      <h2>How long we keep it</h2>
+      <p class="todo"><b>OWNER — 3 of 6: retention periods.</b> How long mailbox content
+      is kept; how long account records are kept after an account is closed; how long
+      logs and usage counters are kept.<br /><br />
+      <b>Accuracy constraint, not a drafting preference:</b> agents, users and
+      organisations are currently <i>soft-deleted</i> — the record is marked deleted and
+      hidden, not removed. So this page must not say data is erased on deletion until
+      that is actually true. Deleting an agent also permanently retires its address; it
+      can never be registered again. See platform issues #51 and #83.</p>
+
+      <h2>Our role, and yours</h2>
+      <p class="todo"><b>OWNER — 4 of 6: controller / processor split.</b> Mailgi is
+      almost certainly a <i>controller</i> for account and billing data, and a
+      <i>processor</i> acting on the customer's instructions for mailbox content. That
+      distinction decides most of the obligations in this document and is a legal
+      determination, not a wording choice.</p>
+
+      <h2>Your rights</h2>
+      <p>Depending on where you live you may have the right to ask what we hold about
+      you, to have it corrected, to have it deleted, to receive a copy, and to object to
+      how it is used. We will not charge you for asking and will not treat you
+      differently for having asked.</p>
+      <p class="todo"><b>OWNER — 5 of 6: privacy contact.</b> The address that receives
+      these requests — <code>hello@mailgi.xyz</code>, or a dedicated one — and the
+      response time being committed to.</p>
+      <p class="todo"><b>OWNER — 6 of 6: EU representative.</b> If the entity is not
+      established in the EU, GDPR Article 27 requires a named representative in the
+      Union, with their contact details published here. Live campaigns currently target
+      Germany and the Netherlands.</p>
+
+      <h2>Changes</h2>
+      <p>When this changes we will update the date at the top. If a change materially
+      affects what we do with your data, we will say so directly rather than relying on
+      you to re-read the page.</p>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+<script>
+/* Withdrawing consent, made functional rather than a paragraph telling people
+   to go and edit their browser settings. Clears the record on both surfaces
+   (the cookie is scoped to .mailgi.xyz) and the local fallback, so the banner
+   asks again on the next page view. */
+(function () {
+  var btn = document.getElementById("consent-reset");
+  var note = document.getElementById("consent-reset-note");
+  if (!btn) return;
+  btn.addEventListener("click", function () {
+    try {
+      document.cookie =
+        "mailgi_consent=; Domain=.mailgi.xyz; Path=/; Max-Age=0; SameSite=Lax; Secure";
+    } catch (e) {}
+    try { window.localStorage.removeItem("mailgi_consent"); } catch (e) {}
+    if (note) note.textContent = "Cleared. You'll be asked again on your next page view.";
+    btn.disabled = true;
+  });
+})();
+</script>
+</body>
+</html>
