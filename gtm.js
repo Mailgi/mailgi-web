@@ -114,6 +114,14 @@
    * and it is skipped entirely while GTM_ID is blank. */
   if (!GTM_ID) return;
 
+  /* Consumed by consent.js, which must not ask for permission to do something
+   * this file is not doing. Published AFTER the guard above, so its presence
+   * means "a container is loading and will want to store things" — which is a
+   * different question from whether the gtag shim exists. consent.js falls
+   * back to a direct dataLayer push when the shim is missing, so keying the
+   * banner off the shim would conflate the two and break that fallback. */
+  window.mailgiGtmEnabled = true;
+
   window.dataLayer.push({
     "gtm.start": new Date().getTime(),
     event: "gtm.js",

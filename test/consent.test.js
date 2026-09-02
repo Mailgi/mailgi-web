@@ -42,7 +42,7 @@ function checkMatch(name, actual, re) {
 
 /* Minimal DOM. Only what consent.js touches — an element stub deep enough for
  * the banner to build, and a document.cookie setter we can observe. */
-function makeEnv({ hostname, cookie = "", storage = {} }) {
+function makeEnv({ hostname, cookie = "", storage = {}, gtmEnabled = true }) {
   const written = { cookies: [], storage: {} };
   const listeners = {};
 
@@ -85,6 +85,9 @@ function makeEnv({ hostname, cookie = "", storage = {} }) {
     },
     dataLayer: [],
   };
+  /* gtm.js publishes this only after its own !GTM_ID guard, so it stands for
+     "a container is loading and will want to store something". */
+  if (gtmEnabled) win.mailgiGtmEnabled = true;
 
   const sandbox = { window: win, document: doc, console };
   sandbox.globalThis = sandbox;
@@ -149,6 +152,28 @@ console.log("consent cookie contract");
   const { body, win } = makeEnv({ hostname: "www.mailgi.xyz", cookie: "mailgi_consent=denied" });
   check("declined: no banner", body.children.length, 0);
   check("  and no consent update", win.dataLayer.filter((a) => a[0] === "consent").length, 0);
+}
+
+/* ── 6. no container, no banner ──────────────────────────────────────────
+ * While GTM_ID is blank nothing is stored, so asking would be claiming
+ * something untrue and taxing every landing-page visit for nothing. */
+{
+  const { body, written } = makeEnv({ hostname: "www.mailgi.xyz", gtmEnabled: false });
+  check("container disabled: no banner", body.children.length, 0);
+  check("  and nothing written", written.cookies.length + Object.keys(written.storage).length, 0);
+}
+
+/* ── 7. a prior choice is still honoured with no container ───────────────
+ * If an ID is added later, a visitor who already accepted must not be
+ * re-asked, and consent must be re-applied before the container reads it. */
+{
+  const { body, win } = makeEnv({
+    hostname: "www.mailgi.xyz",
+    cookie: "mailgi_consent=granted",
+    gtmEnabled: false,
+  });
+  check("stored grant: still no banner", body.children.length, 0);
+  check("  consent still re-applied", win.dataLayer.filter((a) => a[0] === "consent" && a[1] === "update").length, 1);
 }
 
 console.log(failures ? `\n${failures} FAILED` : "\nall passed");

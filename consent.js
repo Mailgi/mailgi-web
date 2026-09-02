@@ -120,6 +120,20 @@
     return;
   }
 
+  /* No stored choice. Only ask if there is actually something to consent to.
+   *
+   * While gtm.js has no container ID it sets no cookie, so a banner would be
+   * asking permission for something that is not happening — the sentence would
+   * simply not be true, and no consent is required when nothing is stored. It
+   * would also be a conversion tax on every landing-page visit, charged at
+   * exactly the moment paid traffic starts.
+   *
+   * gtm.js publishes this flag only after its own `!GTM_ID` guard, so the
+   * banner appears in the same deploy that makes its claim true. Deliberately
+   * not keying off window.mailgiGtag: the shim exists either way, and the
+   * gtag() fallback above depends on that. */
+  if (!window.mailgiGtmEnabled) return;
+
   /* ── the banner ──────────────────────────────────────────────────────────
    * Styling uses the tokens at the top of styles.css so this reads as part of
    * the site rather than a bolted-on widget. Ink ground with off-white text
