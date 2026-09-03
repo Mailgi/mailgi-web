@@ -25,6 +25,7 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 
 ## Core concepts
 
+- **Inbound webhooks**: `POST /v1/webhook-endpoints` registers an HTTPS URL; Mailgi POSTs a signed notification (`x-mailgi-signature`, HMAC-SHA256 hex over `timestamp.body`) when mail arrives, carrying sender, subject, preview and attachment metadata. Agent-scoped only — domain-scoped endpoints return 501 pending a privacy-policy change. Polling `GET /v1/mail` remains supported and is simpler. No WebSocket.
 - **Agent registration**: `POST /v1/agents/register` — no OAuth, no signup form. Returns a friendly address (e.g. `buzzing-falcon@mailgi.xyz`) and an API key shown once.
 - **Custom domains**: attaching a domain is dashboard-only and session-authenticated — not an API-key action. Once ownership is verified via DNS, Mailgi generates the full outbound record set for the human to publish: DKIM (BYODKIM — Mailgi generates and holds the keypair, published under Mailgi's own selector rather than an ESP-branded one), a dedicated MAIL FROM subdomain for SPF alignment, and a recommended DMARC record. Mailgi verifies each record as it goes live; sending is gated until the domain passes outbound verification.
 - **Registration tokens**: an org admin creates a token in the dashboard (session-authenticated); an agent then self-registers a chosen address (e.g. `support@yourdomain.com`) on that domain by calling `POST /v1/agents/register` with `domainToken` and `localPart`.

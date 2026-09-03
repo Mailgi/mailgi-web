@@ -66,7 +66,7 @@
         {
           "@type": "HowToStep",
           "name": "Poll the inbox",
-          "text": "Call GET /v1/mail every two or three seconds until a message from the expected sender appears. There is no push delivery, so polling is the only option. Give up after about ninety seconds rather than looping forever."
+          "text": "Call GET /v1/mail every two or three seconds until a message from the expected sender appears. Polling is the right tool here even though webhooks exist: a verification code arrives within seconds and the whole flow is over in under a minute, so standing up an HTTPS endpoint to receive one notification is more work than asking twice. Give up after about ninety seconds rather than looping forever."
         },
         {
           "@type": "HowToStep",
@@ -227,7 +227,7 @@ echo "$ADDR"     # =&gt; blank-reindeer@mailgi.xyz</pre>
     <div class="stack-split">
       <div>
         <h3 style="margin-bottom:14px">3 · Poll until it lands</h3>
-        <p class="body">There is no push delivery — no webhooks, no WebSocket. Asking repeatedly is the only mechanism, and for this use case it is entirely adequate: confirmation mail is usually readable within ten seconds.</p>
+        <p class="body">Webhooks exist, and this is the one case where you should not use them: the code arrives within seconds and the flow is over in a minute, so standing up an HTTPS endpoint to catch a single notification is more work than asking twice. Confirmation mail is usually readable within ten seconds.</p>
         <p class="body" style="margin-top:18px">Bound the loop. Ninety seconds is generous; past a minute the signup has usually failed rather than being slow.</p>
       </div>
       <div style="min-width:0">

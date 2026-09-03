@@ -1,7 +1,7 @@
 ---
 name: mailgi
-description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — on a shared handle or your own verified domain.
-version: 1.1.0
+description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain.
+version: 1.2.0
 homepage: https://www.mailgi.xyz
 metadata:
   openclaw:
@@ -17,7 +17,7 @@ metadata:
 This file teaches you how to use the mailgi email API.
 You are an AI agent. Read this file, then you can send and receive email.
 
-**Skill version 1.1.0 · updated 2026-08-30**
+**Skill version 1.2.0 · updated 2026-09-03**
 Canonical copy: https://www.mailgi.xyz/SKILL.md — if yours is older, re-fetch it.
 This file tracks the live API; a stale copy will describe endpoints that changed.
 
@@ -96,10 +96,11 @@ Each message has: `id`, `subject`, `from`, `to`, `receivedAt`, `size`, `preview`
 `msg.from[0].email`. Treating `from` as a string is the most common mistake
 against this API.
 
-**There is no push delivery.** No webhooks, no WebSocket, no long-poll. The only
-way to learn about new mail is to call `GET /v1/mail` again. Poll every few
-seconds when waiting for something specific (a verification code), and every
-minute or two for a background inbox.
+**You can poll, or you can register a webhook.** Polling is the simplest thing
+and is fine for most work: call `GET /v1/mail` again, every few seconds when
+waiting for something specific (a verification code), every minute or two for a
+background inbox. If you would rather be told, see section 7 — but there is
+still no WebSocket and no long-poll.
 
 **Get full body of a message:**
 
@@ -244,7 +245,129 @@ Revoke a key: `DELETE /v1/apikeys/<keyId>`
 
 ---
 
-## 7. DID-based auth — NOT AVAILABLE YET
+## 7. Get told about new mail (webhooks)
+
+Instead of polling, register an HTTPS URL and Mailgi will POST to it when mail
+arrives. Only worth it if you already run a public HTTPS endpoint; polling is
+less work and is not worse for most tasks.
+
+```
+POST /v1/webhook-endpoints
+Authorization: Bearer <apiKey>
+Content-Type: application/json
+
+{ "url": "https://example.com/hooks/mailgi" }
+```
+
+Response:
+```json
+{
+  "id": "cmtljbc8y00036z1j8qkqdecr",
+  "url": "https://example.com/hooks/mailgi",
+  "eventTypes": ["mail.received"],
+  "enabled": true,
+  "createdAt": "2026-09-03T13:02:09.309Z",
+  "secret": "whsec_..."
+}
+```
+
+**Store `secret` immediately — it is shown exactly once**, like your API key.
+It is the HMAC key you need to verify that a delivery really came from Mailgi,
+and `GET /v1/webhook-endpoints` does not return it. Lose it and you must delete
+the endpoint and create a new one.
+
+Optional fields: `eventTypes` (default `["mail.received"]` — the only event
+there is today) and `scope`.
+
+**`scope: "domain"` returns `501` / `NOT_AVAILABLE_YET`.** It would notify you
+about mail for every agent on a whole domain, which discloses other people's
+mail metadata, and it is switched off until the privacy policy covers it. Use
+the default `"agent"` scope, which is your own mailbox only.
+
+Manage them:
+```
+GET    /v1/webhook-endpoints                 — list yours, as { endpoints: [...] }
+DELETE /v1/webhook-endpoints/<id>            — remove one
+GET    /v1/webhook-endpoints/<id>/deliveries — recent delivery attempts
+POST   /v1/webhook-endpoints/<id>/deliveries/<deliveryId>/resend
+POST   /v1/webhook-endpoints/<id>/enable     — see "disabled" below
+```
+
+There is no update endpoint. To change a URL, delete and create.
+
+### What arrives
+
+```json
+{
+  "event": "mail.received",
+  "agentId": "...",
+  "messageId": "...",
+  "from": "someone@example.com",
+  "to": ["you@mailgi.xyz"],
+  "receivedAt": "2026-09-03T10:00:00Z",
+  "size": 4096,
+  "spam": false,
+  "subject": "Your verification code",
+  "preview": "Your code is 481902",
+  "attachments": [{ "name": "invoice.pdf", "size": 20481, "type": "application/pdf" }],
+  "fetchUrl": "https://api.mailgi.xyz/v1/mail/<id>"
+}
+```
+
+**Metadata and a preview, never the full body.** Use `fetchUrl`, or
+`GET /v1/mail/<id>`, to read the message.
+
+**`subject`, `preview`, `fetchUrl` can be `null` and `attachments` can be `[]`
+even when the mail is fine.** They come from a second lookup that fails soft —
+if it fails you still get the notification, just without them. Handle their
+absence rather than assuming they are there. Everything above `subject` is
+always present.
+
+**`spam: true`** means the spam filter flagged it. You are told either way; decide
+what to do with it.
+
+### Verify the signature — do not skip this
+
+Anyone can POST to your URL. The `secret` from the create response, plus two
+headers, let you prove Mailgi sent it:
+
+- `x-mailgi-signature` — HMAC-SHA256, **hex**
+- `x-mailgi-timestamp` — unix seconds
+
+The signature is over `` `${timestamp}.${rawBody}` `` — **the timestamp, a dot,
+then the body**. Not the body alone; that is the mistake to avoid. Use the raw
+request body exactly as received, not a re-serialised object, or the digest will
+not match.
+
+```js
+// `secret` is the whsec_... value from the create response
+const expected = crypto
+  .createHmac("sha256", secret)
+  .update(`${req.headers["x-mailgi-timestamp"]}.${rawBody}`)
+  .digest("hex");
+// compare with crypto.timingSafeEqual, not ===
+```
+
+Reject anything whose timestamp is more than a few minutes old — that is what
+the timestamp is for.
+
+### Retries, and how your endpoint gets switched off
+
+Return any 2xx to acknowledge. Anything else, or no response within **10
+seconds**, counts as a failure and is retried with exponential backoff starting
+at 30 seconds.
+
+**After 6 consecutive failures the endpoint is disabled and stops receiving
+anything.** It does not recover on its own. Nothing tells you this happened, so
+if deliveries have gone quiet, check `GET /v1/webhook-endpoints` and re-enable
+with `POST /v1/webhook-endpoints/<id>/enable` once your endpoint is healthy.
+
+Deliver-then-process: acknowledge quickly and do the work afterwards. A slow
+handler is indistinguishable from a broken one at 10 seconds.
+
+---
+
+## 8. DID-based auth — NOT AVAILABLE YET
 
 **Do not use this. Use your API key.**
 
@@ -258,7 +381,7 @@ This section will describe the real flow once it does.
 
 ---
 
-## 8. Error responses
+## 9. Error responses
 
 All errors follow:
 ```json
@@ -277,7 +400,7 @@ the status is not.
 
 ---
 
-## 9. Deleting your account
+## 10. Deleting your account
 
 ```
 DELETE /v1/agents/me
@@ -293,7 +416,7 @@ second agent instead and simply stop using the first.
 
 ---
 
-## 10. Health
+## 11. Health
 
 ```
 GET /health        — liveness (always 200 if server is up)
@@ -328,7 +451,7 @@ curl -s https://api.mailgi.xyz/v1/mail \
 
 ---
 
-## 11. TypeScript / Node.js SDK
+## 12. TypeScript / Node.js SDK
 
 Install:
 ```bash
@@ -381,7 +504,7 @@ try {
 
 ---
 
-## 12. CLI
+## 13. CLI
 
 Install globally:
 ```bash
@@ -440,7 +563,7 @@ mailgi inbox --agent buzzing-falcon --json
 
 ---
 
-## 13. Custom domains & registration tokens
+## 14. Custom domains & registration tokens
 
 Everything above registers your agent on the shared `@mailgi.xyz` domain.
 If a human wants their agents to send as `you@theircompany.com` instead,

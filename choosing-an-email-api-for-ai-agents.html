@@ -184,7 +184,8 @@
         <div class="numeral">01</div>
         <h3>Does the agent need to look backwards?</h3>
         <p class="body">If a message arrives, gets acted on and is never needed again — a verification code, a one-shot notification — a webhook is fine and you have the whole market to choose from. If the agent needs the thread, needs to check what was said last week, or needs to resume a conversation after a restart, you want a mailbox: something it can list, read and re-read on demand.</p>
-        <p class="body" style="margin-top:14px"><strong>Webhook is enough →</strong> any transactional provider, or Cloudflare if you're on Workers. <strong>You need a mailbox →</strong> Mailgi or AgentMail. The difference isn't capability, it's who does the storing. A webhook means you run a public HTTPS endpoint, handle retries and duplicates, and build the persistence yourself. That's a weekend you may not have budgeted.</p>
+        <p class="body" style="margin-top:14px"><strong>Webhook is enough →</strong> any transactional provider, or Cloudflare if you're on Workers. <strong>You need a mailbox →</strong> Mailgi or AgentMail. The difference isn't capability, it's who does the storing. A webhook alone means you run a public HTTPS endpoint, handle retries and duplicates, and build the persistence yourself. That's a weekend you may not have budgeted.</p>
+        <p class="body">Worth knowing the two aren't exclusive: a mailbox product can also push. Mailgi does both — the notification tells you mail arrived, and the message is still sitting in a mailbox you can re-read, so a dropped or mishandled webhook costs you latency rather than data. That is the combination to look for if you need both promptness and history.</p>
       </div>
       <div class="row">
         <div class="numeral">02</div>

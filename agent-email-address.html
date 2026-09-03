@@ -56,7 +56,7 @@
         {
           "@type": "HowToStep",
           "name": "Read the inbox",
-          "text": "GET https://api.mailgi.xyz/v1/mail with the API key as a Bearer token to list messages, then GET /v1/mail/<id> for a full body as JSON. Mail from any sender is accepted. There is no push delivery today, so poll on an interval that suits the task."
+          "text": "GET https://api.mailgi.xyz/v1/mail with the API key as a Bearer token to list messages, then GET /v1/mail/<id> for a full body as JSON. Mail from any sender is accepted. Poll on an interval that suits the task, or register a webhook endpoint to be notified instead."
         },
         {
           "@type": "HowToStep",
@@ -102,7 +102,7 @@
           "name": "How does an agent know when new mail arrives?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "By polling. Mailgi has no webhooks or WebSocket push today — an agent calls GET /v1/mail on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Push delivery is planned but not shipped, and any guide that tells you to register a webhook URL with Mailgi is describing something that does not exist yet."
+            "text": "Two ways. Polling: call GET /v1/mail on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Or register a webhook endpoint with POST /v1/webhook-endpoints and Mailgi will POST a notification when mail arrives, carrying sender, subject and a preview, signed so you can verify it came from us. Webhooks are only worth it if you already run a public HTTPS endpoint; polling is less work and no worse for most tasks. There is still no WebSocket."
           }
         },
         {
@@ -274,7 +274,7 @@ curl -X POST https://api.mailgi.xyz/v1/agents/register \
       <div>
         <h3 style="margin-bottom:14px">Receive, and read</h3>
         <p class="body">Mail from any sender lands in the inbox and is readable over the API seconds later. List messages, then fetch one by id for the full body as JSON — no MIME parsing on your side.</p>
-        <p class="body" style="margin-top:18px"><strong>There is no push delivery today.</strong> No webhooks, no WebSocket — an agent finds out about new mail by asking. Poll fast for a verification code, slowly for a support inbox. There is also no search: page through the list and match messages yourself.</p>
+        <p class="body" style="margin-top:18px"><strong>Poll, or register a webhook.</strong> Polling is the simpler option and fine for most work — fast for a verification code, slowly for a support inbox. If you already run a public HTTPS endpoint, <span class="mono">POST /v1/webhook-endpoints</span> gets you told instead. There is no WebSocket, and no search: page through the list and match messages yourself.</p>
       </div>
       <div style="min-width:0">
 <pre class="code"># Wait for a verification code to arrive
@@ -387,7 +387,7 @@ curl -X POST https://api.mailgi.xyz/v1/mail/send \
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">How does an agent know when new mail arrives?</span><span class="mark"></span></summary>
-        <p class="a">By polling. Mailgi has no webhooks or WebSocket push today — an agent calls <span class="mono">GET /v1/mail</span> on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Push delivery is planned but not shipped, and any guide that tells you to register a webhook URL with Mailgi is describing something that doesn't exist yet.</p>
+        <p class="a">Two ways. Poll <span class="mono">GET /v1/mail</span> on an interval suited to the task — every few seconds for a verification code, every minute or two for a support inbox. Or register a webhook with <span class="mono">POST /v1/webhook-endpoints</span> and we'll POST you a notification carrying sender, subject and a preview, signed so you can verify it came from us. Webhooks are only worth it if you already run a public HTTPS endpoint; polling is less work and no worse for most tasks. There's still no WebSocket.</p>
       </details>
       <details>
         <summary><span class="numeral">05</span><span class="q">Do I need my own domain to give an agent an email address?</span><span class="mark"></span></summary>

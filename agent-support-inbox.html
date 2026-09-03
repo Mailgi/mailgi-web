@@ -66,7 +66,7 @@
         {
           "@type": "HowToStep",
           "name": "Poll and triage",
-          "text": "Call GET /v1/mail?mailboxId=<inbox> on an interval of a minute or two, fetch each unseen message in full, decide what to do, then reply, mark it seen with PATCH /v1/mail/<id>/flags and file it with PATCH /v1/mail/<id>/move."
+          "text": "Either poll GET /v1/mail?mailboxId=<inbox> on an interval of a minute or two, or register a webhook endpoint and be notified as mail arrives. For a support queue a webhook is genuinely worth it, since you already run a server. Then fetch each message in full, decide what to do, reply, mark it seen with PATCH /v1/mail/<id>/flags and file it with PATCH /v1/mail/<id>/move."
         }
       ]
     },
@@ -86,7 +86,7 @@
           "name": "How does an agent know a new support email has arrived?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "By polling GET /v1/mail on an interval. Mailgi has no webhooks and no WebSocket push today, so there is no way to be notified. For a support queue this is rarely a real constraint — polling every sixty to ninety seconds is well within what customers expect from an email response, and it costs nothing because reading mail is unmetered."
+            "text": "Either way. Register a webhook endpoint with POST /v1/webhook-endpoints and Mailgi will POST you a signed notification carrying the sender, subject and a preview as mail arrives — for a support queue this is the better option, because you are already running a server and it removes the polling latency. Or poll GET /v1/mail every sixty to ninety seconds, which is well within what customers expect from email and costs nothing since reading is unmetered. There is no WebSocket."
           }
         },
         {
@@ -234,7 +234,7 @@ done
     <div class="stack-split">
       <div>
         <h3 style="margin-bottom:14px">The triage loop</h3>
-        <p class="body">Poll the inbox, take what is unseen, fetch each in full, decide, act. Reading is unmetered, so polling costs nothing but the request.</p>
+        <p class="body">Poll the inbox, take what is unseen, fetch each in full, decide, act. Reading is unmetered, so polling costs nothing but the request. A webhook removes the latency if you would rather be told — see <span class="mono">SKILL.md</span> §7 — but the loop below is the same either way once you have a message id.</p>
         <p class="body" style="margin-top:18px">Note the two <span class="mono">PATCH</span> calls at the end. Marking seen is what stops the next pass picking the message up again; moving it is what records the outcome. Both return <span class="mono">204</span> with no body.</p>
       </div>
       <div style="min-width:0">
@@ -297,8 +297,8 @@ done</pre>
       </div>
       <div class="row">
         <div class="numeral">02</div>
-        <h3>No push — you poll</h3>
-        <p class="body">No webhooks, no WebSocket. The agent finds out about mail by asking. For support this is mostly a non-issue: a minute of latency is invisible against email expectations, and reading is unmetered so the polling itself is free.</p>
+        <h3>Webhooks now exist</h3>
+        <p class="body"><span class="mono">POST /v1/webhook-endpoints</span> registers an HTTPS URL and Mailgi POSTs a signed notification as mail arrives — for a support queue the better choice, since you already run a server. One thing to watch: the endpoint is <strong>disabled after six consecutive delivery failures</strong> and does not recover on its own, so a broken deploy can silence it quietly. There is still no WebSocket.</p>
       </div>
       <div class="row">
         <div class="numeral">03</div>
@@ -347,7 +347,7 @@ done</pre>
       </details>
       <details>
         <summary><span class="numeral">02</span><span class="q">How does an agent know a new support email arrived?</span><span class="mark"></span></summary>
-        <p class="a">By polling <span class="mono">GET /v1/mail</span> on an interval. There are no webhooks and no WebSocket today, so there's no way to be notified. For a support queue this is rarely a real constraint — every sixty to ninety seconds is well within what customers expect from email, and it costs nothing because reading is unmetered.</p>
+        <p class="a">Either way, and for a support queue a webhook is the better one. <span class="mono">POST /v1/webhook-endpoints</span> registers an HTTPS URL and we POST a signed notification with the sender, subject and a preview as mail arrives — you are already running a server, so the usual objection does not apply. Polling <span class="mono">GET /v1/mail</span> every sixty to ninety seconds also works and costs nothing, since reading is unmetered. There is no WebSocket.</p>
       </details>
       <details>
         <summary><span class="numeral">03</span><span class="q">How do you stop an AI agent sending a bad reply?</span><span class="mark"></span></summary>

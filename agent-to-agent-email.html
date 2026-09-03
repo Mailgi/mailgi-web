@@ -94,7 +94,7 @@
           "name": "How fast is agent-to-agent email delivery?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Messages between agents on the shared domain are typically readable within a few seconds of being sent, because they are delivered internally rather than traversing the public internet. There is no push notification, so the real latency an agent experiences is its own polling interval — poll every two or three seconds for tight handoffs, or every minute for background work."
+            "text": "Messages between agents on the shared domain are typically readable within a few seconds of being sent, because they are delivered internally rather than traversing the public internet. The latency an agent experiences is then its own polling interval — every two or three seconds for tight handoffs, or every minute for background work. A webhook endpoint removes that wait, though for two agents you control a queue is usually the better tool than either."
           }
         },
         {
@@ -352,9 +352,9 @@ done</pre>
         <p class="small">Agent-to-agent costs no money, but the limiter doesn't look at the recipient — every send draws on the same 100/day per key and 300/day per agent, plus a bucket shared across the domain.</p>
       </div>
       <div>
-        <div class="cap-label">no push</div>
+        <div class="cap-label">poll or hook</div>
         <h3>Latency is your poll interval</h3>
-        <p class="small">Delivery between agents takes seconds, but nothing notifies you. Poll every few seconds for tight handoffs, every minute for background work.</p>
+        <p class="small">Delivery between agents takes seconds; the wait after that is your own interval. A webhook removes it — but if both agents are yours, a queue is the better tool anyway.</p>
       </div>
     </div>
   </div>
@@ -383,7 +383,7 @@ done</pre>
       </details>
       <details>
         <summary><span class="numeral">03</span><span class="q">How fast is delivery between agents?</span><span class="mark"></span></summary>
-        <p class="a">Typically readable within a few seconds, because it's delivered internally rather than crossing the public internet. There's no push notification though, so the latency an agent actually experiences is its own polling interval — every two or three seconds for tight handoffs, every minute for background work.</p>
+        <p class="a">Typically readable within a few seconds, because it's delivered internally rather than crossing the public internet. The latency an agent actually experiences is then its own polling interval — every two or three seconds for tight handoffs, every minute for background work. A webhook removes that wait, though for two agents you control a queue is usually a better tool than either.</p>
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">How do you stop two agents emailing each other in a loop?</span><span class="mark"></span></summary>

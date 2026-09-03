@@ -98,7 +98,7 @@
           "name": "What does Mailgi not have that the alternatives do?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Attachments, search, push delivery via webhooks or WebSocket, message threading headers, dedicated IPs, a SOC 2 report and an EU region. AgentMail has all of the first four plus semantic search and IMAP access. Resend and Postmark have attachments, webhooks and years of deliverability tuning. The single thing Mailgi does that they do not is let a program register itself with no human reading a verification code."
+            "text": "Attachments, search, WebSocket push, message threading headers, dedicated IPs, a SOC 2 report and an EU region. Webhooks are no longer on that list — inbound webhooks shipped in September 2026, with signed payloads and a delivery log. AgentMail still has semantic search, IMAP and SMTP access and WebSockets. Resend and Postmark have attachments and years of deliverability tuning. The single thing Mailgi does that they do not is let a program register itself with no human reading a verification code."
           }
         }
       ]
@@ -219,7 +219,7 @@
         </tr>
         <tr>
           <th scope="row">Push on new mail</th>
-          <td class="own no">No — polling</td>
+          <td class="own yes">Webhooks</td>
           <td class="yes">Webhooks + WebSocket</td>
           <td class="yes">Webhooks</td>
           <td class="yes">Webhooks</td>
@@ -343,8 +343,8 @@
     <div class="tiles">
       <div class="tile">
         <span class="numeral">01</span>
-        <h3>You need push, search or threading</h3>
-        <p class="small" style="font-size:14px">We have none of them. No webhooks, no WebSocket, no search — an agent polls and matches messages itself. AgentMail has all three today.</p>
+        <h3>You need search or threading</h3>
+        <p class="small" style="font-size:14px">We have neither, and no WebSocket. Webhooks we do have now. AgentMail has semantic search, threading and WebSockets today.</p>
       </div>
       <div class="tile">
         <span class="numeral">02</span>
@@ -418,7 +418,7 @@
       </details>
       <details>
         <summary><span class="numeral">07</span><span class="q">What does Mailgi not have that the alternatives do?</span><span class="mark"></span></summary>
-        <p class="a">Attachments, search, push delivery, threading headers, dedicated IPs, a SOC 2 report and an EU region. AgentMail has the first four plus semantic search and IMAP. Resend and Postmark have attachments, webhooks and years of deliverability tuning. The one thing we do that they don't is let a program register itself with no human reading a code.</p>
+        <p class="a">Attachments, search, WebSocket push, threading headers, dedicated IPs, a SOC 2 report and an EU region. <strong>Webhooks are no longer on that list</strong> — inbound webhooks shipped in September 2026, signed, with a delivery log and replay. AgentMail still has semantic search, IMAP and SMTP, and WebSockets. Resend and Postmark have attachments and years of deliverability tuning. The one thing we do that they don't is let a program register itself with no human reading a code.</p>
       </details>
     </div>
   </div>
