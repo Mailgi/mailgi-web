@@ -140,6 +140,10 @@ a:hover { color: var(--accent-dark); }
   }
 }
 
+/* Anything that also sets vertical padding must use padding-block, never the
+   `padding` shorthand — the shorthand zeroes these gutters, and .hero/.section
+   come later in the file so they win. On desktop max-width hides the damage;
+   on a phone the content lands flush against the screen edge. */
 .shell { max-width: var(--shell); margin: 0 auto; width: 100%; padding-left: var(--gutter); padding-right: var(--gutter); }
 .rule-top { border-top: 1px solid var(--rule); }
 .surface { background: var(--surface); }
@@ -173,6 +177,7 @@ em.accent-light { font-style: italic; color: var(--accent-light); }
 
 /* ── Nav ──────────────────────────────────────────────────────────────── */
 .nav {
+  position: relative;
   display: flex; align-items: center; gap: 32px;
   padding-top: 28px; padding-bottom: 28px;
   border-bottom: 1px solid var(--rule);
@@ -213,7 +218,7 @@ em.accent-light { font-style: italic; color: var(--accent-light); }
 .link-serif:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ── Layout pieces ────────────────────────────────────────────────────── */
-.hero { padding: 110px 0 90px; }
+.hero { padding-block: 110px 90px; }
 .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 52px; align-items: end; }
 .hero-actions { display: flex; gap: 16px; justify-content: flex-end; align-items: center; flex-wrap: wrap; }
 
@@ -226,12 +231,12 @@ em.accent-light { font-style: italic; color: var(--accent-light); }
 }
 .pull .mono { font-style: normal; font-size: 17px; color: var(--accent-light); }
 .caps-note { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--on-dark-dim); margin-top: 26px; }
-.codeblock { font-family: var(--mono); font-size: 13.5px; line-height: 1.9; }
+.codeblock { font-family: var(--mono); font-size: 13.5px; line-height: 1.9;  overflow-x: auto;}
 .codeblock .c { color: var(--on-dark-faint); }
 .codeblock .v { color: var(--accent-light); }
 
-.section { padding: 96px 0; }
-.section-sm { padding: 72px 0; }
+.section { padding-block: 96px; }
+.section-sm { padding-block: 72px; }
 
 /* Numbered editorial rows */
 .rows { display: flex; flex-direction: column; }
@@ -389,58 +394,59 @@ pre.code {
 .prose strong { color: var(--ink); font-weight: 600; }
 .prose a { color: var(--accent-dark); text-decoration: underline; text-underline-offset: 2px; }
 
-/* ── Resources submenu (#87) ──────────────────────────────────────────────
-   Native <details> rather than a hover menu or a JS one, for three reasons:
-   every href stays in the served HTML so crawlers see all of them (§2.1), it
-   is keyboard-operable for free, and hover menus are unusable on touch —
-   which is why #87 and #88 were one job. */
-.nav-menu { position: relative; display: inline-block; }
-.nav-menu > summary {
-  list-style: none; cursor: pointer;
-  color: var(--muted-2); display: inline-flex; align-items: center; gap: 5px;
-}
-.nav-menu > summary::-webkit-details-marker { display: none; }
-.nav-menu > summary::after {
+/* ── Mobile drawer ───────────────────────────────────────────────────────
+   A visually-hidden-but-focusable checkbox drives this, not <details>.
+   <details> was wrong twice: a closed one gets content-visibility:hidden from
+   the UA, so nested inside the drawer its links rendered without contributing
+   height, and used AS the drawer it hid the desktop nav outright even with
+   display:contents. The state must be open on desktop and closed on mobile,
+   and `open` is an attribute CSS cannot vary. :checked ~ can. */
+.nav-toggle-cb { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.nav-toggle { display: none; }
+
+
+/* ── Resources group (#87) ────────────────────────────────────────────────
+   Not a <details>: a closed one gets content-visibility:hidden from the UA, so
+   on mobile — where the panel must be visible inside the open drawer — its
+   links render without contributing height and hang outside the panel. That is
+   not overridable from the child.
+
+   Instead: a real link as the trigger, revealed on hover or focus-within.
+   Tapping it goes to /guides.html, so it is a useful destination rather than a
+   dead end on touch, and keyboard users get the panel the moment focus enters.
+   Every href sits in the served HTML either way. */
+.nav-group { position: relative; display: inline-block; }
+.nav-group-trigger { display: inline-flex; align-items: center; gap: 5px; }
+.nav-group-trigger::after {
   content: '';
   width: 5px; height: 5px; margin-top: -3px;
   border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
-  transform: rotate(45deg); transition: transform .15s;
+  transform: rotate(45deg);
 }
-.nav-menu[open] > summary::after { transform: rotate(-135deg); margin-top: 2px; }
-.nav-menu > summary:hover { color: var(--ink); }
-.nav-menu > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-/* A page inside the menu marks its own link; surface that on the trigger too,
-   so the header still says where you are. */
-.nav-menu:has(a[aria-current="page"]) > summary { color: var(--ink); }
+.nav-group:has(a[aria-current="page"]) > .nav-group-trigger { color: var(--ink); }
 
-/* Display is driven off [open] rather than left to the UA. Chrome hides closed
-   <details> content with content-visibility, which an explicit `display` on the
-   child can interact with unpredictably, and Safari and Firefox differ. This is
-   deterministic. The hrefs stay in the served HTML either way — hiding here is
-   CSS, exactly as with the FAQ. */
-.nav-menu-panel { display: none; }
-.nav-menu[open] > .nav-menu-panel {
+.nav-menu-panel {
   position: absolute; top: calc(100% + 12px); left: -14px; z-index: 40;
-  display: flex; flex-direction: column; min-width: 176px;
+  display: none; flex-direction: column; min-width: 176px;
   padding: 8px; gap: 2px;
   background: var(--bg); border: 1px solid var(--rule-strong); border-radius: 8px;
   box-shadow: 0 12px 28px rgba(22, 33, 31, .1);
 }
-.nav-menu-panel a {
-  padding: 8px 12px; border-radius: 5px; white-space: nowrap;
-  color: var(--muted);
-}
+.nav-group:hover > .nav-menu-panel,
+.nav-group:focus-within > .nav-menu-panel { display: flex; }
+.nav-menu-panel a { padding: 8px 12px; border-radius: 5px; white-space: nowrap; color: var(--muted); }
 .nav-menu-panel a:hover { background: var(--surface); color: var(--ink); }
-.nav-menu-panel a[aria-current="page"] {
-  color: var(--ink); border-bottom: 0; padding-bottom: 8px; background: var(--surface);
-}
+.nav-menu-panel a[aria-current="page"] { color: var(--ink); background: var(--surface); border-bottom: 0; padding-bottom: 8px; }
 
-/* ── Responsive ───────────────────────────────────────────────────────── */
+/* ── Responsive: tablet ───────────────────────────────────────────────────
+   Restored after a too-greedy regex deletion removed it wholesale, taking
+   --gutter: 24px and every grid collapse with it. Note the padding-block
+   rules: the `padding` shorthand here would re-zero .shell's gutters. */
 @media (max-width: 900px) {
   :root { --gutter: 24px; }
-  .hero { padding: 64px 0 56px; }
-  .section { padding: 56px 0; }
-  .section-sm { padding: 48px 0; }
+  .hero { padding-block: 64px 56px; }
+  .section { padding-block: 56px; }
+  .section-sm { padding-block: 48px; }
   .hero-grid, .split, .stack-split { grid-template-columns: 1fr; gap: 32px; }
   .hero-actions { justify-content: flex-start; }
   .split > .quote { padding: 48px 0 32px; border-right: 0; border-bottom: 1px solid rgba(242, 241, 236, .14); }
@@ -455,8 +461,62 @@ pre.code {
   .consent-actions { margin-left: 0; width: 100%; }
   .consent-btn { flex: 1; }
   .nav { gap: 18px; }
-  .nav-links { gap: 16px 18px; }
   .footer-end { margin-left: 0; }
+}
+
+@media (max-width: 700px) {
+  .nav-toggle {
+    display: flex; align-items: center; justify-content: center;
+    order: 3; margin-left: auto; cursor: pointer;
+    width: 40px; height: 40px;
+    border: 1px solid var(--rule-strong); border-radius: 7px; background: var(--bg);
+  }
+  .nav-toggle-cb:focus-visible + .nav-toggle { outline: 2px solid var(--accent); outline-offset: 2px; }
+  /* Three bars from one element: the middle is the box, the outer two are
+     pseudo-elements. Becomes a cross when open. */
+  .nav-toggle-bars, .nav-toggle-bars::before, .nav-toggle-bars::after {
+    content: ''; display: block; width: 18px; height: 1.5px;
+    background: var(--ink); border-radius: 2px; transition: transform .18s, background .18s;
+  }
+  .nav-toggle-bars { position: relative; }
+  .nav-toggle-bars::before { position: absolute; top: -6px; }
+  .nav-toggle-bars::after { position: absolute; top: 6px; }
+  .nav-toggle-cb:checked + .nav-toggle .nav-toggle-bars { background: transparent; }
+  .nav-toggle-cb:checked + .nav-toggle .nav-toggle-bars::before { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle-cb:checked + .nav-toggle .nav-toggle-bars::after { transform: translateY(-6px) rotate(-45deg); }
+
+  .nav-links { display: none; }
+
+  /* Inside an open drawer the group is already "in", so its links show flat
+     rather than making Compare a two-tap destination. Static positioning is
+     what lets them contribute height to the drawer. */
+  .nav-links > a, .nav-group-trigger {
+    padding: 13px 0; border-bottom: 1px solid var(--rule); font-size: 15px;
+  }
+  .nav-group { display: block; width: 100%; }
+  .nav-group-trigger {
+    display: block; color: var(--muted-2); font-size: 12px;
+    letter-spacing: .08em; text-transform: uppercase;
+    border-bottom: 0; padding: 14px 0 4px;
+  }
+  .nav-group-trigger::after { display: none; }
+  .nav-menu-panel,
+  .nav-group:hover > .nav-menu-panel,
+  .nav-group:focus-within > .nav-menu-panel {
+    display: flex; flex-direction: column; position: static;
+    box-shadow: none; border: 0; background: transparent;
+    padding: 0; margin: 0; min-width: 0;
+  }
+  .nav-menu-panel a { padding: 13px 0; border-bottom: 1px solid var(--rule); border-radius: 0; white-space: normal; }
+  .nav-menu-panel a:hover { background: transparent; }
+
+  .nav-toggle-cb:checked ~ .nav-links {
+    position: absolute; left: 0; right: 0; top: 100%; z-index: 45;
+    display: flex; flex-direction: column; gap: 0;
+    padding: 8px var(--gutter) 16px;
+    background: var(--bg); border-bottom: 1px solid var(--rule);
+    box-shadow: 0 14px 28px rgba(22, 33, 31, .09);
+  }
 }
 
 /* ── Phone (#88) ──────────────────────────────────────────────────────────
@@ -467,32 +527,23 @@ pre.code {
   .nav { gap: 12px; padding-top: 20px; padding-bottom: 20px; }
   .brand { font-size: 22px; }
   .brand img { width: 22px; height: 22px; }
-  .nav-links { gap: 14px 16px; font-size: 13.5px; width: 100%; }
-  /* Tap targets: 13px text with no padding is not a touch target. */
-  .nav-links > a, .nav-menu > summary { padding: 6px 0; }
-  /* On a narrow screen an absolutely-positioned panel is worse than one that
-     pushes the page down — it can overflow the viewport edge and there is no
-     room for it to sit beside anything. */
-  .nav-menu { display: block; width: 100%; }
-  .nav-menu[open] > .nav-menu-panel {
-    position: static; box-shadow: none; min-width: 0;
-    margin-top: 8px; background: var(--surface);
-  }
-  .nav-menu-panel a { padding: 10px 12px; }
-  .nav-end { gap: 12px; width: 100%; }
+  .nav-end { gap: 12px; }
   .nav-note { display: none; }   /* markup stays; only hidden visually */
 
-  .hero { padding: 44px 0 40px; }
+  .hero { padding-block: 44px 40px; }
   h1 { font-size: clamp(30px, 9vw, 40px); }
   h2 { font-size: clamp(23px, 6.5vw, 28px); }
   .lede { font-size: 17px; }
-  .section { padding: 44px 0; }
-  .section-sm { padding: 36px 0; }
+  .section { padding-block: 44px; }
+  .section-sm { padding-block: 36px; }
 
   /* Long lines are the main overflow risk on this site. They scroll inside
      their own box; the page body never scrolls sideways. */
   pre.code { font-size: 11.5px; padding: 16px 14px; overflow-x: auto; }
-  .codeblock { font-size: 11.5px; }
+  /* Same guard as pre.code. Restoring .shell's gutter (it was being zeroed
+     by the padding shorthand) narrowed the content box enough to push these
+     long lines past the viewport edge, so the fix surfaced this. */
+  .codeblock { font-size: 11.5px; overflow-x: auto; }
   .prose h2 { margin: 40px 0 14px; }
   .prose p, .prose li { font-size: 15px; }
 

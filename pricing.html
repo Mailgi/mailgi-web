@@ -133,18 +133,20 @@
     <img src="/favicon.svg" alt="" width="26" height="26" />
     <span>mailgi</span>
   </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
   <div class="nav-links">
     <a href="/">Product</a>
     <a href="/agents.html">For agents</a>
     <a href="/pricing.html" aria-current="page">Pricing</a>
-    <details class="nav-menu">
-      <summary>Resources</summary>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
       <div class="nav-menu-panel">
         <a href="/guides.html">Guides</a>
         <a href="/vs-resend-postmark-mailgun.html">Compare</a>
         <a href="https://api.mailgi.xyz/docs">Docs <span aria-hidden="true">&#8599;</span></a>
       </div>
-    </details>
+    </div>
   </div>
   <div class="nav-end">
     <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
