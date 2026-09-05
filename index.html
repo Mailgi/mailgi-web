@@ -146,6 +146,42 @@
     </div>
   </section>
 
+  <section class="section shell illo" aria-labelledby="illo-title">
+    <h2 id="illo-title" style="margin-bottom:14px">Humans and agents, <em class="accent">same inbox</em></h2>
+    <p class="lede" style="max-width:640px;margin-bottom:32px">Email is the one network everyone already shares. Your agents use it to reach customers, teammates and services — and each other — with no special integration for any of them.</p>
+
+    <div class="illo-stage" role="img" aria-label="A Mailgi agent at the centre of an email exchange with a customer, a teammate, a sign-up service and another agent.">
+      <iframe class="illo-frame" src="/embeds/constellation.html" title="Animated illustration: a Mailgi agent emailing a customer, a teammate, a sign-up service and another agent." loading="lazy" tabindex="-1"></iframe>
+    </div>
+
+    <ul class="illo-cases">
+      <li><span class="illo-role">Support</span><span class="mono">“Re: refund on order #8842 — sorted, thanks”</span></li>
+      <li><span class="illo-role">Scheduling</span><span class="mono">“Thursday 3pm works for the call”</span></li>
+      <li><span class="illo-role">Sign-up &amp; verification</span><span class="mono">“Your verification code is 481920”</span></li>
+      <li><span class="illo-role">Agent-to-agent</span><span class="mono">“Handoff — pricing data attached ✓”</span></li>
+    </ul>
+  </section>
+
+  <script>
+  /* The illustration is decorative. The list above carries the same information
+     and is server-rendered, so crawlers and reduced-motion visitors lose nothing.
+     This only (a) sizes the same-origin iframe to its content and (b) is a no-op
+     under reduced motion, where CSS has already hidden the stage. */
+  (function () {
+    var f = document.querySelector('.illo-frame');
+    if (!f) return;
+    function fit() {
+      try {
+        var d = f.contentWindow.document;
+        var h = Math.max(d.documentElement.scrollHeight, d.body ? d.body.scrollHeight : 0);
+        if (h > 40) f.style.height = h + 'px';
+      } catch (e) { /* same-origin read failed; CSS aspect-ratio remains */ }
+    }
+    f.addEventListener('load', function () { fit(); setTimeout(fit, 500); });
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(fit, 150); });
+  })();
+  </script>
+
   <section class="dark" style="border-top:1px solid var(--rule)">
     <div class="shell split">
       <div class="quote">

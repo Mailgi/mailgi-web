@@ -40,8 +40,11 @@
 	@apex host mailgi.xyz
 	redir @apex https://www.mailgi.xyz{uri} permanent
 
-	# Security headers
-	header {
+	# Security headers — every page EXCEPT the sandboxed illustration embed
+	# (see the @embeds block below). The two matchers are mutually exclusive,
+	# so a request ever gets exactly one Content-Security-Policy.
+	@pages not path /embeds/*
+	header @pages {
 		# Enable cross-site filter (XSS) and tell browsers to block detected attacks
 		X-XSS-Protection "1; mode=block"
 		# Prevent some browsers from MIME-sniffing a response away from the declared Content-Type
@@ -51,6 +54,23 @@
 		# Enable strict Content Security Policy
 		Content-Security-Policy "default-src 'self'; img-src 'self' data: https: *; style-src 'self' 'unsafe-inline' https: *; script-src 'self' 'unsafe-inline' https: *; font-src 'self' data: https: *; connect-src 'self' https: *; media-src 'self' https: *; object-src 'none'; frame-src 'self' https: *;"
 		# Remove Server header
+		-Server
+	}
+
+	# /embeds/* — the homepage "constellation" illustration. It is a
+	# self-contained React artifact whose runtime loads its code as data: URLs
+	# and executes every component through new Function(), so it cannot run
+	# under the strict policy above: it needs 'unsafe-eval' plus data:/blob:
+	# sources. That relaxation is DELIBERATELY confined to this path only.
+	# The embed is noindex, takes no user input, holds no secrets, and is
+	# framed by our own pages only (frame-ancestors 'self'). Rationale and
+	# alternatives considered: mailgi-platform docs/decisions/ (homepage
+	# illustration). Do not widen this to other paths.
+	@embeds path /embeds/*
+	header @embeds {
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: https: *; style-src 'self' 'unsafe-inline' https: *; script-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https: *; font-src 'self' data: https: *; connect-src 'self' data: blob: https: *; media-src 'self' data: blob: https: *; object-src 'none'; frame-ancestors 'self';"
 		-Server
 	}
 

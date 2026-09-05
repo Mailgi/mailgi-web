@@ -559,3 +559,57 @@ pre.code {
   h1 { font-size: 28px; }
   pre.code { font-size: 11px; }
 }
+
+
+/* ---- Homepage illustration: decorative iframe + crawlable use-case list ---- */
+.illo-stage {
+  margin: 6px 0 30px;
+  max-width: 1000px;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 1px 0 var(--rule), 0 12px 30px rgba(22, 33, 31, 0.06);
+}
+.illo-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* desktop default; JS refines to real content height */
+  min-height: 320px;
+  border: 0;
+}
+.illo-cases {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 44px;
+}
+.illo-cases li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 16px;
+  border-left: 2px solid var(--accent-light);
+}
+.illo-role {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.illo-cases .mono { font-size: 14px; color: var(--ink); }
+
+@media (max-width: 700px) {
+  .illo-cases { grid-template-columns: 1fr; }
+  .illo-frame { aspect-ratio: 4 / 5; min-height: 480px; }  /* taller fallback for the vertical reflow; JS sets exact height */
+}
+
+/* Reduced motion: drop the animation entirely; the list carries the message. */
+@media (prefers-reduced-motion: reduce) {
+  .illo-stage { display: none; }
+}
