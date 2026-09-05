@@ -165,20 +165,30 @@
   <script>
   /* The illustration is decorative. The list above carries the same information
      and is server-rendered, so crawlers and reduced-motion visitors lose nothing.
-     This only (a) sizes the same-origin iframe to its content and (b) is a no-op
-     under reduced motion, where CSS has already hidden the stage. */
+     This only sizes the same-origin iframe to what its player expects: the
+     player contain-fits a fixed-size scene canvas and reserves 44px for a
+     (hidden) playback bar, so height = width * canvasH/canvasW + 44. Reading
+     the canvas size live keeps this right if the mobile layout changes shape.
+     A no-op under reduced motion, where CSS has already hidden the stage. */
   (function () {
     var f = document.querySelector('.illo-frame');
     if (!f) return;
+    var BAR = 44, tries = 0;
     function fit() {
       try {
         var d = f.contentWindow.document;
-        var h = Math.max(d.documentElement.scrollHeight, d.body ? d.body.scrollHeight : 0);
-        if (h > 40) f.style.height = h + 'px';
-      } catch (e) { /* same-origin read failed; CSS aspect-ratio remains */ }
+        var svg = d.querySelector('[data-om-starter] svg');
+        var W = +(svg && svg.getAttribute('width')) || 1920;
+        var H = +(svg && svg.getAttribute('height')) || 1080;
+        f.style.height = Math.round(f.clientWidth * H / W + BAR) + 'px';
+        return !!svg;
+      } catch (e) { return false; }
     }
-    f.addEventListener('load', function () { fit(); setTimeout(fit, 500); });
-    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(fit, 150); });
+    // The engine mounts the scene asynchronously (it compiles it in-page), so
+    // retry briefly until the canvas exists, then settle.
+    function settle() { if (!fit() && tries++ < 25) setTimeout(settle, 200); }
+    f.addEventListener('load', settle);
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(fit, 120); });
   })();
   </script>
 

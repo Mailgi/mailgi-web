@@ -574,9 +574,10 @@ pre.code {
 .illo-frame {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;   /* desktop default; JS refines to real content height */
+  aspect-ratio: 16 / 9;   /* fallback if the sizing script can't run; JS sets the exact height */
   min-height: 320px;
   border: 0;
+  overflow: hidden;
 }
 .illo-cases {
   list-style: none;
@@ -606,7 +607,7 @@ pre.code {
 
 @media (max-width: 700px) {
   .illo-cases { grid-template-columns: 1fr; }
-  .illo-frame { aspect-ratio: 4 / 5; min-height: 480px; }  /* taller fallback for the vertical reflow; JS sets exact height */
+  .illo-frame { min-height: 360px; }  /* the scene reflows inside its canvas; JS sizes from the live canvas ratio */
 }
 
 /* Reduced motion: drop the animation entirely; the list carries the message. */
