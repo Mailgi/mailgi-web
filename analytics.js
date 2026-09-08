@@ -26,9 +26,12 @@
  *   the two outbound clicks that signal intent is the useful signal;
  *   recording every click would be more data and less insight.
  *
- * - session recording off — nothing sensitive on these pages today, but it's
- *   off by default on both surfaces so it can't get switched on by accident
- *   (see the dashboard's analytics.ts for the case where it genuinely matters).
+ * - session recording ON, here only — these are static marketing pages with
+ *   nothing sensitive on them, and replays show where visitors stall before
+ *   signing up. Inputs are masked anyway as a safe default should a form ever
+ *   be added. This stays OFF on the dashboard (see its analytics.ts): it
+ *   displays raw API keys and webhook secrets, which replay would ship to a
+ *   third-party store. Disclosed on privacy.html (PostHog row).
  */
 (function () {
   var POSTHOG_KEY = "phc_nGKKLpWd6d9zuDQ7XfBVqnfp79SLmmru6iQqRnDkeN88";
@@ -47,7 +50,8 @@
     // would be the one event in the session with no attribution on it --
     // and it is the event that answers "did this ad produce a visit".
     capture_pageview: false,
-    disable_session_recording: true,
+    disable_session_recording: false,
+    session_recording: { maskAllInputs: true },
   });
 
   // Campaign parameters from attribution.js, attached to every subsequent
