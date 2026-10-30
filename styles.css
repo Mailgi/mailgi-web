@@ -434,6 +434,11 @@ pre.code {
 }
 .nav-group:hover > .nav-menu-panel,
 .nav-group:focus-within > .nav-menu-panel { display: flex; }
+/* Invisible bridge over the 12px gap above the panel. Without it the pointer
+   leaves .nav-group on its way down and the panel closes before it is reached. */
+.nav-menu-panel::before {
+  content: ''; position: absolute; left: 0; right: 0; top: -13px; height: 13px;
+}
 .nav-menu-panel a { padding: 8px 12px; border-radius: 5px; white-space: nowrap; color: var(--muted); }
 .nav-menu-panel a:hover { background: var(--surface); color: var(--ink); }
 .nav-menu-panel a[aria-current="page"] { color: var(--ink); background: var(--surface); border-bottom: 0; padding-bottom: 8px; }
@@ -507,6 +512,7 @@ pre.code {
     box-shadow: none; border: 0; background: transparent;
     padding: 0; margin: 0; min-width: 0;
   }
+  .nav-menu-panel::before { display: none; }
   .nav-menu-panel a { padding: 13px 0; border-bottom: 1px solid var(--rule); border-radius: 0; white-space: normal; }
   .nav-menu-panel a:hover { background: transparent; }
 
