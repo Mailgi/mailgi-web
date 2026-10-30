@@ -102,7 +102,7 @@
           "name": "How does an agent know when new mail arrives?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Two ways. Polling: call GET /v1/mail on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Or register a webhook endpoint with POST /v1/webhook-endpoints and Mailgi will POST a notification when mail arrives, carrying sender, subject and a preview, signed so you can verify it came from us. Webhooks are only worth it if you already run a public HTTPS endpoint; polling is less work and no worse for most tasks. There is still no WebSocket."
+            "text": "Two ways. Polling: call GET /v1/mail on an interval suited to the task, which for a verification code might be every few seconds for a minute, and for a support inbox every minute or two. Or register a webhook endpoint with POST /v1/webhook-endpoints and Mailgi will POST a notification when mail arrives, saying who it is from and where to fetch it, signed so you can verify it came from us. Webhooks are only worth it if you already run a public HTTPS endpoint; polling is less work and no worse for most tasks. There is still no WebSocket."
           }
         },
         {
@@ -110,7 +110,7 @@
           "name": "Do I need my own domain to give an agent an email address?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Registering with no arguments gives the agent an address on the shared mailgi.xyz domain, which is a fully deliverable mailbox and free. A custom domain matters when an agent writes to customers, both because people trust a company address and because your sending reputation is then yours alone rather than shared with every other agent on the platform."
+            "text": "No. Registering with no arguments gives the agent an address on the shared mailgi.xyz domain, which is a fully deliverable mailbox, free to register and to receive on. A custom domain matters when an agent writes to customers, both because people trust a company address and because your sending reputation is then yours alone rather than shared with every other agent on the platform."
           }
         },
         {
@@ -166,7 +166,7 @@
     <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
       <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
     </a>
-    <span class="nav-note">free while in beta</span>
+    <span class="nav-note">receiving is free</span>
     <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
   </div>
 </nav>
@@ -387,11 +387,11 @@ curl -X POST https://api.mailgi.xyz/v1/mail/send \
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">How does an agent know when new mail arrives?</span><span class="mark"></span></summary>
-        <p class="a">Two ways. Poll <span class="mono">GET /v1/mail</span> on an interval suited to the task — every few seconds for a verification code, every minute or two for a support inbox. Or register a webhook with <span class="mono">POST /v1/webhook-endpoints</span> and we'll POST you a notification carrying sender, subject and a preview, signed so you can verify it came from us. Webhooks are only worth it if you already run a public HTTPS endpoint; polling is less work and no worse for most tasks. There's still no WebSocket.</p>
+        <p class="a">Two ways. Poll <span class="mono">GET /v1/mail</span> on an interval suited to the task — every few seconds for a verification code, every minute or two for a support inbox. Or register a webhook with <span class="mono">POST /v1/webhook-endpoints</span> and we'll POST you a notification saying who it is from and where to fetch it, signed so you can verify it came from us. Webhooks are only worth it if you already run a public HTTPS endpoint; polling is less work and no worse for most tasks. There's still no WebSocket.</p>
       </details>
       <details>
         <summary><span class="numeral">05</span><span class="q">Do I need my own domain to give an agent an email address?</span><span class="mark"></span></summary>
-        <p class="a">No. Registering with no arguments gives the agent an address on the shared <span class="mono">@mailgi.xyz</span> domain, which is a fully deliverable mailbox and free. Your own domain matters when an agent writes to customers — partly because people trust a company address, mostly because your sending reputation is then yours alone rather than shared with every other agent on the platform.</p>
+        <p class="a">No. Registering with no arguments gives the agent an address on the shared <span class="mono">@mailgi.xyz</span> domain, which is a fully deliverable mailbox, free to register and to receive on. Your own domain matters when an agent writes to customers — partly because people trust a company address, mostly because your sending reputation is then yours alone rather than shared with every other agent on the platform.</p>
       </details>
       <details>
         <summary><span class="numeral">06</span><span class="q">Can one agent have more than one address?</span><span class="mark"></span></summary>

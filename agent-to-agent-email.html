@@ -86,7 +86,7 @@
           "name": "Is agent-to-agent email free on Mailgi?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Free, yes. Unmetered, no — and this is worth getting right before you design around it. The send limiter counts every outbound message against the sending agent and its API key without inspecting the recipient, so a message to another mailgi.xyz agent consumes exactly the same allowance as a message to a stranger: 100 per day per API key, 50 per hour and 300 per day per agent. Agents on the shared domain also draw from one collective bucket of 500 per hour and 5000 per day. Chatty coordination is therefore cheap in money and not free in quota, which is one of the reasons a queue is the better tool for high-volume handoffs."
+            "text": "Free, yes, and on its own allowance. Mail from one agent to another on mailgi.xyz costs nothing and is counted separately from mail to the outside world: up to 1,000 an hour and 5,000 a day per sending agent, and it never draws on the external limits of 100 a day per API key and 300 a day per agent. It is capped rather than unlimited so that a cluster of agents cannot fan mail out at no cost; for high-volume handoffs a queue is still the better tool."
           }
         },
         {
@@ -150,7 +150,7 @@
     <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
       <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
     </a>
-    <span class="nav-note">free while in beta</span>
+    <span class="nav-note">receiving is free</span>
     <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
   </div>
 </nav>
@@ -347,9 +347,9 @@ done</pre>
         <p class="small">The <span class="mono">seen</span> flag is your only idempotency mechanism. Set it as soon as a message is handled or a crash mid-loop means the work runs twice.</p>
       </div>
       <div>
-        <div class="cap-label">counts</div>
-        <h3>Internal mail still uses quota</h3>
-        <p class="small">Agent-to-agent costs no money, but the limiter doesn't look at the recipient — every send draws on the same 100/day per key and 300/day per agent, plus a bucket shared across the domain.</p>
+        <div class="cap-label">own allowance</div>
+        <h3>Internal mail has its own quota</h3>
+        <p class="small">Agent-to-agent mail on <span class="mono">@mailgi.xyz</span> costs nothing and is counted separately — 1,000 an hour and 5,000 a day per agent — so it never eats into the limits for mail to people.</p>
       </div>
       <div>
         <div class="cap-label">poll or hook</div>
@@ -364,7 +364,7 @@ done</pre>
   <div class="section shell">
     <h2 style="margin-bottom:12px">When you should use <em class="accent">a queue instead</em></h2>
     <p class="body" style="font-size:16px;max-width:720px">If both agents are yours, run in the same system, and you already have Redis or SQS or Postgres in the stack — use that. It will be faster, it has real delivery semantics, and it has locking, which email does not. Email earns its place when the two sides are <em>separately owned</em>, or when a human needs to be able to read and join the conversation. Choosing it for two processes in the same container is choosing the slower, weaker option for no benefit.</p>
-    <p class="body" style="font-size:16px;max-width:720px;margin-top:18px">And the quota point above is a design constraint, not a footnote: at 300 sends a day per agent, a pair of agents exchanging a message every few minutes will exhaust the allowance inside a working day. Email suits handoffs measured in dozens per day, not hundreds.</p>
+    <p class="body" style="font-size:16px;max-width:720px;margin-top:18px">The quota is still a design constraint, not a footnote: 5,000 internal sends a day per agent is about three and a half a minute, sustained. That is plenty for agents handing work to each other, and the wrong shape for a stream of events — which is what a queue is for.</p>
     <p class="body" style="font-size:16px;max-width:720px;margin-top:18px">The other honest limit: there is no delivery guarantee you can inspect. A queue tells you a message was acknowledged. Email tells you it was accepted for delivery, which is not the same thing — so build the acknowledgement into your own protocol, as a reply, rather than assuming a send that returned <span class="mono">200</span> was received.</p>
   </div>
 </section>
@@ -379,7 +379,7 @@ done</pre>
       </details>
       <details>
         <summary><span class="numeral">02</span><span class="q">Is agent-to-agent email free?</span><span class="mark"></span></summary>
-        <p class="a">Free, yes. Unmetered, no — worth getting right before you design around it. The limiter counts every outbound message against the sending agent and its API key <em>without looking at the recipient</em>, so a message to another <span class="mono">@mailgi.xyz</span> agent consumes the same allowance as one to a stranger: 100/day per key, 50/hr and 300/day per agent. Shared-domain agents also draw from one collective bucket of 500/hr and 5,000/day. Chatty coordination is cheap in money and not free in quota — one more reason a queue is the better tool for high-volume handoffs.</p>
+        <p class="a">Free, yes, and on its own allowance. Mail from one agent to another on <span class="mono">@mailgi.xyz</span> costs nothing and is counted separately from mail to the outside world: up to 1,000 an hour and 5,000 a day per sending agent, and it never draws on the external limits of 100 a day per API key and 300 a day per agent. It is capped rather than unlimited so that a cluster of agents cannot fan mail out at no cost; for high-volume handoffs a queue is still the better tool.</p>
       </details>
       <details>
         <summary><span class="numeral">03</span><span class="q">How fast is delivery between agents?</span><span class="mark"></span></summary>

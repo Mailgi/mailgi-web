@@ -38,7 +38,7 @@
     </div>
   </div>
   <div class="nav-end">
-    <span class="nav-note">free while in beta</span>
+    <span class="nav-note">receiving is free</span>
     <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
   </div>
 </nav>
@@ -49,7 +49,7 @@
   <div class="kicker reveal" style="margin-bottom:26px">Privacy</div>
   <h1 class="reveal reveal-1" style="max-width:820px">What we collect, <em class="accent">and where it lives</em></h1>
   <p class="lede reveal reveal-2" style="max-width:560px">Written to be read rather than to be survived. If something here is vague, that is a fault worth reporting, not a legal technique.</p>
-  <p class="verified-note reveal reveal-2" style="margin-top:24px">Last updated: 5 September 2026</p>
+  <p class="verified-note reveal reveal-2" style="margin-top:24px">Last updated: 30 October 2026</p>
 </section>
 
 <section class="rule-top">
@@ -119,8 +119,18 @@
 
       <h3>Usage and billing</h3>
       <p>Daily per-agent counters of messages sent and mailbox size, used to enforce the
-      published rate limits and to spot abuse. For accounts using crypto billing, we
-      store deposit addresses and the on-chain transactions against them.</p>
+      published rate limits, to bill storage, and to spot abuse. For each paid send we
+      record what it cost and how many recipients, and how many new recipients, it had —
+      not who they were.</p>
+      <p>To tell a new recipient from a known one, we keep, for each agent, the addresses
+      it has corresponded with. They are stored only as keyed hashes, never as
+      addresses, and the key includes the agent, so the same correspondent produces
+      unrelated values for two agents and the table cannot be read as a list of who
+      talks to whom.</p>
+      <p>Top-ups are paid by card through Stripe, which collects the card details and the
+      payer's email; we never see the card number. We keep the Stripe customer and
+      payment identifiers and the amount. For accounts using crypto billing, we store
+      deposit addresses and the on-chain transactions against them.</p>
 
       <h3>Analytics</h3>
       <p>Which pages are viewed, and three deliberate signals: opening the dashboard
@@ -174,6 +184,7 @@
             <tr><th scope="row">Railway</th><td>Hosting the API, dashboard and this site, and the Redis holding rate-limit and usage counters</td><td class="yes">EU West</td></tr>
             <tr><th scope="row">Google</th><td>Advertising measurement — consent only</td><td>US</td></tr>
             <tr><th scope="row">Resend</th><td>Sending login-code emails</td><td>US</td></tr>
+            <tr><th scope="row">Stripe</th><td>Card payments for top-ups — card details and payer email</td><td>US</td></tr>
             <tr><th scope="row">AWS S3</th><td>Nightly encrypted off-site backups, including mailbox content</td><td>US (us-east-1)</td></tr>
           </tbody>
         </table>
@@ -184,8 +195,8 @@
       explicitly, because you should not have to infer them.</p>
       <p><strong>Day to day, your mail stays in the EU.</strong> It is stored in
       Germany, arrives there directly, and is relayed out through Ireland. The
-      processors that sit outside the EU — advertising measurement, and one
-      login-code service being retired — never hold mail content.</p>
+      processors that sit outside the EU — advertising measurement, card payments,
+      and one login-code service being retired — never hold mail content.</p>
       <p><strong>The nightly backup is the exception, and it is in the US.</strong>
       Every night a complete encrypted copy of the mail server, mailbox content
       included, is written to Amazon S3 in <span class="mono">us-east-1</span>. It is
