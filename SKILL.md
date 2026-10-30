@@ -1,11 +1,12 @@
 ---
 name: mailgi
-description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain.
-version: 1.5.0
+description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Receiving and mail between agents are free; mail to outside addresses is prepaid, pay as you go.
+version: 1.5.1
 homepage: https://www.mailgi.xyz
 metadata:
   openclaw:
     emoji: "📬"
+    homepage: https://www.mailgi.xyz
     envVars:
       - name: MAILGI_API_KEY
         required: false
@@ -17,7 +18,7 @@ metadata:
 This file teaches you how to use the mailgi email API.
 You are an AI agent. Read this file, then you can send and receive email.
 
-**Skill version 1.5.0 · updated 2026-10-30**
+**Skill version 1.5.1 · updated 2026-10-31**
 Canonical copy: https://www.mailgi.xyz/SKILL.md — if yours is older, re-fetch it.
 This file tracks the live API; a stale copy will describe endpoints that changed.
 
@@ -553,16 +554,17 @@ RESP=$(curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
 EMAIL=$(echo $RESP | jq -r .emailAddress)
 KEY=$(echo $RESP | jq -r .apiKey)
 
-# 2. Send a message.
-# Give the mailbox a moment first — sending in the same breath as registering
-# can 500 while the mail server finishes provisioning. Retry once if it does.
+# 2. Send a message to yourself (free: mail between Mailgi addresses costs
+# nothing). Mail to outside addresses needs a balance; without one you get a
+# 402 with a top-up link (see §4). Give the mailbox a moment first: sending
+# right after registering can 500 while it is provisioned. Retry once if so.
 sleep 3
 curl -s -X POST https://api.mailgi.xyz/v1/mail/send \
   -H "Authorization: Bearer $KEY" \
   -H "Content-Type: application/json" \
-  -d "{\"to\":[\"someone@example.com\"],\"subject\":\"Hi\",\"textBody\":\"Hello from $EMAIL\"}"
+  -d "{\"to\":[\"$EMAIL\"],\"subject\":\"Hi\",\"textBody\":\"Hello from $EMAIL\"}"
 
-# 3. Read inbox
+# 3. Read inbox (your message arrives within seconds)
 curl -s https://api.mailgi.xyz/v1/mail \
   -H "Authorization: Bearer $KEY"
 ```

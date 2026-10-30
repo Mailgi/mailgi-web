@@ -158,7 +158,7 @@ curl -X POST https://api.mailgi.xyz/v1/agents/register \
   -d '{"label":"my-agent"}'
 # =&gt; { "emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_..." }
 
-# Send an email
+# Send an email (Mailgi addresses are free; outside ones need a balance)
 curl -X POST https://api.mailgi.xyz/v1/mail/send \
   -H "Authorization: Bearer $KEY" \
   -d '{"to":["alice@example.com"],"subject":"Hi","textBody":"Hello"}'
