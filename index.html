@@ -50,9 +50,15 @@
       "description": "REST API and dashboard giving AI agents real, deliverable email addresses: send, receive, and read mail as JSON, with per-domain DKIM/SPF/DMARC provisioning.",
       "offers": {
         "@type": "Offer",
-        "price": "0",
+        "name": "Mailgi pay-as-you-go",
         "priceCurrency": "USD",
-        "description": "Free while in beta: inbound, agent-to-agent, and outbound-to-humans sending, rate-limited to 100 emails/day/API key, with further per-agent and per-org caps."
+        "description": "Receiving and mail between your own agents are free. Mail leaving Mailgi is prepaid: $0.0005 per external recipient, plus $0.02 once per new address. Storage above 10 MB per mailbox is $0.25 per GB-month. Minimum top-up $5.",
+        "url": "https://www.mailgi.xyz/pricing.html",
+        "priceSpecification": [
+          { "@type": "UnitPriceSpecification", "name": "Outbound email, per external recipient", "price": "0.0005", "priceCurrency": "USD", "unitText": "recipient" },
+          { "@type": "UnitPriceSpecification", "name": "Introduction, once per new address", "price": "0.02", "priceCurrency": "USD", "unitText": "new recipient" },
+          { "@type": "UnitPriceSpecification", "name": "Mailbox storage above 10 MB", "price": "0.25", "priceCurrency": "USD", "unitText": "GB-month" }
+        ]
       }
     },
     {
@@ -79,7 +85,7 @@
           "name": "What does it cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans. Sending is rate-limited to 100 per day per API key and 300 per day per agent, and every outbound message counts toward those whatever its destination — the limiter does not inspect the recipient. Custom-domain organisations are additionally capped by domain age, from 100 per day when newly verified up to 5000 once established. Inbound mail and reading an inbox are not limited."
+            "text": "Receiving mail from any sender is free, and so is mail between your own agents. Mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus a one-time $0.02 the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top up from $5 by card, with no account needed. Sending is also rate-limited: 100 a day per API key and 300 a day per agent, with per-organisation caps that grow with domain age."
           }
         },
         {
@@ -127,7 +133,7 @@
     <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
       <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
     </a>
-    <span class="nav-note">free while in beta</span>
+    <span class="nav-note">receiving is free</span>
     <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
   </div>
 </nav>
@@ -327,7 +333,7 @@
         </details>
         <details>
           <summary><span class="numeral">03</span><span class="q">What does it cost?</span><span class="mark"></span></summary>
-          <p class="a">Everything is free while in beta: inbound mail from any sender, agent-to-agent mail on @mailgi.xyz, and outbound mail to humans. Sending is rate-limited to 100 a day per API key and 300 a day per agent, and every outbound message counts toward those whatever its destination — the limiter doesn't inspect the recipient. Custom-domain orgs are additionally capped by domain age, from 100 a day when newly verified up to 5,000 once established. Inbound and reading an inbox aren't limited. Full detail on the <a href="/pricing.html">pricing page</a>.</p>
+          <p class="a">Receiving mail from any sender is free, and so is mail between your own agents. Mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus a one-time $0.02 the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top up from $5 by card, with no account needed. Sending is also rate-limited: 100 a day per API key and 300 a day per agent, with per-organisation caps that grow with domain age. Full detail on the <a href="/pricing.html">pricing page</a>.</p>
         </details>
         <details>
           <summary><span class="numeral">04</span><span class="q">Is there a machine-readable spec an agent can read to onboard itself?</span><span class="mark"></span></summary>
@@ -339,8 +345,8 @@
 
   <section class="rule-top">
     <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
-      <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">Free while in beta.</h2>
-      <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">Inbound, agent-to-agent, outbound to humans — all free. No credit card, no crypto.</p>
+      <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">Receiving is free.</h2>
+      <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:460px">So is mail between your agents. Writing to the world is $0.0005 a recipient, plus two cents to introduce yourself. No subscription, no card to start.</p>
       <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
     </div>
   </section>
