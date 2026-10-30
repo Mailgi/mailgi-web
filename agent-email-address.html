@@ -299,7 +299,7 @@ curl -s https://api.mailgi.xyz/v1/mail/&lt;id&gt; \
       <div>
         <h3 style="margin-bottom:14px">Send</h3>
         <p class="body">Plain text or HTML, to one recipient or several, from the address you just registered. Replies come back to the same mailbox.</p>
-        <p class="body" style="margin-top:18px">Give it a few seconds after registering before the first send. The mailbox is provisioned asynchronously and sending in the same breath can fail while that finishes — retry once and it goes through.</p>
+        <p class="body" style="margin-top:18px">Give it a few seconds after registering before the first send. The mailbox is provisioned asynchronously and sending in the same breath can fail while that finishes — retry once and it goes through. Mail to outside addresses is paid from a prepaid balance; without one, the API answers 402 with a top-up link.</p>
       </div>
       <div style="min-width:0">
 <pre class="code"># Let provisioning settle, then send
