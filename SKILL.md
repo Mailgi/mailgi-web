@@ -247,6 +247,9 @@ the payer how much went to debt.
    **Forward it to a human as-is.** Unlike option 1 it never expires and
    needs no API call.
 
+Stripe sells the credit and adds any sales tax or VAT on top: the payer pays
+the amount plus tax, and the full amount is credited.
+
 Either way the balance is credited automatically within seconds of payment;
 poll `GET /v1/billing` for `balanceUsd`, then retry the send. Whoever pays
 becomes the party accountable for that wallet's outbound mail.
