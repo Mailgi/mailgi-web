@@ -4,23 +4,72 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>How to give an AI agent an email address — Mailgi</title>
-<meta name="description" content="An AI agent needs its own email address to receive verification codes, hold a thread, and be written to. The options, their failure modes, and a working setup in one POST — with DKIM, SPF and DMARC explained rather than name-dropped." />
+<meta name="description" content="An AI agent needs its own inbox to receive verification codes and hold threads. The options, how each fails, and a working setup in one POST." />
 <link rel="canonical" href="https://www.mailgi.xyz/agent-email-address.html" />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="Mailgi" />
-<meta property="og:title" content="How to give an AI agent an email address" />
-<meta property="og:description" content="The options, their failure modes, and a working setup in one POST." />
+<meta property="og:title" content="How to give an AI agent an email address — Mailgi" />
+<meta property="og:description" content="An AI agent needs its own inbox to receive verification codes and hold threads. The options, how each fails, and a working setup in one POST." />
 <meta property="og:url" content="https://www.mailgi.xyz/agent-email-address.html" />
 <meta property="og:image" content="https://www.mailgi.xyz/og.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="How to give an AI agent an email address" />
-<meta name="twitter:description" content="The options, their failure modes, and a working setup in one POST." />
+<meta name="twitter:title" content="How to give an AI agent an email address — Mailgi" />
+<meta name="twitter:description" content="An AI agent needs its own inbox to receive verification codes and hold threads. The options, how each fails, and a working setup in one POST." />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides",
+          "item": "https://www.mailgi.xyz/guides.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Give an AI agent an email address",
+          "item": "https://www.mailgi.xyz/agent-email-address.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
