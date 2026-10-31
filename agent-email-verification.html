@@ -318,7 +318,7 @@ echo "$CODE"     # =&gt; 481902</pre>
         <p class="a">Yes, if it has a real mailbox. The blocker is almost never the signup form — it's the confirmation email, because an agent with no address can't receive one. Give the agent its own inbox and the flow completes without a human. Worth noting that some services deliberately prohibit automated signups in their terms; check before automating one.</p>
       </details>
       <details>
-        <summary><span class="numeral">02</span><span class="q">Why not use a disposable email service for this?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">02</span><span class="q">Why not use a temporary or disposable email service for verification codes?</span><span class="mark"></span></summary>
         <p class="a">For a throwaway test it's a reasonable choice and costs nothing. For anything real there are three problems: disposable domains are widely blocklisted by exactly the services worth signing up for, so the signup is often rejected outright; the inboxes are usually public, so anyone who guesses the address reads the code; and there's no sending, so the agent can receive the confirmation but never reply to anything afterwards.</p>
       </details>
       <details>
@@ -326,7 +326,7 @@ echo "$CODE"     # =&gt; 481902</pre>
         <p class="a">Poll every two to three seconds for about ninety seconds. Most confirmation mail is readable within ten; anything past a minute usually means the signup silently failed or the message was filtered, not that it's still in flight. Always bound the loop and fail with a clear error rather than polling forever.</p>
       </details>
       <details>
-        <summary><span class="numeral">04</span><span class="q">Why does my agent read the wrong code?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">04</span><span class="q">Why does my agent read the wrong verification code?</span><span class="mark"></span></summary>
         <p class="a">Two causes account for nearly all of it. Matching any six-digit number, which will happily match a year, an order number or a phone extension — anchor the pattern to nearby words like "code" or "verification" instead. And reading the newest message without checking it's newer than what existed before the signup, so a welcome email gets parsed instead.</p>
       </details>
       <details>

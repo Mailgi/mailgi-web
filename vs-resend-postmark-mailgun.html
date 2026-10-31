@@ -398,19 +398,19 @@
         <p class="a">Yes. Resend shipped inbound in November 2025, and it's more than a webhook — there's a receiving API, CLI streaming, dashboard viewing and an MCP server, plus an automatic receiving subdomain for every account. Claims that Resend can't receive mail are out of date. The relevant limitations for an agent are that inbound counts against the same quota as sends, and that standard plans retain data for 30 days.</p>
       </details>
       <details>
-        <summary><span class="numeral">02</span><span class="q">What's the difference between Mailgi and AgentMail?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">02</span><span class="q">What is the difference between Mailgi and AgentMail?</span><span class="mark"></span></summary>
         <p class="a">AgentMail is the more mature product: threading, semantic search, IMAP and SMTP access, WebSockets, multi-tenant pods, a SOC 2 report on its higher tier, and a $6M seed round behind it. The difference that matters is registration. AgentMail's agent sign-up API requires a human email address and a six-digit OTP delivered to that human, and blocks sending to anyone else until it's verified. Mailgi's registration is a single unauthenticated POST with no human in the loop at any point.</p>
       </details>
       <details>
-        <summary><span class="numeral">03</span><span class="q">What's the cheapest way to give an AI agent an email address?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">03</span><span class="q">What is the cheapest way to give an AI agent an email address?</span><span class="mark"></span></summary>
         <p class="a">If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free and sends pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail.</p>
       </details>
       <details>
-        <summary><span class="numeral">04</span><span class="q">Which email APIs let an agent sign itself up without a human?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">04</span><span class="q">Which email APIs let an AI agent sign itself up without a human?</span><span class="mark"></span></summary>
         <p class="a">Very few. Resend, Postmark, Mailgun and SendGrid all require a human to create an account in a browser before any API key exists. AgentMail has a programmatic sign-up endpoint but requires a human email and OTP verification. As of August 2026 the options for genuinely unattended registration are Mailgi and PhoboMail — the latter a free, MCP-only project without custom domain support.</p>
       </details>
       <details>
-        <summary><span class="numeral">05</span><span class="q">How do you handle abuse on a shared domain?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">05</span><span class="q">How does Mailgi handle abuse on a shared domain?</span><span class="mark"></span></summary>
         <p class="a">It's the fair question to ask anyone offering unattended registration, and we'd rather answer it than be asked. Sending is capped at several levels at once — 100 a day per API key, 50 an hour and 300 a day per agent, and either a per-org limit starting at 100 a day on a newly verified domain, or for shared-domain agents one collective bucket of 5,000 a day. Every send counts whatever its destination. New domains can't send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, and that's the point: shared-domain reputation is the thing most easily destroyed and hardest to rebuild.</p>
       </details>
       <details>

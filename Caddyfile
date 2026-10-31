@@ -40,6 +40,20 @@
 	@apex host mailgi.xyz
 	redir @apex https://www.mailgi.xyz{uri} permanent
 
+	# ── One URL per page, 301 ─────────────────────────────────────────────────
+	# try_files below serves /agents as /agents.html, and /index.html is the
+	# same document as /. Both answered 200, so every page had two crawlable
+	# URLs. Canonicals name the .html form (and / for home); redirect the
+	# others there. Only paths with no dot whose .html file exists are
+	# redirected, so /SKILL.md, assets and genuine 404s are untouched.
+	redir /index.html /{?query} permanent
+	@extensionless {
+		not path */ /404
+		not path *.*
+		file {path}.html
+	}
+	redir @extensionless {path}.html{?query} permanent
+
 	# Security headers — every page EXCEPT the sandboxed illustration embed
 	# (see the @embeds block below). The two matchers are mutually exclusive,
 	# so a request ever gets exactly one Content-Security-Policy.
