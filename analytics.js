@@ -60,6 +60,16 @@
   // last-non-direct rule attribution.js applies to its own storage.
   posthog.register(window.MailgiAttribution || {});
 
+  // Visits that came from an AI assistant's answer (brief §1: being cited is
+  // the primary channel). PostHog records $referrer already; naming the
+  // assistant makes "how many visits did answers send us" one filter.
+  var ref = "";
+  try { ref = new URL(document.referrer).hostname; } catch (e) {}
+  var assistants = { "chatgpt.com": "chatgpt", "chat.openai.com": "chatgpt", "perplexity.ai": "perplexity",
+    "www.perplexity.ai": "perplexity", "claude.ai": "claude", "gemini.google.com": "gemini",
+    "copilot.microsoft.com": "copilot", "chat.mistral.ai": "mistral", "chat.deepseek.com": "deepseek" };
+  if (assistants[ref]) posthog.register_once({ ai_referrer: assistants[ref] });
+
   posthog.capture('$pageview');
 
   // The clicks that actually indicate intent, rather than every link.
