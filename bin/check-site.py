@@ -11,6 +11,7 @@ without an install step.
 """
 
 import html
+import importlib.util
 import json
 import re
 import sys
@@ -145,6 +146,13 @@ def main():
             target = ROOT / (path.lstrip("/") or "index.html")
             if not target.exists() and not target.with_suffix(".html").exists():
                 err(name, f"broken internal link {href}")
+
+    # llms-full.txt is generated from the pages; a stale copy quotes old copy.
+    spec = importlib.util.spec_from_file_location("llms_full", ROOT / "bin" / "build-llms-full.py")
+    llms_full = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(llms_full)
+    if (ROOT / "llms-full.txt").read_text() != llms_full.render():
+        err("llms-full.txt", "out of date: run python3 bin/build-llms-full.py")
 
     if errors:
         print("\n".join(errors))

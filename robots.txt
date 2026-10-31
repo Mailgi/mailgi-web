@@ -57,5 +57,7 @@ Allow: /
 
 # Site summary written for LLMs, alongside the sitemap.
 # https://www.mailgi.xyz/llms.txt
+# Every page as one plain-text file:
+# https://www.mailgi.xyz/llms-full.txt
 
 Sitemap: https://www.mailgi.xyz/sitemap.xml
