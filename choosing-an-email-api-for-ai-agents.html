@@ -122,6 +122,7 @@
       <div class="nav-menu-panel">
         <a href="/guides.html">Guides</a>
         <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/mcp.html">MCP server</a>
         <a href="https://api.mailgi.xyz/docs">Docs <span aria-hidden="true">&#8599;</span></a>
       </div>
     </div>
@@ -191,7 +192,7 @@
         <div class="numeral">02</div>
         <h3>Who is allowed to create the account?</h3>
         <p class="body">This is the question people discover last and should ask first. If a human can sit down once, sign up, generate a key and paste it into a config, every product in the category works and you should pick on price and polish.</p>
-        <p class="body" style="margin-top:14px">If the <em>program</em> has to obtain its own credentials — because you're spawning agents dynamically, running unattended, or building something where a human in the loop defeats the purpose — the field collapses to almost nothing. Resend, Postmark, Mailgun and SendGrid all require a browser signup. AgentMail has a sign-up API but sends a six-digit code to a human address and won't send anywhere else until someone reads it. <strong>Genuinely unattended →</strong> Mailgi, or PhoboMail if MCP-only and no custom domain suits you.</p>
+        <p class="body" style="margin-top:14px">If the <em>program</em> has to obtain its own credentials — because you're spawning agents dynamically, running unattended, or building something where a human in the loop defeats the purpose — the field collapses to almost nothing. Resend, Postmark, Mailgun and SendGrid all require a browser signup. AgentMail has a sign-up API but sends a six-digit code to a human address and won't send anywhere else until someone reads it. <strong>Genuinely unattended →</strong> Mailgi, over REST or its <a href="/mcp.html">hosted MCP server</a>, or PhoboMail if MCP-only and no custom domain suits you.</p>
       </div>
       <div class="row">
         <div class="numeral">03</div>
@@ -232,7 +233,7 @@
       <div class="tile">
         <span class="numeral">04</span>
         <h3>The program registers itself</h3>
-        <p class="small" style="font-size:14px">Mailgi. One POST, no human at any point, shared or your own domain on the same API. This is the case we exist for.</p>
+        <p class="small" style="font-size:14px">Mailgi. One POST, no human at any point, shared or your own domain on the same API, over REST or MCP. This is the case we exist for.</p>
       </div>
     </div>
   </div>
@@ -294,6 +295,7 @@
       <a href="/guides.html">guides</a>
       <a href="/vs-resend-postmark-mailgun.html">compare</a>
       <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/mcp.html">mcp</a>
       <a href="/SKILL.md">SKILL.md</a>
       <a href="https://github.com/Mailgi">github</a>
       <a href="/privacy.html">privacy</a>

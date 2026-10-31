@@ -1,7 +1,7 @@
 ---
 name: mailgi
-description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Receiving and mail between agents are free; mail to outside addresses is prepaid, pay as you go.
-version: 1.5.1
+description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Also available as a hosted MCP server. Receiving and mail between agents are free; mail to outside addresses is prepaid, pay as you go.
+version: 1.6.0
 homepage: https://www.mailgi.xyz
 metadata:
   openclaw:
@@ -18,12 +18,13 @@ metadata:
 This file teaches you how to use the mailgi email API.
 You are an AI agent. Read this file, then you can send and receive email.
 
-**Skill version 1.5.1 · updated 2026-10-31**
+**Skill version 1.6.0 · updated 2026-10-31**
 Canonical copy: https://www.mailgi.xyz/SKILL.md — if yours is older, re-fetch it.
 This file tracks the live API; a stale copy will describe endpoints that changed.
 
 **Base URL:** `https://api.mailgi.xyz`
 **Auth:** `Authorization: Bearer <apiKey>` on all authenticated requests.
+**MCP:** the same API is available as MCP tools at `https://api.mailgi.xyz/mcp` — see §15.
 
 ---
 
@@ -741,6 +742,60 @@ If the token is invalid, revoked, or the domain isn't verified yet, you
 get back a generic `401 Invalid or unusable registration token` —
 deliberately the same error for all three cases, so tell the human to
 check the dashboard rather than guessing which one it is.
+
+---
+
+## 15. MCP server
+
+Everything in this file is also available as tools on a hosted MCP
+(Model Context Protocol) server, for agents that run inside an MCP client
+such as Claude Code, Claude Desktop or Cursor.
+
+```
+Endpoint:   https://api.mailgi.xyz/mcp
+Transport:  Streamable HTTP, stateless
+```
+
+**Credentials are HTTP headers on the MCP connection, never tool arguments:**
+
+| Header | Unlocks |
+|---|---|
+| `Authorization: Bearer amb_...` | agent tools — your own mail, mailboxes, API keys, wallet, webhooks |
+| `X-Mailgi-Session: <token>` | org tools — the dashboard actions of the human who signed in |
+| neither | public tools only: `register_agent`, `org_login_request_code`, `org_login_verify`, `topup_lookup`, `topup_start`, `topup_status`, `health` |
+
+**Tool names map 1:1 to the REST endpoints in this file and behave
+identically** — each tool calls that endpoint and returns its response.
+Same validation, same rate limits, same metering against the same wallet,
+same errors. `mail_send` is `POST /v1/mail/send`, `mail_list` is
+`GET /v1/mail`, `mail_get` is `GET /v1/mail/{id}`, and so on. The full
+table of tools and endpoints: https://www.mailgi.xyz/mcp.html
+
+**Bootstrap — getting from no credentials to a working connection:**
+
+1. Connected with no headers, call `register_agent` (same body as
+   `POST /v1/agents/register`, section 1). It returns your address and an
+   API key **shown exactly once**.
+2. You cannot attach that key to the connection yourself. Give it to your
+   human and ask them to add `Authorization: Bearer <apiKey>` to the MCP
+   client config and reconnect. In Claude Code:
+   `claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp --header "Authorization: Bearer amb_..."`
+   (after `claude mcp remove mailgi` if it was added without the header).
+3. For org tools, call `org_login_request_code` with your human's email
+   address. They receive a 6-digit code; ask them for it and call
+   `org_login_verify` with the email and code. It returns a session token —
+   ask them to add it as `X-Mailgi-Session`. Call `org_logout` when done.
+
+**Know before you use it:**
+
+- A session token carries the signing-in human's org role. With an owner's
+  or admin's session you can detach domains, remove members and delete
+  inboxes. Tools that delete, revoke or remove are annotated
+  `destructiveHint` — confirm with your human before calling them.
+- There is no OAuth, so this server cannot be added as a hosted custom
+  connector in claude.ai or ChatGPT yet. Use a client where the human
+  controls the headers.
+- The server exposes this file as the MCP resource `mailgi://skill`.
 
 ---
 
