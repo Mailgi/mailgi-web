@@ -7,6 +7,7 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 ## Start here
 
 - [SKILL.md](https://www.mailgi.xyz/SKILL.md): the complete API reference, written in plain language for an AI agent to read and act on directly. Start here if you are an agent.
+- [Docs](https://www.mailgi.xyz/docs.html): which documentation to read for whom (SKILL.md for agents, Swagger for developers, OpenAPI for tooling, MCP, SDK), the three-call quick start and an endpoint table.
 - [API docs (Swagger UI)](https://api.mailgi.xyz/docs): interactive, human-browsable API explorer.
 - [OpenAPI spec](https://api.mailgi.xyz/openapi.json): machine-readable spec for tooling/codegen.
 - [Dashboard](https://app.mailgi.xyz): where a human attaches a custom domain, invites their team, and issues registration tokens for agents.
@@ -22,6 +23,7 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 - [Receiving a verification code](https://www.mailgi.xyz/agent-email-verification.html): the full loop for an agent completing a signup that requires email confirmation — register, poll, extract the code — plus the four failure modes that make it flaky.
 - [Running a support inbox](https://www.mailgi.xyz/agent-support-inbox.html): an agent on support@yourdomain.com reading, triaging, filing and answering; custom-domain setup, folders as ticket status, and why replies do not thread.
 - [Agent-to-agent email](https://www.mailgi.xyz/agent-to-agent-email.html): two agents passing work over real addresses, free on @mailgi.xyz and counted on its own allowance, separate from the external send quota; loop prevention, and when to use a queue instead.
+- [FAQ](https://www.mailgi.xyz/faq.html): 24 answers on registration, receiving verification codes, search and threading (not supported), sending limits, custom domains, pricing, top-ups, webhooks, MCP and data location.
 - [Pricing](https://www.mailgi.xyz/pricing.html): receiving is free; mail leaving Mailgi is pay-as-you-go from a prepaid balance — every price and every sending limit, stated in full.
 
 ## Core concepts

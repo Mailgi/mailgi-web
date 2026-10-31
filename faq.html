@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Email for AI agents: FAQ — Mailgi</title>
+<meta name="description" content="Answers on giving AI agents email: registration, receiving codes, sending limits, custom domains, pricing, webhooks, MCP and where mail is stored." />
+<link rel="canonical" href="https://www.mailgi.xyz/faq.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Email for AI agents: FAQ — Mailgi" />
+<meta property="og:description" content="Answers on giving AI agents email: registration, receiving codes, sending limits, custom domains, pricing, webhooks, MCP and where mail is stored." />
+<meta property="og:url" content="https://www.mailgi.xyz/faq.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Email for AI agents: FAQ — Mailgi" />
+<meta name="twitter:description" content="Answers on giving AI agents email: registration, receiving codes, sending limits, custom domains, pricing, webhooks, MCP and where mail is stored." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.mailgi.xyz/faq.html",
+      "name": "Mailgi FAQ",
+      "dateModified": "2026-10-31",
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does an AI agent get its own email address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "One unauthenticated POST to https://api.mailgi.xyz/v1/agents/register. The response carries a readable address like buzzing-falcon@mailgi.xyz, a second alias address that delivers to the same inbox, and an API key that is shown once. No signup form, no OAuth, no human approval. The full walkthrough is in how to give an AI agent an email address."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does a human need to sign up first?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. An agent can register itself on the shared @mailgi.xyz domain with no account, card or credentials. A human is only needed for a custom domain: they attach it in the dashboard and hand the agent a registration token."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can the agent use our own domain, like support@ourcompany.com?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. A human attaches the domain at app.mailgi.xyz and publishes the DNS records it generates: TXT and MX for inbound, then DKIM, a MAIL FROM subdomain for SPF, and a recommended DMARC record for outbound. Once verified, they create a registration token, and the agent registers with domainToken and a localPart such as support. Custom domains cost nothing extra."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many agents or inboxes can I create?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "There is no inbox fee and no quota on registration. Each agent is one mailbox; for another address, register another agent. One agent per role or per task is a normal pattern."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an agent delete its own address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, with DELETE /v1/agents/me. It is permanent and burns the address: a deleted local part can never be registered again, by anyone. To start clean, register a new agent instead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an AI agent receive verification codes by email?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. That is the most common reason to give an agent an address. Register, trigger the signup, poll GET /v1/mail every few seconds until the message arrives, then read the code from the body. See receiving a verification code for working code and the four mistakes that make it flaky."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does an agent find out that new mail has arrived?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Poll GET /v1/mail, or register an HTTPS webhook with POST /v1/webhook-endpoints. The webhook is a signed notification (HMAC-SHA256 over the timestamp and body) with the sender, time, size and a fetch URL, never the content. There is no WebSocket or long-poll."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an agent search its inbox?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. There is no full-text, subject, sender or date search. You can list by folder, page and sort, then match messages yourself. Unknown query parameters are ignored rather than rejected, so ?q=invoice returns the whole inbox."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Mailgi support attachments?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not yet. There is no attachments field on send; send a link instead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an agent reply in the same thread?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not with threading headers. Send a new message with “Re: ” in the subject; most clients group it correctly by subject and participants, but there is no In-Reply-To header and no thread ID in the API."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an agent organise mail into folders?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Create, rename and delete folders with /v1/mailboxes, move messages with PATCH /v1/mail/<id>/move and mark them read with PATCH /v1/mail/<id>/flags. Folders work well as ticket status in a support inbox."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Will mail from an agent land in spam?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every domain sends with DKIM, SPF and DMARC. On the shared @mailgi.xyz domain they are already in place; on your own domain Mailgi generates the records and refuses to send until they verify. Reputation on the shared domain is protected by conservative sending limits; on your own domain it is yours alone."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the sending limits?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "All apply at once and the lowest wins: 100 a day per API key; 50 an hour and 300 a day per agent; on a custom domain, 100 a day for the first three days, 1,000 a day up to thirty days, and 5,000 a day after that; on the shared @mailgi.xyz domain, one collective bucket of 500 an hour and 5,000 a day. Mail between Mailgi agents has its own allowance of 1,000 an hour and 5,000 a day per agent. Receiving and reading are not limited."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use Mailgi for newsletters or cold outreach?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Mailgi has no lists, imports or campaigns. Every send is one explicit API call naming its own recipients, at most 50 per field, and the limits above are deliberately too low for bulk mail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can two agents email each other?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, and it is free. Mail to any @mailgi.xyz address or to your organisation's own domains costs nothing and is counted separately from external sending. See agent-to-agent email."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does Mailgi cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Receiving is free, and so is mail between your own agents. Mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription. Details on the pricing page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the $0.02 introduction charge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A one-time charge the first time an agent writes to an address that has never written to it. Anyone whose DKIM-signed message reaches the agent becomes a known contact for free, so replying to customers, services and verification senders costs only the per-email price."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when the balance runs out?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A send the balance cannot cover is refused whole with 402 PAYMENT_REQUIRED, itemised, and nothing is charged. Receiving keeps working. The error carries a top-up link the agent can forward to whoever pays."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I top up, and do I need an account?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Anyone can top up any agent by card at app.mailgi.xyz/topup, with no Mailgi account. The minimum is $5 plus any sales tax or VAT; Stripe is the merchant of record. An agent can also request a checkout link with POST /v1/billing/topup."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an MCP server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, hosted at https://api.mailgi.xyz/mcp (Streamable HTTP). It works with Claude Code, Claude Desktop and Cursor, and every tool is a 1:1 proxy of a REST endpoint with the same limits and billing. It has no OAuth yet, so it cannot be added as a claude.ai or ChatGPT connector. Setup is on the MCP server page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there an SDK or CLI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes: npm install @mailgi/mailgi gives you the TypeScript SDK and the mailgi CLI. Neither is required; everything works over plain HTTP from any language."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is SKILL.md?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "SKILL.md is the whole API written in plain language for an agent to read at runtime. Point an agent at it and it can register, send and read mail without an SDK. It is versioned and tracks the live API. The docs page explains how it differs from the OpenAPI spec and llms.txt."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is mail stored?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mailbox content is stored in Germany, and outbound mail relays through AWS in Ireland. The privacy page lists every sub-processor and where each one runs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I verify that a webhook came from Mailgi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Compute HMAC-SHA256 over the x-mailgi-timestamp header, a dot, and the raw request body, using the secret returned when you created the endpoint, and compare it to x-mailgi-signature in constant time. Reject timestamps more than a few minutes old."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "FAQ",
+          "item": "https://www.mailgi.xyz/faq.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html" aria-current="page">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">FAQ</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">Everything people ask <em class="accent">before they start</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">24 questions about giving an AI agent its own email address, answered against the live API.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="/SKILL.md">or read SKILL.md →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">Mailgi gives an AI agent its own real email address in one API call, with no human in the loop. Receiving is free, mail between your own agents is free, and mail to the outside world costs $0.0005 per recipient from a prepaid balance. Every answer below matches the live API; where something isn't built yet, it says so.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Getting an <em class="accent">address</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">How does an AI agent get its own email address?</span><span class="mark"></span></summary>
+        <p class="a">One unauthenticated POST to <span class="mono">https://api.mailgi.xyz/v1/agents/register</span>. The response carries a readable address like <span class="mono">buzzing-falcon@mailgi.xyz</span>, a second alias address that delivers to the same inbox, and an API key that is shown once. No signup form, no OAuth, no human approval. The full walkthrough is in <a href="/agent-email-address.html">how to give an AI agent an email address</a>.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Does a human need to sign up first?</span><span class="mark"></span></summary>
+        <p class="a">No. An agent can register itself on the shared @mailgi.xyz domain with no account, card or credentials. A human is only needed for a custom domain: they attach it in the dashboard and hand the agent a registration token.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Can the agent use our own domain, like support@ourcompany.com?</span><span class="mark"></span></summary>
+        <p class="a">Yes. A human attaches the domain at <a href="https://app.mailgi.xyz">app.mailgi.xyz</a> and publishes the DNS records it generates: TXT and MX for inbound, then DKIM, a MAIL FROM subdomain for SPF, and a recommended DMARC record for outbound. Once verified, they create a registration token, and the agent registers with <span class="mono">domainToken</span> and a <span class="mono">localPart</span> such as <span class="mono">support</span>. Custom domains cost nothing extra.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">How many agents or inboxes can I create?</span><span class="mark"></span></summary>
+        <p class="a">There is no inbox fee and no quota on registration. Each agent is one mailbox; for another address, register another agent. One agent per role or per task is a normal pattern.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">05</span><span class="q">Can an agent delete its own address?</span><span class="mark"></span></summary>
+        <p class="a">Yes, with <span class="mono">DELETE /v1/agents/me</span>. It is permanent and burns the address: a deleted local part can never be registered again, by anyone. To start clean, register a new agent instead.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Receiving and <em class="accent">reading</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">06</span><span class="q">Can an AI agent receive verification codes by email?</span><span class="mark"></span></summary>
+        <p class="a">Yes. That is the most common reason to give an agent an address. Register, trigger the signup, poll <span class="mono">GET /v1/mail</span> every few seconds until the message arrives, then read the code from the body. See <a href="/agent-email-verification.html">receiving a verification code</a> for working code and the four mistakes that make it flaky.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">07</span><span class="q">How does an agent find out that new mail has arrived?</span><span class="mark"></span></summary>
+        <p class="a">Poll <span class="mono">GET /v1/mail</span>, or register an HTTPS webhook with <span class="mono">POST /v1/webhook-endpoints</span>. The webhook is a signed notification (HMAC-SHA256 over the timestamp and body) with the sender, time, size and a fetch URL, never the content. There is no WebSocket or long-poll.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">08</span><span class="q">Can an agent search its inbox?</span><span class="mark"></span></summary>
+        <p class="a">No. There is no full-text, subject, sender or date search. You can list by folder, page and sort, then match messages yourself. Unknown query parameters are ignored rather than rejected, so <span class="mono">?q=invoice</span> returns the whole inbox.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">09</span><span class="q">Does Mailgi support attachments?</span><span class="mark"></span></summary>
+        <p class="a">Not yet. There is no attachments field on send; send a link instead.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">10</span><span class="q">Can an agent reply in the same thread?</span><span class="mark"></span></summary>
+        <p class="a">Not with threading headers. Send a new message with “Re: ” in the subject; most clients group it correctly by subject and participants, but there is no <span class="mono">In-Reply-To</span> header and no thread ID in the API.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">11</span><span class="q">Can an agent organise mail into folders?</span><span class="mark"></span></summary>
+        <p class="a">Yes. Create, rename and delete folders with <span class="mono">/v1/mailboxes</span>, move messages with <span class="mono">PATCH /v1/mail/&lt;id&gt;/move</span> and mark them read with <span class="mono">PATCH /v1/mail/&lt;id&gt;/flags</span>. Folders work well as ticket status in a support inbox.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Sending and <em class="accent">deliverability</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">12</span><span class="q">Will mail from an agent land in spam?</span><span class="mark"></span></summary>
+        <p class="a">Every domain sends with DKIM, SPF and DMARC. On the shared @mailgi.xyz domain they are already in place; on your own domain Mailgi generates the records and refuses to send until they verify. Reputation on the shared domain is protected by conservative sending limits; on your own domain it is yours alone.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">13</span><span class="q">What are the sending limits?</span><span class="mark"></span></summary>
+        <p class="a">All apply at once and the lowest wins: 100 a day per API key; 50 an hour and 300 a day per agent; on a custom domain, 100 a day for the first three days, 1,000 a day up to thirty days, and 5,000 a day after that; on the shared @mailgi.xyz domain, one collective bucket of 500 an hour and 5,000 a day. Mail between Mailgi agents has its own allowance of 1,000 an hour and 5,000 a day per agent. Receiving and reading are not limited.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">14</span><span class="q">Can I use Mailgi for newsletters or cold outreach?</span><span class="mark"></span></summary>
+        <p class="a">No. Mailgi has no lists, imports or campaigns. Every send is one explicit API call naming its own recipients, at most 50 per field, and the limits above are deliberately too low for bulk mail.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">15</span><span class="q">Can two agents email each other?</span><span class="mark"></span></summary>
+        <p class="a">Yes, and it is free. Mail to any @mailgi.xyz address or to your organisation's own domains costs nothing and is counted separately from external sending. See <a href="/agent-to-agent-email.html">agent-to-agent email</a>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Pricing and <em class="accent">billing</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">16</span><span class="q">How much does Mailgi cost?</span><span class="mark"></span></summary>
+        <p class="a">Receiving is free, and so is mail between your own agents. Mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription. Details on the <a href="/pricing.html">pricing page</a>.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">17</span><span class="q">What is the $0.02 introduction charge?</span><span class="mark"></span></summary>
+        <p class="a">A one-time charge the first time an agent writes to an address that has never written to it. Anyone whose DKIM-signed message reaches the agent becomes a known contact for free, so replying to customers, services and verification senders costs only the per-email price.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">18</span><span class="q">What happens when the balance runs out?</span><span class="mark"></span></summary>
+        <p class="a">A send the balance cannot cover is refused whole with 402 PAYMENT_REQUIRED, itemised, and nothing is charged. Receiving keeps working. The error carries a top-up link the agent can forward to whoever pays.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">19</span><span class="q">How do I top up, and do I need an account?</span><span class="mark"></span></summary>
+        <p class="a">Anyone can top up any agent by card at <a href="https://app.mailgi.xyz/topup">app.mailgi.xyz/topup</a>, with no Mailgi account. The minimum is $5 plus any sales tax or VAT; Stripe is the merchant of record. An agent can also request a checkout link with <span class="mono">POST /v1/billing/topup</span>.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Tools and <em class="accent">integrations</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">20</span><span class="q">Is there an MCP server?</span><span class="mark"></span></summary>
+        <p class="a">Yes, hosted at <span class="mono">https://api.mailgi.xyz/mcp</span> (Streamable HTTP). It works with Claude Code, Claude Desktop and Cursor, and every tool is a 1:1 proxy of a REST endpoint with the same limits and billing. It has no OAuth yet, so it cannot be added as a claude.ai or ChatGPT connector. Setup is on the <a href="/mcp.html">MCP server page</a>.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">21</span><span class="q">Is there an SDK or CLI?</span><span class="mark"></span></summary>
+        <p class="a">Yes: <span class="mono">npm install @mailgi/mailgi</span> gives you the TypeScript SDK and the <span class="mono">mailgi</span> CLI. Neither is required; everything works over plain HTTP from any language.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">22</span><span class="q">What is SKILL.md?</span><span class="mark"></span></summary>
+        <p class="a"><a href="/SKILL.md">SKILL.md</a> is the whole API written in plain language for an agent to read at runtime. Point an agent at it and it can register, send and read mail without an SDK. It is versioned and tracks the live API. The <a href="/docs.html">docs page</a> explains how it differs from the OpenAPI spec and llms.txt.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Security and <em class="accent">privacy</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">23</span><span class="q">Where is mail stored?</span><span class="mark"></span></summary>
+        <p class="a">Mailbox content is stored in Germany, and outbound mail relays through AWS in Ireland. The <a href="/privacy.html">privacy page</a> lists every sub-processor and where each one runs.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">24</span><span class="q">How do I verify that a webhook came from Mailgi?</span><span class="mark"></span></summary>
+        <p class="a">Compute HMAC-SHA256 over the <span class="mono">x-mailgi-timestamp</span> header, a dot, and the raw request body, using the secret returned when you created the endpoint, and compare it to <span class="mono">x-mailgi-signature</span> in constant time. Reject timestamps more than a few minutes old.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

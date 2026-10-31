@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mailgi API docs: REST, SKILL.md, OpenAPI, MCP — Mailgi</title>
+<meta name="description" content="Where Mailgi&#x27;s API is documented and for whom: SKILL.md for agents, Swagger for developers, OpenAPI for tooling, MCP and SDK. The whole loop in three calls." />
+<link rel="canonical" href="https://www.mailgi.xyz/docs.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Mailgi API docs: REST, SKILL.md, OpenAPI, MCP — Mailgi" />
+<meta property="og:description" content="Where Mailgi&#x27;s API is documented and for whom: SKILL.md for agents, Swagger for developers, OpenAPI for tooling, MCP and SDK. The whole loop in three calls." />
+<meta property="og:url" content="https://www.mailgi.xyz/docs.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Mailgi API docs: REST, SKILL.md, OpenAPI, MCP — Mailgi" />
+<meta name="twitter:description" content="Where Mailgi&#x27;s API is documented and for whom: SKILL.md for agents, Swagger for developers, OpenAPI for tooling, MCP and SDK. The whole loop in three calls." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "headline": "Mailgi API documentation",
+      "description": "Where Mailgi's API is documented and for whom, plus the whole loop in three calls.",
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/docs.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Docs",
+          "item": "https://www.mailgi.xyz/docs.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html" aria-current="page">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Docs</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">One API, <em class="accent">four ways to read it</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Mailgi is a REST API at api.mailgi.xyz. Here is which documentation to open, depending on whether you are a person, a tool or an agent.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://api.mailgi.xyz/docs">Open Swagger UI</a>
+      <a class="link-serif" href="/SKILL.md">or read SKILL.md →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">Mailgi's API is documented four times, for four different readers. SKILL.md is for an agent, Swagger UI for a developer, openapi.json for tooling, and llms.txt for an AI crawler. They describe the same REST API at https://api.mailgi.xyz, and the MCP server and SDK wrap it one-to-one.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Pick the surface <em class="accent">for your reader</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:640px">Same API, different shapes. If you are not sure, an agent wants SKILL.md and a person wants the guides.</p>
+    <div class="table-scroll">
+    <table class="cmp">
+      <thead><tr><th>Surface</th><th>Who it's for</th><th>What it is</th><th>Use it when</th></tr></thead>
+      <tbody>
+        <tr><th><a href="/SKILL.md">SKILL.md</a></th><td>An agent</td><td>The whole API in plain language, versioned, small enough for one context window.</td><td>You want an agent to onboard itself and act on the API directly.</td></tr>
+        <tr><th><a href="https://api.mailgi.xyz/docs">Swagger UI</a></th><td>A developer</td><td>Interactive explorer for every endpoint, with request and response schemas.</td><td>You want to try a call in the browser or check a field.</td></tr>
+        <tr><th><a href="https://api.mailgi.xyz/openapi.json">openapi.json</a></th><td>Tooling</td><td>The machine-readable OpenAPI spec.</td><td>You are generating a client or validating requests.</td></tr>
+        <tr><th><a href="/mcp.html">MCP server</a></th><td>An MCP client</td><td><span class="mono">https://api.mailgi.xyz/mcp</span>: every REST endpoint as a tool.</td><td>You use Claude Code, Claude Desktop or Cursor.</td></tr>
+        <tr><th><a href="https://www.npmjs.com/package/@mailgi/mailgi">@mailgi/mailgi</a></th><td>A Node developer</td><td>TypeScript SDK and the mailgi CLI, methods 1:1 with REST.</td><td>You'd rather call typed methods than fetch.</td></tr>
+        <tr><th><a href="/llms.txt">llms.txt</a></th><td>An LLM crawler</td><td>A one-page site summary with links to everything above.</td><td>An assistant needs to find the right page quickly.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">The whole loop <em class="accent">in three calls</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:620px">Every Mailgi integration starts here. Mail between Mailgi addresses is free, so this costs nothing to run.</p>
+    <div class="stack-split" style="margin-bottom:56px">
+      <div>
+        <h3 style="margin-bottom:14px">Register, send, read</h3>
+        <p class="body">Base URL <span class="mono">https://api.mailgi.xyz</span>. Authenticated calls take <span class="mono">Authorization: Bearer amb_…</span>.</p>
+        <p class="body" style="margin-top:18px">Wait a couple of seconds after registering before the first send: the mailbox is provisioned asynchronously. Retry once on a 5xx.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># 1. Register: no auth, no signup form
+curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" -d '{"label":"my-agent"}'
+# =&gt; {"emailAddress":"buzzing-falcon@mailgi.xyz","apiKey":"amb_..."}
+
+# 2. Send (free between Mailgi addresses)
+curl -s -X POST https://api.mailgi.xyz/v1/mail/send \
+  -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" \
+  -d '{"to":["buzzing-falcon@mailgi.xyz"],"subject":"Hi","textBody":"Hello"}'
+
+# 3. Read the inbox
+curl -s https://api.mailgi.xyz/v1/mail -H "Authorization: Bearer $KEY"</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Endpoints <em class="accent">at a glance</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:640px">The full reference, with every field and error code, is in <a href="/SKILL.md">SKILL.md</a> and <a href="https://api.mailgi.xyz/docs">Swagger</a>. Errors are always <span class="mono">{"error":{"code","message"}}</span>; match on the code, not the status.</p>
+    <div class="table-scroll">
+    <table class="cmp">
+      <thead><tr><th>Endpoint</th><th>Auth</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><th><span class="mono">POST /v1/agents/register</span></th><td>none</td><td>Create an agent and its mailbox; returns the address and an API key (shown once).</td></tr>
+        <tr><th><span class="mono">GET /v1/mail</span></th><td>API key</td><td>List messages: folder, limit, position, sort. No search.</td></tr>
+        <tr><th><span class="mono">GET /v1/mail/&lt;id&gt;</span></th><td>API key</td><td>One message with its text and HTML body.</td></tr>
+        <tr><th><span class="mono">POST /v1/mail/send</span></th><td>API key</td><td>Send: to, cc, bcc, subject, textBody, htmlBody, replyTo. Other fields are ignored.</td></tr>
+        <tr><th><span class="mono">/v1/mailboxes</span></th><td>API key</td><td>List, create, rename and delete folders.</td></tr>
+        <tr><th><span class="mono">/v1/webhook-endpoints</span></th><td>API key</td><td>Signed notifications when mail arrives; deliveries log, resend, re-enable.</td></tr>
+        <tr><th><span class="mono">/v1/apikeys</span></th><td>API key</td><td>Create, list and revoke extra keys.</td></tr>
+        <tr><th><span class="mono">GET /v1/billing</span></th><td>API key</td><td>Balance, wallet standing, live prices, top-up links.</td></tr>
+        <tr><th><span class="mono">GET /health/ready</span></th><td>none</td><td>Readiness: database and mail server.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Guides that <em class="accent">go further</em></h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3><a href="/agent-email-address.html">How to give an AI agent an email address</a></h3>
+        <p class="body">The options, how each fails, and the setup in depth, including DKIM, SPF and DMARC.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3><a href="/agent-email-verification.html">Receiving a verification code</a></h3>
+        <p class="body">Register, poll, extract the code, and avoid the four common failure modes.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3><a href="/agent-support-inbox.html">Running a support inbox</a></h3>
+        <p class="body">Custom-domain setup, folders as ticket status, and replies without threading headers.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3><a href="/faq.html">FAQ</a></h3>
+        <p class="body">Limits, pricing, webhooks, MCP and storage, answered in one place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>
