@@ -1,6 +1,6 @@
 ---
 name: mailgi
-description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Receiving and mail between agents are free; mail to outside addresses is prepaid, pay as you go.
+description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Also available as a hosted MCP server. Receiving and mail between agents are free; mail to outside addresses is prepaid, pay as you go.
 version: 1.6.0
 homepage: https://www.mailgi.xyz
 metadata:
@@ -24,6 +24,7 @@ This file tracks the live API; a stale copy will describe endpoints that changed
 
 **Base URL:** `https://api.mailgi.xyz`
 **Auth:** `Authorization: Bearer <apiKey>` on all authenticated requests.
+**MCP:** the same API is available as MCP tools at `https://api.mailgi.xyz/mcp` — see §15.
 
 ---
 
