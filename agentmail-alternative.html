@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgentMail alternative for AI agents: Mailgi vs AgentMail</title>
+<meta name="description" content="Mailgi vs AgentMail: agent self-signup with no human, no per-inbox pricing, free receiving. And where AgentMail is better: threads, search, SOC 2." />
+<link rel="canonical" href="https://www.mailgi.xyz/agentmail-alternative.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="AgentMail alternative for AI agents: Mailgi vs AgentMail" />
+<meta property="og:description" content="Mailgi vs AgentMail: agent self-signup with no human, no per-inbox pricing, free receiving. And where AgentMail is better: threads, search, SOC 2." />
+<meta property="og:url" content="https://www.mailgi.xyz/agentmail-alternative.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AgentMail alternative for AI agents: Mailgi vs AgentMail" />
+<meta name="twitter:description" content="Mailgi vs AgentMail: agent self-signup with no human, no per-inbox pricing, free receiving. And where AgentMail is better: threads, search, SOC 2." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "AgentMail alternative",
+      "description": "Mailgi vs AgentMail: agent self-signup with no human, no per-inbox pricing, free receiving. And where AgentMail is better: threads, search, SOC 2.",
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/agentmail-alternative.html"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the best AgentMail alternative?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on why you're leaving. For agents that register themselves with no human, Mailgi. For a team already on Resend, Resend Inboxes. For mailbox plus calendar, Nylas Agent Accounts. If you need threads, search and SOC 2, AgentMail itself is still the strongest option."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an AgentMail agent sign itself up without a human?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Partly. AgentMail's sign-up endpoint now makes the human email optional, but without one the inbox can only receive until a human is attached. An agent with a USDC wallet can instead pay per request over x402, $2 per inbox; AgentMail's docs don't say what such an inbox may send to."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Mailgi cheaper than AgentMail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For many agents with light traffic, yes: no monthly fee, no per-inbox fee and free receiving. For steady volume to new recipients, no: AgentMail's $20 plan includes 10,000 emails, while Mailgi charges $0.02 the first time an agent writes to each new address."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I move from AgentMail to Mailgi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, but it is a rewrite of the mail calls, not a config change: Mailgi has its own REST API, SDK and MCP server, and no threading or search. Register a Mailgi agent per AgentMail inbox and point your domain's MX records at Mailgi when you are ready."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides",
+          "item": "https://www.mailgi.xyz/guides.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Compare email APIs",
+          "item": "https://www.mailgi.xyz/vs-resend-postmark-mailgun.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "AgentMail alternative",
+          "item": "https://www.mailgi.xyz/agentmail-alternative.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Comparison</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">An AgentMail alternative, <em class="accent">and when not to switch</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">AgentMail is the most complete email API for agents. Mailgi differs on one thing that matters to some builds: a program can register and send with no human at all.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="/vs-resend-postmark-mailgun.html">or see the full comparison →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">Mailgi and AgentMail both give AI agents real mailboxes over an API. AgentMail is more mature, with threads, full-text search, IMAP, WebSockets and SOC 2. Mailgi lets an agent register itself and send immediately with no human and no wallet, has no per-inbox fee, and receives for free. Choose on that, not on a feature count.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Mailgi vs AgentMail, <em class="accent">line by line</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:12px;max-width:640px">Facts from AgentMail's own pricing page and API docs.</p>
+    <p class="verified-note" style="margin:0 0 32px">Last verified: 2026-10-31 against each vendor's own pricing and documentation pages. Pricing moves; re-check before you commit.</p>
+    <div class="table-scroll">
+    <table class="cmp">
+      <thead><tr><th></th><th class="own">Mailgi</th><th>AgentMail</th></tr></thead>
+      <tbody>
+        <tr><th>Agent registers itself</th><td class="own">Yes: one POST, can send immediately</td><td>Yes, but can't send until a human is attached; or pay per call from a USDC wallet ($2 per inbox)</td></tr>
+        <tr><th>Inbox pricing</th><td class="own">No per-inbox fee</td><td>3 free; 10 on $20/mo; 150 on $200/mo</td></tr>
+        <tr><th>Receiving</th><td class="own">Free, not counted</td><td>Counts toward plan limits</td></tr>
+        <tr><th>Sending</th><td class="own">$0.0005 per recipient, $0.02 once per new address</td><td>Included in plan: 3k/mo free, 10k/mo on $20</td></tr>
+        <tr><th>Custom domains</th><td class="own">Free on every agent</td><td>Paid plans (10 on $20/mo)</td></tr>
+        <tr><th>Threading</th><td class="own">No (Re: subject only)</td><td>Yes</td></tr>
+        <tr><th>Search</th><td class="own">No</td><td>Full-text</td></tr>
+        <tr><th>IMAP / SMTP / WebSocket</th><td class="own">No / No / No</td><td>Yes / Yes / Yes</td></tr>
+        <tr><th>Webhooks</th><td class="own">Yes, signed, no content</td><td>Yes</td></tr>
+        <tr><th>MCP server</th><td class="own">Yes, hosted</td><td>Yes, hosted</td></tr>
+        <tr><th>Attachments</th><td class="own">No</td><td>Yes</td></tr>
+        <tr><th>SOC 2</th><td class="own">No</td><td>Type II on $200/mo</td></tr>
+        <tr><th>Data location</th><td class="own">Mail stored in Germany</td><td>US; EU on Enterprise</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Pick AgentMail <em class="accent">if</em></h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>You need threads, search or attachments now</h3>
+        <p class="body">We don't have them. AgentMail does, plus IMAP and WebSockets.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>A human can sign up once</h3>
+        <p class="body">Then our main difference doesn't apply to you, and AgentMail is the more mature product.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>You need a SOC 2 report</h3>
+        <p class="body">AgentMail has a Type II report on its $200 plan. We don't have one.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>You send high, steady volume to new people</h3>
+        <p class="body">At 10,000 first-contact emails a month AgentMail's $20 plan is far cheaper than our $0.02 introduction charge. Mailgi is not built for outreach.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Pick Mailgi <em class="accent">if</em></h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>The agent has to create its own address, unattended</h3>
+        <p class="body">One POST, no human, no wallet, and it can send straight away. That is the reason Mailgi exists.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>You run many agents with little traffic each</h3>
+        <p class="body">No per-inbox fee and free receiving: a thousand mostly idle agents cost nothing until they send.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Most mail goes to people who wrote first</h3>
+        <p class="body">Anyone whose DKIM-signed mail reached the agent is a known contact; replying costs $0.0005.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>You want your own domain on day one, free</h3>
+        <p class="body">Custom domains are free and every agent on them shares the organisation's balance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">What is the best AgentMail alternative?</span><span class="mark"></span></summary>
+        <p class="a">It depends on why you're leaving. For agents that register themselves with no human, Mailgi. For a team already on Resend, Resend Inboxes. For mailbox plus calendar, Nylas Agent Accounts. If you need threads, search and SOC 2, AgentMail itself is still the strongest option.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Can an AgentMail agent sign itself up without a human?</span><span class="mark"></span></summary>
+        <p class="a">Partly. AgentMail's sign-up endpoint now makes the human email optional, but without one the inbox can only receive until a human is attached. An agent with a USDC wallet can instead pay per request over x402, $2 per inbox; AgentMail's docs don't say what such an inbox may send to.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Is Mailgi cheaper than AgentMail?</span><span class="mark"></span></summary>
+        <p class="a">For many agents with light traffic, yes: no monthly fee, no per-inbox fee and free receiving. For steady volume to new recipients, no: AgentMail's $20 plan includes 10,000 emails, while Mailgi charges $0.02 the first time an agent writes to each new address.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">Can I move from AgentMail to Mailgi?</span><span class="mark"></span></summary>
+        <p class="a">Yes, but it is a rewrite of the mail calls, not a config change: Mailgi has its own REST API, SDK and MCP server, and no threading or search. Register a Mailgi agent per AgentMail inbox and point your domain's MX records at Mailgi when you are ready.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="font-size:28px;margin-bottom:20px">Sources</h2>
+    <ul class="change-list">
+      <li><a href="https://www.agentmail.to/pricing">AgentMail pricing</a></li>
+      <li><a href="https://agentmail.to/docs/api-reference/agent/sign-up.md">AgentMail agent sign-up API</a></li>
+      <li><a href="https://agentmail.to/docs/knowledge-base/agent-sign-up-limits.md">AgentMail agent sign-up limits</a></li>
+      <li><a href="https://agentmail.to/docs/integrations/x402.md">AgentMail x402 payments</a></li>
+      <li><a href="https://www.mailgi.xyz/pricing.html">Mailgi pricing</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top related">
+  <div class="section shell">
+    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
+    <ul class="related-list">
+      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/changelog.html">changelog</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>
