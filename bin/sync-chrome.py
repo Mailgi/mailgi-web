@@ -6,7 +6,9 @@ full on every page. Edit them once in bin/chrome/, run this, commit the result.
 The served HTML stays plain, complete and crawler-readable; this only saves
 hand-editing the same block in every file.
 
-The current page's own link gets aria-current="page".
+The current page's own link gets aria-current="page". Pages that carry a
+"Keep reading" block (<section class="rule-top related">) get the shared list
+of guides, minus a link to themselves.
 
     python3 bin/sync-chrome.py
 """
@@ -19,7 +21,12 @@ CHROME = Path(__file__).resolve().parent / "chrome"
 BLOCKS = {
     "nav": (re.compile(r'<nav class="nav shell">.*?</nav>', re.S), (CHROME / "nav.html").read_text().strip()),
     "footer": (re.compile(r'<footer class="footer">.*?</footer>', re.S), (CHROME / "footer.html").read_text().strip()),
+    "related": (re.compile(r'<section class="rule-top related">.*?</section>', re.S), (CHROME / "related.html").read_text().strip()),
 }
+
+
+def drop_self(related, name):
+    return re.sub(rf'\n\s*<li><a href="/{re.escape(name)}">.*?</li>', "", related)
 
 
 def mark_current(nav, name):
@@ -37,6 +44,8 @@ def main():
         for key, (pattern, block) in BLOCKS.items():
             if key == "nav":
                 block = mark_current(block, page.name)
+            elif key == "related":
+                block = drop_self(block, page.name)
             out = pattern.sub(lambda _: block, out, count=1)
         if out != src:
             page.write_text(out)
