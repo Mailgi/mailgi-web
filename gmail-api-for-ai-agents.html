@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Should your AI agent use the Gmail API? — Mailgi</title>
+<meta name="description" content="The Gmail API for AI agents: OAuth, the 100-user cap, CASA assessments and full mailbox access, versus giving the agent its own email address." />
+<link rel="canonical" href="https://www.mailgi.xyz/gmail-api-for-ai-agents.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Should your AI agent use the Gmail API? — Mailgi" />
+<meta property="og:description" content="The Gmail API for AI agents: OAuth, the 100-user cap, CASA assessments and full mailbox access, versus giving the agent its own email address." />
+<meta property="og:url" content="https://www.mailgi.xyz/gmail-api-for-ai-agents.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Should your AI agent use the Gmail API? — Mailgi" />
+<meta name="twitter:description" content="The Gmail API for AI agents: OAuth, the 100-user cap, CASA assessments and full mailbox access, versus giving the agent its own email address." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Gmail API for AI agents",
+      "description": "The Gmail API for AI agents: OAuth, the 100-user cap, CASA assessments and full mailbox access, versus giving the agent its own email address.",
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/gmail-api-for-ai-agents.html"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Should my AI agent use the Gmail API?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For one internal agent on your own Workspace account, it is free and workable. For an agent used by people outside your organisation, the OAuth verification, 100-user cap before verification and annual CASA assessment for restricted scopes make it slow and costly, and the agent can read the whole mailbox. Giving the agent its own address avoids all of that."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I create Gmail accounts for my AI agents?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not programmatically for consumer Gmail, and accounts operated by bots risk being flagged. Workspace accounts are paid per user. An email API for agents gives each agent an address with one call."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the Gmail API need a security assessment?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Apps using restricted Gmail scopes that access data through their own servers must pass a third-party CASA security assessment, renewed at least every 12 months. Internal Workspace apps and personal use are exempt."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides",
+          "item": "https://www.mailgi.xyz/guides.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Compare email APIs",
+          "item": "https://www.mailgi.xyz/vs-resend-postmark-mailgun.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Gmail API for AI agents",
+          "item": "https://www.mailgi.xyz/gmail-api-for-ai-agents.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Comparison</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">Should your AI agent <em class="accent">use Gmail</em>?</h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">The Gmail API works for one internal agent. Shipping an agent that reads users' Gmail means OAuth verification, a yearly security assessment and access to everything in the mailbox.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="/vs-resend-postmark-mailgun.html">or see the full comparison →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">Use the Gmail API only for an internal agent on your own Workspace account. For anything shipped to other people, restricted Gmail scopes require OAuth verification and a CASA security assessment renewed every 12 months, unverified apps are capped at 100 users, and the agent can read the user's entire mailbox. Giving the agent its own address, and forwarding it what it needs, avoids all of it.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">What it takes to <em class="accent">ship an agent on Gmail</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">Fine for one internal agent on a Workspace account. Each step below applies once the agent serves users outside your organisation.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>A Cloud project and an OAuth consent screen</h3>
+        <p class="body">Before the agent reads one message: project, consent screen, scopes, and an OAuth flow each user clicks through.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>A 100-user cap until verified</h3>
+        <p class="body">Unverified apps can sign in at most 100 new users and show a warning screen.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Restricted scopes mean a security assessment</h3>
+        <p class="body">Reading Gmail uses restricted scopes. Apps that handle that data on their own servers need a CASA assessment by an approved assessor, renewed every 12 months; Google says verification alone can take several weeks.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>The agent can read everything</h3>
+        <p class="body">The structural problem: an agent with access to a person's mailbox reads all of it, and everything it sends is from that person.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Gmail API vs <em class="accent">an agent's own address</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:12px;max-width:640px">Facts from Google's OAuth verification documentation.</p>
+    <p class="verified-note" style="margin:0 0 32px">Last verified: 2026-10-31 against each vendor's own pricing and documentation pages. Pricing moves; re-check before you commit.</p>
+    <div class="table-scroll">
+    <table class="cmp">
+      <thead><tr><th></th><th>Gmail API on a user's account</th><th class="own">Mailgi address for the agent</th></tr></thead>
+      <tbody>
+        <tr><th>Setup before the first read</th><td>Cloud project, consent screen, OAuth</td><td class="own">One POST</td></tr>
+        <tr><th>Human involvement</th><td>Each user consents</td><td class="own">None</td></tr>
+        <tr><th>Shipping to outside users</th><td>Verification and annual CASA assessment</td><td class="own">Nothing extra</td></tr>
+        <tr><th>What the agent can read</th><td>The whole mailbox</td><td class="own">Only mail sent to the agent</td></tr>
+        <tr><th>Sender identity</th><td>The human</td><td class="own">The agent's own address or your domain</td></tr>
+        <tr><th>Cost</th><td>Free API; assessment costs</td><td class="own">Receiving free; $0.0005 per external recipient</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">A pattern that <em class="accent">keeps both</em></h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Forward, don't grant</h3>
+        <p class="body">Give the agent its own address and have the human forward or CC it what it needs. The agent works from its inbox; the human's mailbox stays private.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>Reply from the agent's address</h3>
+        <p class="body">Customers see a stable address you control, with DKIM, SPF and DMARC on your own domain.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">Should my AI agent use the Gmail API?</span><span class="mark"></span></summary>
+        <p class="a">For one internal agent on your own Workspace account, it is free and workable. For an agent used by people outside your organisation, the OAuth verification, 100-user cap before verification and annual CASA assessment for restricted scopes make it slow and costly, and the agent can read the whole mailbox. Giving the agent its own address avoids all of that.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Can I create Gmail accounts for my AI agents?</span><span class="mark"></span></summary>
+        <p class="a">Not programmatically for consumer Gmail, and accounts operated by bots risk being flagged. Workspace accounts are paid per user. An email API for agents gives each agent an address with one call.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Does the Gmail API need a security assessment?</span><span class="mark"></span></summary>
+        <p class="a">Apps using restricted Gmail scopes that access data through their own servers must pass a third-party CASA security assessment, renewed at least every 12 months. Internal Workspace apps and personal use are exempt.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="font-size:28px;margin-bottom:20px">Sources</h2>
+    <ul class="change-list">
+      <li><a href="https://developers.google.com/identity/protocols/oauth2/production-readiness/restricted-scope-verification">Google: restricted scope verification</a></li>
+      <li><a href="https://support.google.com/cloud/answer/7454865">Google: unverified apps</a></li>
+      <li><a href="https://www.mailgi.xyz/pricing.html">Mailgi pricing</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top related">
+  <div class="section shell">
+    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
+    <ul class="related-list">
+      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+      <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
+      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/changelog.html">changelog</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

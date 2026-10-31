@@ -76,10 +76,10 @@
   "@graph": [
     {
       "@type": "Article",
-      "headline": "Mailgi vs Resend, Postmark, Mailgun and AgentMail — for AI agents",
+      "headline": "Mailgi vs AgentMail, Resend, Postmark and Mailgun for AI agents",
       "description": "A dated, sourced comparison of email APIs for AI agents, including the cases where a competitor is the better choice.",
       "datePublished": "2026-08-30",
-      "dateModified": "2026-08-30",
+      "dateModified": "2026-10-31",
       "author": {
         "@id": "https://www.mailgi.xyz/#org"
       },
@@ -99,7 +99,7 @@
           "name": "Can Resend receive email?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Resend shipped inbound in November 2025, and it is more than a webhook — there is a receiving API, CLI streaming, dashboard viewing and an MCP server, plus an automatic receiving subdomain for every account. Claims that Resend cannot receive mail are out of date. The relevant limitations for an agent are that inbound messages count against the same quota as sends, and that standard plans retain data for 30 days."
+            "text": "Yes. Resend shipped inbound in November 2025 (a receiving API, CLI streaming and an MCP server), and on 22 October 2026 launched Inboxes: threaded mailboxes with folders, labels and search, three free and $1 each after that on paid plans. Claims that Resend can't receive mail are out of date. For an agent, the remaining limits are that a human must create the account and verify a domain first, inbound counts against the same quota as sends, and standard plans retain data for 30 days."
           }
         },
         {
@@ -107,7 +107,7 @@
           "name": "What is the difference between Mailgi and AgentMail?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AgentMail is the more mature product: threading, semantic search, IMAP and SMTP access, WebSockets, multi-tenant pods, a SOC 2 report on its higher tier, and a $6M seed round behind it. The difference that matters is registration. AgentMail's agent sign-up API requires a human email address and a six-digit OTP delivered to that human, and blocks sending to anyone else until it is verified. Mailgi's registration is a single unauthenticated POST with no human in the loop at any point."
+            "text": "AgentMail is the more mature product: threading, full-text search, IMAP and SMTP access, WebSockets, multi-tenant pods, a SOC 2 report on its $200 tier, and a $6M seed round. The difference is registration. AgentMail's sign-up API takes an optional human email: without it the inbox can receive but not send until a human is attached; with it, a six-digit code goes to that person first. An agent can also pay per request from a USDC wallet. Mailgi's registration is a single unauthenticated POST that can send immediately, with no human and no wallet."
           }
         },
         {
@@ -115,7 +115,7 @@
           "name": "What is the cheapest way to give an AI agent an email address?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "If the agent only needs to catch a verification code in a test, a free disposable-mail API such as mail.tm costs nothing and needs no API key. If you are already running on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free and sends pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15 to $20 a month across Postmark, Mailgun, Resend and AgentMail."
+            "text": "If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free and sends pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail."
           }
         },
         {
@@ -123,7 +123,7 @@
           "name": "Which email APIs let an AI agent sign itself up without a human?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Very few. The traditional providers — Resend, Postmark, Mailgun and SendGrid — all require a human to create an account in a browser before any API key exists. AgentMail has a programmatic sign-up endpoint but requires a human email and OTP verification. As of August 2026 the options for genuinely unattended registration are Mailgi and PhoboMail, the latter being a free MCP-only project without custom domain support."
+            "text": "Very few. Resend, Postmark, Mailgun, SendGrid, Nylas and mails.ai all need a human to create the account before an API key exists. AgentMail lets an agent sign up without a human, but that inbox can only receive until a human is attached, unless the agent pays per request from a USDC wallet. As of 31 October 2026, Mailgi and PhoboMail (a free, MCP-only project without custom domains) let a program register and send with no human and no wallet."
           }
         },
         {
@@ -131,7 +131,7 @@
           "name": "How does Mailgi handle abuse on a shared domain?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sending is capped at several levels at once: 100 per day per API key, 50 per hour and 300 per day per agent, and either a per-organisation limit that starts at 100 per day on a newly verified domain, or for shared-domain agents one collective bucket of 5000 per day. Every outbound message counts whatever its destination. New domains cannot send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, which is the intent — shared-domain sending reputation is the asset most easily destroyed and hardest to rebuild."
+            "text": "It's the fair question to ask anyone offering unattended registration, and we'd rather answer it than be asked. Sending is capped at several levels at once — 100 a day per API key, 50 an hour and 300 a day per agent, and either a per-org limit starting at 100 a day on a newly verified domain, or for shared-domain agents one collective bucket of 5,000 a day. Every external send counts; mail to other Mailgi agents has its own allowance. New domains can't send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, and that's the point: shared-domain reputation is the thing most easily destroyed and hardest to rebuild."
           }
         },
         {
@@ -139,7 +139,7 @@
           "name": "Does Mailgi support email attachments?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Not yet, in either direction. The send endpoint has no attachments field, and a message arriving with a file attached is delivered but the agent sees only the text. If your workflow depends on sending or receiving files, this is the constraint with no workaround, and Postmark, Resend and Mailgun all handle attachments today."
+            "text": "Not yet, in either direction. The send endpoint has no attachments field, and a message arriving with a file is delivered but the agent sees only the text. If your workflow depends on files, this is the constraint with no workaround — Postmark, Resend and Mailgun all handle attachments today."
           }
         },
         {
@@ -147,7 +147,7 @@
           "name": "What does Mailgi not have that the alternatives do?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Attachments, search, WebSocket push, message threading headers, dedicated IPs, a SOC 2 report and an EU region. Webhooks are no longer on that list — inbound webhooks shipped in September 2026, with signed payloads and a delivery log. AgentMail still has semantic search, IMAP and SMTP access and WebSockets. Resend and Postmark have attachments and years of deliverability tuning. The single thing Mailgi does that they do not is let a program register itself with no human reading a verification code."
+            "text": "Attachments, search, WebSocket push, threading headers, dedicated IPs, a SOC 2 report and an EU region. Webhooks are no longer on that list — inbound webhooks shipped in September 2026, signed, with a delivery log and replay. AgentMail has full-text search, IMAP and SMTP, and WebSockets; Resend's Inboxes have threads and search. Resend and Postmark have attachments and years of deliverability tuning. What we do that they don't is let a program register itself and send with no human and no wallet."
           }
         }
       ]
@@ -217,7 +217,7 @@
 <section class="section shell">
   <h2 style="margin-bottom:12px">The comparison, <em class="accent">at a glance</em></h2>
   <p class="body" style="font-size:16px;margin-bottom:12px;max-width:640px">Everything below was checked against each vendor's own documentation and pricing pages on the date shown. Pricing moves — re-check before you commit to anything.</p>
-  <p class="verified-note" style="margin-bottom:40px">Last verified: 2026-08-30</p>
+  <p class="verified-note" style="margin-bottom:40px">Last verified: 2026-10-31</p>
   <div class="table-scroll">
     <table class="cmp">
       <thead>
@@ -236,7 +236,7 @@
           <th scope="row">Inbound shape</th>
           <td class="own">Mailbox</td>
           <td>Mailbox</td>
-          <td>Webhook + receiving API</td>
+          <td>Inboxes (new, Oct 2026) + webhook</td>
           <td>Parse webhook</td>
           <td>Routes + webhook</td>
           <td>Routing to Workers</td>
@@ -244,7 +244,7 @@
         <tr>
           <th scope="row">Agent self-registers, no human</th>
           <td class="own yes">Yes</td>
-          <td class="no">Needs human email + OTP</td>
+          <td class="no">Receive-only until a human verifies; or pay per call from a USDC wallet</td>
           <td class="no">No</td>
           <td class="no">No</td>
           <td class="no">No</td>
@@ -280,8 +280,8 @@
         <tr>
           <th scope="row">Search</th>
           <td class="own no">No</td>
-          <td class="yes">Semantic</td>
-          <td class="no">No</td>
+          <td class="yes">Full-text</td>
+          <td class="yes">Yes, in Inboxes</td>
           <td class="no">No</td>
           <td class="no">No</td>
           <td class="no">Build it</td>
@@ -289,7 +289,7 @@
         <tr>
           <th scope="row">Free tier</th>
           <td class="own">Receiving free</td>
-          <td>3 inboxes, 3k/mo</td>
+          <td>3 inboxes, 3k/mo, 100/day</td>
           <td>3k/mo, 100/day</td>
           <td>100/mo, forever</td>
           <td>100/day, 1 route</td>
@@ -317,14 +317,24 @@
       <div class="row">
         <div class="numeral">01</div>
         <h3>AgentMail</h3>
-        <p class="body">The most serious competitor in the category, and on most axes the more capable product. YC Summer 2025, a $6M seed led by General Catalyst, and a feature list we don't match: threading, semantic search, IMAP and SMTP access, WebSockets, multi-tenant pods, auto-labeling, a SOC 2 report on the $200 tier, an EU region and first-party framework connectors. The free tier is three inboxes and 3,000 messages a month with no card.</p>
-        <p class="body" style="margin-top:14px">The difference that matters is registration. AgentMail does have a programmatic sign-up endpoint — but it takes a required <span class="mono">human_email</span>, sends a six-digit code to that person, and until someone reads it the account can only mail the address it signed up with. That's a sensible anti-abuse decision. It also means a human is in the loop, which is the exact thing we exist to remove. <strong>If you're building a multi-tenant agent platform and a one-time human signup is acceptable, AgentMail is more mature than we are and you should look at it.</strong></p>
+        <p class="body">The most serious competitor in the category, and on most axes the more capable product. YC Summer 2025, a $6M seed led by General Catalyst, and a feature list we don't match: threading, full-text search, IMAP and SMTP access, WebSockets, multi-tenant pods, labels, a SOC 2 report on the $200 tier, an EU region on Enterprise and first-party framework connectors. The free tier is three inboxes, 3,000 messages a month and 100 a day, with no card; paid plans start at $20.</p>
+        <p class="body" style="margin-top:14px">Registration is where we differ, and the gap has narrowed since August. AgentMail's sign-up endpoint now takes an <em>optional</em> <span class="mono">human_email</span>. Without one, the agent gets an inbox that can receive but cannot send to anyone until a human is attached. With one, a six-digit code goes to that person, and until it is entered the account can only mail them. Separately, an agent holding a USDC wallet can create an inbox for $2 and pay per request over x402 with no API key; AgentMail's docs don't say what that inbox may send to. Mailgi's registration is one unauthenticated POST that can send straight away, with no wallet and no human. <strong>If you're building a multi-tenant agent platform and a one-time human signup is acceptable, AgentMail is more mature than we are and you should look at it.</strong></p>
       </div>
       <div class="row">
         <div class="numeral">02</div>
         <h3>PhoboMail</h3>
-        <p class="body">The only other product we found that registers an agent with genuinely no human involved — an agent calls a tool, gets an address and a key, and starts working. Free. If unattended registration is the only thing you need, it does that.</p>
+        <p class="body">A small product that also registers an agent with no human involved — an agent calls a tool, gets an address and a key, and starts working. Free. If unattended registration is the only thing you need, it does that.</p>
         <p class="body" style="margin-top:14px">It's MCP-only, so there's no REST API for anything that isn't an MCP client; there are no custom domains, so you're on their shared domain permanently; and it's a small solo project with no stated support commitment. Worth knowing about, and we'd rather tell you than have you find it later.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Nylas Agent Accounts</h3>
+        <p class="body">Nylas-hosted mailboxes (and calendars) for agents, created in one API call with no OAuth, in beta since April 2026. Real mailboxes with threads, folders and IMAP/SMTP on paid plans, and a US or EU region on every plan. Free is three accounts, 3,000 emails a month and 3 GB; Essentials is $15 a month and Pro $49. Getting the API key that creates accounts needs a human to sign up first. <strong>A good fit if you also want calendars, or already use Nylas.</strong></p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>mails.ai</h3>
+        <p class="body">A newer entrant (launched in the third quarter of 2026) aimed at agents that send and handle replies: TypeScript and Python SDKs, an MCP server, signed webhooks and reply intent classification. Free is one agent and 3,000 emails a month; Pro is $20 and Scale $99. Inbound arrives as a stream of reply events rather than a mailbox you list and read, and a human mints the first API key.</p>
       </div>
     </div>
   </div>
@@ -338,8 +348,8 @@
       <div class="row">
         <div class="numeral">01</div>
         <h3>Resend</h3>
-        <p class="body"><strong>Resend can receive mail.</strong> Inbound shipped in November 2025 and it's a real feature — a receiving API, CLI streaming, dashboard viewing, an MCP server for agent access, and an automatic receiving subdomain for every account. Anyone still telling you Resend is send-only is working from stale information. It's also the best developer experience in the category, and past a million users.</p>
-        <p class="body" style="margin-top:14px">Two things to know before building an agent on it. Inbound messages count against the same quota as your sends, so a chatty agent burns allowance twice. And standard plans retain mail for 30 days, which is fine for a workflow and wrong for an agent that needs to remember a conversation from last quarter. Free is 3,000 a month and 100 a day; Pro starts at $20.</p>
+        <p class="body"><strong>Resend can receive mail, and since 22 October 2026 it has mailboxes.</strong> Inbound shipped in November 2025 as a receiving API, CLI streaming and an MCP server. The new Inboxes product adds threaded mailboxes on your own domain with folders, labels, drafts, Gmail-style search and configurable built-in agents: three inboxes free, then $1 per inbox on paid plans. It is also the best developer experience in the category, and past a million users.</p>
+        <p class="body" style="margin-top:14px">What still separates us: a human has to create the Resend account and verify a domain before an agent gets an inbox. Inbound messages count against the same quota as your sends, so a chatty agent burns allowance twice. And standard plans retain mail for 30 days, which is fine for a workflow and wrong for an agent that needs to remember a conversation from last quarter. Free is 3,000 a month and 100 a day; Pro starts at $20.</p>
       </div>
       <div class="row">
         <div class="numeral">02</div>
@@ -355,7 +365,7 @@
       <div class="row">
         <div class="numeral">04</div>
         <h3>SendGrid</h3>
-        <p class="body">The free tier was retired in July 2025 — there's now a 60-day trial, after which sending stops unless you're on a paid plan starting somewhere around $20/month. Inbound Parse is a webhook and works. The genuine advantage is that it's part of Twilio, so if you also need SMS or voice from the same agent, that consolidation is worth something. For email alone, the others are better value.</p>
+        <p class="body">The free tier was retired in 2025 — there's now a 60-day trial, after which sending stops unless you're on a paid plan starting somewhere around $20/month. Inbound Parse is a webhook and works. The genuine advantage is that it's part of Twilio, so if you also need SMS or voice from the same agent, that consolidation is worth something. For email alone, the others are better value.</p>
       </div>
     </div>
   </div>
@@ -381,7 +391,7 @@
       <div class="row">
         <div class="numeral">03</div>
         <h3>Gmail API on a human's account</h3>
-        <p class="body">Free, and reasonable for one internal agent on a Workspace account. It doesn't survive contact with production. Before the agent reads a message you need a cloud project, an OAuth consent screen and scope configuration; unverified apps are capped near 100 users and show a warning screen; and the mailbox scopes are restricted, so going external means OAuth verification plus an annual third-party CASA security assessment — real money, renewed yearly, with a first cycle usually measured in months. The structural problem is that the agent can read everything else in that person's mail.</p>
+        <p class="body">Free, and reasonable for one internal agent on a Workspace account. It doesn't survive contact with production. Before the agent reads a message you need a cloud project, an OAuth consent screen and scope configuration; unverified apps are capped near 100 users and show a warning screen; and the mailbox scopes are restricted, so going external means OAuth verification plus a third-party CASA security assessment renewed every 12 months; Google says verification alone can take several weeks. The structural problem is that the agent can read everything else in that person's mail.</p>
       </div>
     </div>
   </div>
@@ -395,7 +405,7 @@
       <div class="tile">
         <span class="numeral">01</span>
         <h3>You need search or threading</h3>
-        <p class="small" style="font-size:14px">We have neither, and no WebSocket. Webhooks we do have now. AgentMail has semantic search, threading and WebSockets today.</p>
+        <p class="small" style="font-size:14px">We have neither, and no WebSocket. Webhooks we do have. AgentMail has full-text search, threading and WebSockets, and Resend's new Inboxes have threads and search.</p>
       </div>
       <div class="tile">
         <span class="numeral">02</span>
@@ -423,7 +433,7 @@
       <div>
         <div class="cap-label">one POST</div>
         <h3>No human, anywhere</h3>
-        <p class="small">A program registers itself and starts sending. No signup form, no OAuth consent, no six-digit code delivered to a person who has to be awake. Every traditional provider requires a human to create the account first; the closest agent-native competitor requires one to read an OTP. It works the same over REST or the <a href="/mcp.html">hosted MCP server</a>.</p>
+        <p class="small">A program registers itself and starts sending. No signup form, no OAuth consent, no six-digit code delivered to a person who has to be awake. Every traditional provider requires a human to create the account first; AgentMail's agents can't send until a human is attached, unless they pay from a crypto wallet. It works the same over REST or the <a href="/mcp.html">hosted MCP server</a>.</p>
       </div>
       <div>
         <div class="cap-label">inbox, not hook</div>
@@ -445,11 +455,11 @@
     <div class="faq">
       <details>
         <summary><span class="numeral">01</span><span class="q">Can Resend receive email?</span><span class="mark"></span></summary>
-        <p class="a">Yes. Resend shipped inbound in November 2025, and it's more than a webhook — there's a receiving API, CLI streaming, dashboard viewing and an MCP server, plus an automatic receiving subdomain for every account. Claims that Resend can't receive mail are out of date. The relevant limitations for an agent are that inbound counts against the same quota as sends, and that standard plans retain data for 30 days.</p>
+        <p class="a">Yes. Resend shipped inbound in November 2025 (a receiving API, CLI streaming and an MCP server), and on 22 October 2026 launched Inboxes: threaded mailboxes with folders, labels and search, three free and $1 each after that on paid plans. Claims that Resend can't receive mail are out of date. For an agent, the remaining limits are that a human must create the account and verify a domain first, inbound counts against the same quota as sends, and standard plans retain data for 30 days.</p>
       </details>
       <details>
         <summary><span class="numeral">02</span><span class="q">What is the difference between Mailgi and AgentMail?</span><span class="mark"></span></summary>
-        <p class="a">AgentMail is the more mature product: threading, semantic search, IMAP and SMTP access, WebSockets, multi-tenant pods, a SOC 2 report on its higher tier, and a $6M seed round behind it. The difference that matters is registration. AgentMail's agent sign-up API requires a human email address and a six-digit OTP delivered to that human, and blocks sending to anyone else until it's verified. Mailgi's registration is a single unauthenticated POST with no human in the loop at any point.</p>
+        <p class="a">AgentMail is the more mature product: threading, full-text search, IMAP and SMTP access, WebSockets, multi-tenant pods, a SOC 2 report on its $200 tier, and a $6M seed round. The difference is registration. AgentMail's sign-up API takes an optional human email: without it the inbox can receive but not send until a human is attached; with it, a six-digit code goes to that person first. An agent can also pay per request from a USDC wallet. Mailgi's registration is a single unauthenticated POST that can send immediately, with no human and no wallet.</p>
       </details>
       <details>
         <summary><span class="numeral">03</span><span class="q">What is the cheapest way to give an AI agent an email address?</span><span class="mark"></span></summary>
@@ -457,11 +467,11 @@
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">Which email APIs let an AI agent sign itself up without a human?</span><span class="mark"></span></summary>
-        <p class="a">Very few. Resend, Postmark, Mailgun and SendGrid all require a human to create an account in a browser before any API key exists. AgentMail has a programmatic sign-up endpoint but requires a human email and OTP verification. As of August 2026 the options for genuinely unattended registration are Mailgi and PhoboMail — the latter a free, MCP-only project without custom domain support.</p>
+        <p class="a">Very few. Resend, Postmark, Mailgun, SendGrid, Nylas and mails.ai all need a human to create the account before an API key exists. AgentMail lets an agent sign up without a human, but that inbox can only receive until a human is attached, unless the agent pays per request from a USDC wallet. As of 31 October 2026, Mailgi and PhoboMail (a free, MCP-only project without custom domains) let a program register and send with no human and no wallet.</p>
       </details>
       <details>
         <summary><span class="numeral">05</span><span class="q">How does Mailgi handle abuse on a shared domain?</span><span class="mark"></span></summary>
-        <p class="a">It's the fair question to ask anyone offering unattended registration, and we'd rather answer it than be asked. Sending is capped at several levels at once — 100 a day per API key, 50 an hour and 300 a day per agent, and either a per-org limit starting at 100 a day on a newly verified domain, or for shared-domain agents one collective bucket of 5,000 a day. Every send counts whatever its destination. New domains can't send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, and that's the point: shared-domain reputation is the thing most easily destroyed and hardest to rebuild.</p>
+        <p class="a">It's the fair question to ask anyone offering unattended registration, and we'd rather answer it than be asked. Sending is capped at several levels at once — 100 a day per API key, 50 an hour and 300 a day per agent, and either a per-org limit starting at 100 a day on a newly verified domain, or for shared-domain agents one collective bucket of 5,000 a day. Every external send counts; mail to other Mailgi agents has its own allowance. New domains can't send at all until DKIM, SPF and DMARC verify. Limits this conservative are deliberately inconvenient for bulk sending, and that's the point: shared-domain reputation is the thing most easily destroyed and hardest to rebuild.</p>
       </details>
       <details>
         <summary><span class="numeral">06</span><span class="q">Does Mailgi support email attachments?</span><span class="mark"></span></summary>
@@ -469,7 +479,7 @@
       </details>
       <details>
         <summary><span class="numeral">07</span><span class="q">What does Mailgi not have that the alternatives do?</span><span class="mark"></span></summary>
-        <p class="a">Attachments, search, WebSocket push, threading headers, dedicated IPs, a SOC 2 report and an EU region. <strong>Webhooks are no longer on that list</strong> — inbound webhooks shipped in September 2026, signed, with a delivery log and replay. AgentMail still has semantic search, IMAP and SMTP, and WebSockets. Resend and Postmark have attachments and years of deliverability tuning. The one thing we do that they don't is let a program register itself with no human reading a code.</p>
+        <p class="a">Attachments, search, WebSocket push, threading headers, dedicated IPs, a SOC 2 report and an EU region. <strong>Webhooks are no longer on that list</strong> — inbound webhooks shipped in September 2026, signed, with a delivery log and replay. AgentMail has full-text search, IMAP and SMTP, and WebSockets; Resend's Inboxes have threads and search. Resend and Postmark have attachments and years of deliverability tuning. What we do that they don't is let a program register itself and send with no human and no wallet.</p>
       </details>
     </div>
   </div>
@@ -494,6 +504,8 @@
       <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
       <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
       <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+      <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
       <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
       <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
     </ul>
