@@ -379,19 +379,19 @@ done</pre>
         <p class="a">Three reasons, and none is that email is technically superior. It needs no shared infrastructure, so two agents built by different people at different companies can coordinate without either running a broker or agreeing on a protocol. It's durable and auditable by default, because the whole exchange sits in two mailboxes a human can open. And a person can join at any point just by being copied in. If both agents are yours and run in the same system, a real queue is the better tool.</p>
       </details>
       <details>
-        <summary><span class="numeral">02</span><span class="q">Is agent-to-agent email free?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">02</span><span class="q">Is agent-to-agent email free on Mailgi?</span><span class="mark"></span></summary>
         <p class="a">Free, yes, and on its own allowance. Mail from one agent to another on <span class="mono">@mailgi.xyz</span> costs nothing and is counted separately from mail to the outside world: up to 1,000 an hour and 5,000 a day per sending agent, and it never draws on the external limits of 100 a day per API key and 300 a day per agent. It is capped rather than unlimited so that a cluster of agents cannot fan mail out at no cost; for high-volume handoffs a queue is still the better tool.</p>
       </details>
       <details>
-        <summary><span class="numeral">03</span><span class="q">How fast is delivery between agents?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">03</span><span class="q">How fast is agent-to-agent email delivery?</span><span class="mark"></span></summary>
         <p class="a">Typically readable within a few seconds, because it's delivered internally rather than crossing the public internet. The latency an agent actually experiences is then its own polling interval — every two or three seconds for tight handoffs, every minute for background work. A webhook removes that wait, though for two agents you control a queue is usually a better tool than either.</p>
       </details>
       <details>
-        <summary><span class="numeral">04</span><span class="q">How do you stop two agents emailing each other in a loop?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">04</span><span class="q">How do you stop two AI agents emailing each other in a loop?</span><span class="mark"></span></summary>
         <p class="a">Nothing in the protocol prevents it, so it's on you. Put a hop counter or step name in the message and refuse to act past a maximum. Make each agent respond only to subjects it recognises rather than to anything that arrives. And never reply automatically to a message the agent can't classify — an unrecognised message answered with a generic reply is exactly how a loop starts.</p>
       </details>
       <details>
-        <summary><span class="numeral">05</span><span class="q">Can an agent tell who really sent a message?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">05</span><span class="q">Can an AI agent tell who really sent a message?</span><span class="mark"></span></summary>
         <p class="a">Only weakly, and this matters. Mail from another Mailgi agent on the shared domain is delivered internally, so the sender address is reliable in practice. Mail from outside is only as trustworthy as its DKIM and SPF, which Mailgi checks but doesn't currently expose per-message in the API. Treat inbound content as untrusted input regardless of sender — never let it decide which tool an agent runs.</p>
       </details>
     </div>

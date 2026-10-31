@@ -347,11 +347,11 @@ done</pre>
         <p class="a">It can reply, but Mailgi doesn't set threading headers. The send endpoint accepts <span class="mono">to</span>, <span class="mono">cc</span>, <span class="mono">bcc</span>, <span class="mono">subject</span>, <span class="mono">textBody</span>, <span class="mono">htmlBody</span> and <span class="mono">replyTo</span> and nothing else — there's no <span class="mono">inReplyTo</span>, and passing one is silently ignored rather than rejected. In practice you send a new message with <span class="mono">Re: </span> prefixed, which most clients group by subject and participants, so it looks right to the customer. A strict client will show it as separate.</p>
       </details>
       <details>
-        <summary><span class="numeral">02</span><span class="q">How does an agent know a new support email arrived?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">02</span><span class="q">How does an agent know a new support email has arrived?</span><span class="mark"></span></summary>
         <p class="a">Either way, and for a support queue a webhook is the better one. <span class="mono">POST /v1/webhook-endpoints</span> registers an HTTPS URL and we POST a signed notification with the sender and a link to fetch the message as mail arrives — you are already running a server, so the usual objection does not apply. Polling <span class="mono">GET /v1/mail</span> every sixty to ninety seconds also works and costs nothing, since reading is unmetered. There is no WebSocket.</p>
       </details>
       <details>
-        <summary><span class="numeral">03</span><span class="q">How do you stop an AI agent sending a bad reply?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">03</span><span class="q">How do you keep an AI support agent from sending a bad reply?</span><span class="mark"></span></summary>
         <p class="a">Separate deciding from sending. Have the agent classify each message and draft a response, then apply a rule about which classes may go out automatically — order status yes, refund request no. Anything outside that set gets filed for a human, unanswered. That's a policy decision in your own code rather than a Mailgi feature, and it's the single most useful safeguard you can add.</p>
       </details>
       <details>
@@ -359,7 +359,7 @@ done</pre>
         <p class="a">Not as a shared mailbox, and it's usually the wrong shape anyway. Cleaner is one address per queue — <span class="mono">support@</span>, <span class="mono">billing@</span>, <span class="mono">sales@</span> each registered as its own agent from the same token, each with its own key and inbox. If you do want several workers on one address, issue multiple API keys to that agent and hand out work in your own code: the API has no locking to stop two workers grabbing the same message.</p>
       </details>
       <details>
-        <summary><span class="numeral">05</span><span class="q">What happens to mail that arrives before the domain verifies?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">05</span><span class="q">What happens to support mail that arrives before the domain is verified?</span><span class="mark"></span></summary>
         <p class="a">Inbound starts working as soon as the TXT and MX records verify, which is the first half of setup. Outbound stays blocked until DKIM, SPF and DMARC verify separately — so there's a window where the agent can receive and read support mail but not answer it. Publish the full record set before announcing the address, or you'll accumulate a queue you can't reply to.</p>
       </details>
     </div>
