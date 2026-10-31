@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inbox per agent vs catch-all for AI agents — Mailgi</title>
+<meta name="description" content="Should each AI agent get its own inbox, or share a catch-all with a router? Isolation, credentials, prompt injection and when catch-all is fine." />
+<link rel="canonical" href="https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Inbox per agent vs catch-all for AI agents — Mailgi" />
+<meta property="og:description" content="Should each AI agent get its own inbox, or share a catch-all with a router? Isolation, credentials, prompt injection and when catch-all is fine." />
+<meta property="og:url" content="https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Inbox per agent vs catch-all for AI agents — Mailgi" />
+<meta name="twitter:description" content="Should each AI agent get its own inbox, or share a catch-all with a router? Isolation, credentials, prompt injection and when catch-all is fine." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Inbox per agent vs catch-all for AI agents",
+      "description": "Choosing between a mailbox per agent and a shared catch-all with routing.",
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Should each AI agent have its own email inbox?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, when agents act for different customers, roles or tasks. Separate inboxes isolate mail, credentials and prompt-injection exposure, and each agent replies from its own address. A catch-all with a router is only simpler when one consumer reads everything anyway."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a catch-all email address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A domain setting that accepts mail sent to any address on the domain, including ones that were never created, and delivers it to one mailbox."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Mailgi support catch-all addresses?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Each Mailgi address belongs to one agent with its own mailbox. Registering more agents is free and has no quota."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides",
+          "item": "https://www.mailgi.xyz/guides.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Inbox per agent vs catch-all",
+          "item": "https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Decision guide</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">Inbox per agent, <em class="accent">or one catch-all</em>?</h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Two ways to give many agents email. One of them turns your routing code into security code.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#setup">see the setup →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">Give each agent its own inbox when agents have separate identities, credentials or customers; use a catch-all with routing only when one consumer reads everything anyway, such as a test harness. Inbox per agent costs a little more setup per agent and removes a whole class of misrouting and access bugs.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">The two designs, <em class="accent">compared</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:640px">A catch-all accepts mail for any address on a domain into one mailbox; your code reads the To header and dispatches. Inbox per agent gives each agent a real mailbox and key.</p>
+    <div class="table-scroll">
+    <table class="cmp">
+      <thead><tr><th></th><th class="own">Inbox per agent</th><th>Catch-all + router</th></tr></thead>
+      <tbody>
+        <tr><th>Setup</th><td class="own">One registration per agent</td><td>One mailbox, routing code you maintain</td></tr>
+        <tr><th>Isolation</th><td class="own">Each agent sees only its own mail</td><td>Router sees everything; a bug misroutes mail</td></tr>
+        <tr><th>Credentials</th><td class="own">One key per agent, revocable alone</td><td>One shared credential</td></tr>
+        <tr><th>Sending identity</th><td class="own">Each agent replies from its address</td><td>Need a send-as per address</td></tr>
+        <tr><th>Audit</th><td class="own">Per-agent mailbox is the log</td><td>Rebuild per-agent history from routing logs</td></tr>
+        <tr><th>Cost shape</th><td class="own">Per-inbox fees on some providers; none on Mailgi</td><td>One mailbox</td></tr>
+        <tr><th>Good for</th><td class="own">Agents with distinct identities</td><td>Ephemeral addresses for tests, one consumer</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Where catch-all <em class="accent">goes wrong</em></h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Routing is now security code</h3>
+        <p class="body">The To header decides which agent reads a message. BCC, forwarding and display-name tricks all land in the same box, and a routing bug hands one customer's mail to another customer's agent.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>Prompt injection reaches every agent</h3>
+        <p class="body">Any message to any address on the domain is read by the router first. With separate inboxes, a hostile message only ever reaches the one agent it was addressed to.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Revoking one agent revokes all</h3>
+        <p class="body">One credential reads the shared mailbox. Taking one agent offline means rotating it for everyone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">When catch-all <em class="accent">is fine</em></h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Test suites</h3>
+        <p class="body">Generating a fresh address per test run and reading them all from one place is exactly what a catch-all is good at.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>One agent, many aliases</h3>
+        <p class="body">If one agent legitimately handles every address, routing is just labelling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface" id="setup">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Inbox per agent <em class="accent">on Mailgi</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:620px">There is no catch-all on Mailgi; each address is an agent. Registration is free and has no quota, so one agent per role is the normal pattern.</p>
+    <div class="stack-split" style="margin-bottom:56px">
+      <div>
+        <h3 style="margin-bottom:14px">One call per agent</h3>
+        <p class="body">On your own domain, a human creates a registration token once in the dashboard, and each agent claims its own local part with <span class="mono">domainToken</span> and <span class="mono">localPart</span>.</p>
+        <p class="body" style="margin-top:18px">Agents on an organisation's domain share the organisation's balance; mail between them is free.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># One token, several agents on your domain
+for role in support sales billing; do
+  curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+    -H "Content-Type: application/json" \
+    -d "{\"domainToken\":\"$TOKEN\",\"localPart\":\"$role\"}"
+done
+# =&gt; support@yourco.com, sales@yourco.com, billing@yourco.com
+#    each with its own mailbox and API key</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">Should each AI agent have its own email inbox?</span><span class="mark"></span></summary>
+        <p class="a">Yes, when agents act for different customers, roles or tasks. Separate inboxes isolate mail, credentials and prompt-injection exposure, and each agent replies from its own address. A catch-all with a router is only simpler when one consumer reads everything anyway.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">What is a catch-all email address?</span><span class="mark"></span></summary>
+        <p class="a">A domain setting that accepts mail sent to any address on the domain, including ones that were never created, and delivers it to one mailbox.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Does Mailgi support catch-all addresses?</span><span class="mark"></span></summary>
+        <p class="a">No. Each Mailgi address belongs to one agent with its own mailbox. Registering more agents is free and has no quota.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top related">
+  <div class="section shell">
+    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
+    <ul class="related-list">
+      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+      <li><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></li>
+      <li><a href="/langchain-email-agent.html">Build a LangChain email agent</a></li>
+      <li><a href="/ai-assistant-email-address.html">Give your AI assistant its own email address</a></li>
+      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+      <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
+      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/changelog.html">changelog</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

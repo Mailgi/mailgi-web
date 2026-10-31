@@ -23,6 +23,10 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 - [AgentMail alternative: Mailgi compared](https://www.mailgi.xyz/agentmail-alternative.html): Mailgi vs AgentMail line by line — self-registration, per-inbox pricing, threads, search, SOC 2 — and when to stay on AgentMail.
 - [Resend for AI agents](https://www.mailgi.xyz/resend-for-ai-agents.html): what Resend Inboxes (launched 2026-10-22) change for agents, versus Mailgi on self-signup, receiving costs and retention.
 - [Should your AI agent use the Gmail API?](https://www.mailgi.xyz/gmail-api-for-ai-agents.html): OAuth verification, the 100-user cap, CASA assessments and mailbox access, versus giving the agent its own address.
+- [Give an OpenAI Agents SDK agent email](https://www.mailgi.xyz/openai-agents-sdk-email.html): three function tools (send, list, read) over the REST API, tested against the live API, wired into openai-agents.
+- [Build a LangChain email agent](https://www.mailgi.xyz/langchain-email-agent.html): the same three tools wrapped for LangChain's create_agent; why not the Gmail toolkit.
+- [Give your AI assistant its own email address](https://www.mailgi.xyz/ai-assistant-email-address.html): instead of your Gmail password: register, forward or CC what it needs, reply as itself.
+- [Inbox per agent vs catch-all](https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html): isolation, credentials and prompt-injection exposure of a mailbox per agent versus one catch-all with a router; Mailgi has no catch-all.
 - [Guides index](https://www.mailgi.xyz/guides.html): all guides in one place, ordered from first-time setup to specific use cases.
 - [Receiving a verification code](https://www.mailgi.xyz/agent-email-verification.html): the full loop for an agent completing a signup that requires email confirmation — register, poll, extract the code — plus the four failure modes that make it flaky.
 - [Running a support inbox](https://www.mailgi.xyz/agent-support-inbox.html): an agent on support@yourdomain.com reading, triaging, filing and answering; custom-domain setup, folders as ticket status, and why replies do not thread.

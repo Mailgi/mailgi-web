@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Give your AI assistant its own email address — Mailgi</title>
+<meta name="description" content="Stop handing your AI assistant your Gmail. Give it its own address in one API call, forward it what it needs, and let it reply as itself." />
+<link rel="canonical" href="https://www.mailgi.xyz/ai-assistant-email-address.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Give your AI assistant its own email address — Mailgi" />
+<meta property="og:description" content="Stop handing your AI assistant your Gmail. Give it its own address in one API call, forward it what it needs, and let it reply as itself." />
+<meta property="og:url" content="https://www.mailgi.xyz/ai-assistant-email-address.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Give your AI assistant its own email address — Mailgi" />
+<meta name="twitter:description" content="Stop handing your AI assistant your Gmail. Give it its own address in one API call, forward it what it needs, and let it reply as itself." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "headline": "Give your AI assistant its own email address",
+      "description": "Give an AI assistant its own address instead of your inbox.",
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/ai-assistant-email-address.html"
+    },
+    {
+      "@type": "HowTo",
+      "name": "Give an AI assistant its own email address",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Register",
+          "text": "POST https://api.mailgi.xyz/v1/agents/register to get an address and API key."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Forward",
+          "text": "Add mail filters that forward or CC the assistant the mail it should handle."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Read and reply",
+          "text": "The assistant lists and reads its inbox with its API key and replies from its own address."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Should I give my AI assistant access to my Gmail?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Only if you are comfortable with it reading everything and sending as you. A safer pattern is to give the assistant its own address and forward or CC it what it needs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I give an AI assistant its own email address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Register one with a single POST to https://api.mailgi.xyz/v1/agents/register. It returns an address like quiet-otter@mailgi.xyz and an API key. No signup form or OAuth."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use my own domain for the assistant?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Attach the domain in the Mailgi dashboard, publish the DNS records it generates, then register the assistant as, say, assistant@yourdomain.com. Custom domains are free."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I take the address away?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Revoke its API keys, or delete the agent. Your own mailbox is never involved."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides",
+          "item": "https://www.mailgi.xyz/guides.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "AI assistant email address",
+          "item": "https://www.mailgi.xyz/ai-assistant-email-address.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Guide</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">Give your AI assistant <em class="accent">its own email</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Your assistant doesn't need your password. It needs an address of its own, and the mail you choose to send it.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#setup">skip to the code →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">Give your AI assistant its own email address instead of your password. Register one in a single API call, forward or CC it the mail it needs, and let it reply from its own address. You decide what it sees; it never has access to the rest of your mailbox, and you can revoke it without touching your own account.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Why not just <em class="accent">connect your Gmail</em>?</h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>It reads everything</h3>
+        <p class="body">Mailbox access is all or nothing: bank mail, medical results, your partner's messages. An assistant with your inbox can be prompted by any email that lands in it.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>It speaks as you</h3>
+        <p class="body">Every message it sends comes from you. A mistake is your mistake, in your name.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>It is hard to take back</h3>
+        <p class="body">Revoking means OAuth settings, app passwords or a password change, and it may be locked into other things.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface" id="setup">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Set it up <em class="accent">in three steps</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:620px">Free to set up: registration and receiving cost nothing.</p>
+    <div class="stack-split" style="margin-bottom:56px">
+      <div>
+        <h3 style="margin-bottom:14px">Register, forward, read</h3>
+        <p class="body">Use your mail client's filters to forward only what the assistant should handle, such as receipts, travel confirmations or a newsletter digest.</p>
+        <p class="body" style="margin-top:18px">When you want it in a conversation, CC its address. It reads with its API key and replies from its own address.</p>
+        <p class="body" style="margin-top:18px">With Claude Code, Claude Desktop or Cursor, connect the <a href="/mcp.html">MCP server</a> instead of writing code.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># 1. Give the assistant its own address (once)
+curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" -d '{"label":"my-assistant"}'
+# =&gt; {"emailAddress":"quiet-otter@mailgi.xyz","apiKey":"amb_..."}
+
+# 2. In Gmail or Outlook, add a filter that forwards
+#    receipts / travel / newsletters to quiet-otter@mailgi.xyz
+#    (or just CC it when you want it involved)
+
+# 3. The assistant reads its own inbox
+curl -s "https://api.mailgi.xyz/v1/mail?limit=20" \
+  -H "Authorization: Bearer $MAILGI_API_KEY"</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">What it can do <em class="accent">from its own inbox</em></h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>Sign up for things on your behalf</h3>
+        <p class="body">Its own address receives the verification code, so the account is the assistant's, not yours.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>Keep receipts and confirmations</h3>
+        <p class="body">File them into folders and answer “when does my flight leave?” from mail it already has.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Write to people as itself</h3>
+        <p class="body">Replies come from its address. Mail to people who wrote first costs $0.0005; a first message to a new address adds $0.02 once.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>What it can't do yet</h3>
+        <p class="body">Search, threading headers and attachments aren't supported. It lists and reads messages and matches them itself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">Should I give my AI assistant access to my Gmail?</span><span class="mark"></span></summary>
+        <p class="a">Only if you are comfortable with it reading everything and sending as you. A safer pattern is to give the assistant its own address and forward or CC it what it needs.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">How do I give an AI assistant its own email address?</span><span class="mark"></span></summary>
+        <p class="a">Register one with a single POST to https://api.mailgi.xyz/v1/agents/register. It returns an address like quiet-otter@mailgi.xyz and an API key. No signup form or OAuth.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Can I use my own domain for the assistant?</span><span class="mark"></span></summary>
+        <p class="a">Yes. Attach the domain in the Mailgi dashboard, publish the DNS records it generates, then register the assistant as, say, assistant@yourdomain.com. Custom domains are free.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">Can I take the address away?</span><span class="mark"></span></summary>
+        <p class="a">Yes. Revoke its API keys, or delete the agent. Your own mailbox is never involved.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top related">
+  <div class="section shell">
+    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
+    <ul class="related-list">
+      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+      <li><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></li>
+      <li><a href="/langchain-email-agent.html">Build a LangChain email agent</a></li>
+      <li><a href="/inbox-per-agent-vs-catch-all.html">Inbox per agent vs catch-all</a></li>
+      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+      <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
+      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/changelog.html">changelog</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>
