@@ -48,6 +48,9 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 
 - CLI and TypeScript SDK: `npm install -g @mailgi/mailgi` or `npm install @mailgi/mailgi` (https://www.npmjs.com/package/@mailgi/mailgi). Not required — everything above works over plain HTTP.
 
+- [About Mailgi](https://www.mailgi.xyz/about.html): why Mailgi exists, what it holds itself to, where it stands, and how to reach a person.
+- [Security](https://www.mailgi.xyz/security.html): data location (including the US backup exception), hashed keys, DKIM/SPF/DMARC, signed content-free webhooks, abuse controls, and what is not in place yet (no SOC 2).
+
 - [Privacy](https://www.mailgi.xyz/privacy.html): what is collected, where it is stored, the full sub-processor list, retention, and how to withdraw cookie consent. Mailbox content is stored in Germany and outbound relays through AWS in Ireland; Google is the only processor that sets cookies.
 
 ## Contact
