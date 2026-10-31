@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Self-onboarding email API for AI agents — Mailgi</title>
-<meta name="description" content="An AI agent registers its own email address in one POST — no OAuth, no dashboard. Read SKILL.md to onboard automatically, or call the REST API, CLI, or TypeScript SDK directly." />
+<meta name="description" content="An AI agent registers its own email address in one POST — no OAuth, no dashboard. Read SKILL.md to onboard automatically, or call the REST API, CLI, TypeScript SDK or hosted MCP server directly." />
 <link rel="canonical" href="https://www.mailgi.xyz/agents.html" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Mailgi" />
@@ -71,6 +71,7 @@
       <div class="nav-menu-panel">
         <a href="/guides.html">Guides</a>
         <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/mcp.html">MCP server</a>
         <a href="https://api.mailgi.xyz/docs">Docs <span aria-hidden="true">&#8599;</span></a>
       </div>
     </div>
@@ -144,13 +145,14 @@ Register an address, then use it to send and receive mail.
       <div class="stack-split">
         <div>
           <h2>The whole API, <em class="accent">in four calls</em></h2>
-          <p class="body" style="margin-top:20px">cURL shown — a CLI and a TypeScript SDK exist, if you're into that sort of thing.</p>
+          <p class="body" style="margin-top:20px">cURL shown — a CLI and a TypeScript SDK exist, if you're into that sort of thing. So does a <a class="link-serif" href="/mcp.html">hosted MCP server</a>, if your agent lives in Claude Code, Claude Desktop or Cursor.</p>
         </div>
         <div style="min-width:0">
           <div class="tabbar" role="tablist" aria-label="API usage examples" data-tabgroup="code">
             <button class="tab" role="tab" aria-selected="true" data-tab="code-curl">cURL</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="code-cli">CLI</button>
             <button class="tab" role="tab" aria-selected="false" data-tab="code-sdk">SDK (TypeScript)</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="code-mcp">MCP</button>
           </div>
           <div class="panel" data-active data-panel="code-curl" data-tabgroup="code"><pre class="code"># Register — get an email address and API key
 curl -X POST https://api.mailgi.xyz/v1/agents/register \
@@ -199,6 +201,18 @@ await client.mail.send({
 
 const { messages } = await client.mail.list({ limit: 20, sort: 'desc' });
 const email = await client.mail.get(messages[0].id);</pre></div>
+          <div class="panel" data-panel="code-mcp" data-tabgroup="code"><pre class="code"># Add the hosted MCP server — no credentials yet
+claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp
+
+# Ask the agent to call register_agent, which returns
+# an address and an API key (amb_...) shown once.
+# Then re-add the server with the key as a header:
+claude mcp remove mailgi
+claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp \
+  --header "Authorization: Bearer amb_..."
+
+# Tools: mail_send, mail_list, mail_get, ... — each one
+# a 1:1 proxy of the REST endpoint. Full list: /mcp.html</pre></div>
         </div>
       </div>
     </div>
@@ -228,6 +242,7 @@ const email = await client.mail.get(messages[0].id);</pre></div>
       <a href="/guides.html">guides</a>
       <a href="/vs-resend-postmark-mailgun.html">compare</a>
       <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/mcp.html">mcp</a>
       <a href="/SKILL.md">SKILL.md</a>
       <a href="https://github.com/Mailgi">github</a>
       <a href="/privacy.html">privacy</a>

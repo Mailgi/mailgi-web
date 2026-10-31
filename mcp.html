@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hosted MCP server for agent email — Mailgi</title>
+<meta name="description" content="Connect Claude Code, Claude Desktop or Cursor to Mailgi's hosted MCP server at https://api.mailgi.xyz/mcp. 67 tools, each a 1:1 proxy of a REST endpoint — same behaviour, limits and billing." />
+<link rel="canonical" href="https://www.mailgi.xyz/mcp.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Hosted MCP server for agent email — Mailgi" />
+<meta property="og:description" content="Give an MCP client a real email address. Streamable HTTP at https://api.mailgi.xyz/mcp, every tool a 1:1 proxy of the REST API." />
+<meta property="og:url" content="https://www.mailgi.xyz/mcp.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Hosted MCP server for agent email — Mailgi" />
+<meta name="twitter:description" content="Give an MCP client a real email address. Streamable HTTP at https://api.mailgi.xyz/mcp, every tool a 1:1 proxy of the REST API." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Connect an MCP client to Mailgi's hosted MCP server",
+  "dateModified": "2026-10-31",
+  "description": "Add https://api.mailgi.xyz/mcp to Claude Code, Claude Desktop or Cursor, register an agent through the register_agent tool, then add its API key as the Authorization header.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Add the server with no credentials",
+      "text": "claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp — with no headers only the public tools (register_agent, org_login_request_code, org_login_verify, topup_*, health) are available."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Register an agent",
+      "text": "Call the register_agent tool. It returns the agent's email address and an API key (amb_...) shown exactly once."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add the API key as a header",
+      "text": "Re-add the server with --header \"Authorization: Bearer amb_...\". The agent tools (mail_send, mail_list, mail_get and the rest) are now available."
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/mcp.html" aria-current="page">MCP server</a>
+        <a href="https://api.mailgi.xyz/docs">Docs <span aria-hidden="true">&#8599;</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">MCP server</div>
+  <h1 class="reveal reveal-1" style="max-width:940px">Email for agents, <em class="accent">as MCP tools</em></h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:540px">A hosted Model Context Protocol server at <span class="mono">https://api.mailgi.xyz/mcp</span>. Point Claude Code, Claude Desktop or Cursor at it and the agent can register an address, send, read and file mail — with nothing to install on the server side.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="#connect">Connect a client</a>
+      <a class="link-serif" href="#tools">see all 67 tools →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell split">
+    <div class="quote">
+      <div class="pull">Every tool is the REST API, called for you. Same limits, same billing, same errors.</div>
+      <div class="caps-note">Streamable HTTP · Stateless · Headers for auth</div>
+    </div>
+    <div class="code codeblock">
+      <div class="c"># endpoint</div>
+      <div>https://api.mailgi.xyz/mcp</div>
+      <div class="c" style="margin-top:10px"># headers decide which tools work</div>
+      <div>Authorization: Bearer amb_…<span class="v"> → agent tools</span></div>
+      <div>X-Mailgi-Session: &lt;token&gt;<span class="v"> → org tools</span></div>
+      <div>(neither)<span class="v"> → public tools only</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section shell">
+  <h2 style="margin-bottom:12px">What it <em class="accent">is</em></h2>
+  <p class="body" style="font-size:16px;max-width:720px">The MCP server runs inside the Mailgi API itself. Each tool forwards to an existing REST endpoint and returns that endpoint's response, so a tool call and the equivalent <span class="mono">curl</span> behave identically: the same validation, the same rate limits, the same metering against the same wallet. Nothing is cached or reshaped in between. The server is stateless — there is no MCP session to keep alive — and credentials travel as HTTP headers on the connection, not as tool arguments.</p>
+  <p class="body" style="font-size:16px;max-width:720px;margin-top:18px">The server also exposes one resource, <span class="mono">mailgi://skill</span>, which serves <a class="link-serif" href="/SKILL.md">SKILL.md</a> — the plain-language guide to the API — so a client can load it as context without fetching the website.</p>
+</section>
+
+<section class="rule-top surface" id="connect">
+  <div class="section shell">
+    <div class="stack-split">
+      <div>
+        <h2>Connect a <em class="accent">client</em></h2>
+        <p class="body" style="margin:20px 0 0">Transport is Streamable HTTP. Already have an API key? Add it as the <span class="mono">Authorization</span> header and you're done. Don't have one yet? Start without headers and follow the bootstrap below.</p>
+        <p class="body" style="margin-top:14px">Claude Desktop's config file only launches local processes, so it reaches a remote server through the <span class="mono">mcp-remote</span> bridge, which needs Node.js. Cursor speaks HTTP directly.</p>
+      </div>
+      <div style="min-width:0">
+        <div class="tabbar" role="tablist" aria-label="MCP client configuration" data-tabgroup="mcp">
+          <button class="tab" role="tab" aria-selected="true" data-tab="mcp-claude-code">Claude Code</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="mcp-claude-desktop">Claude Desktop</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="mcp-cursor">Cursor</button>
+        </div>
+        <div class="panel" data-active data-panel="mcp-claude-code" data-tabgroup="mcp"><pre class="code"># With an agent API key
+claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp \
+  --header "Authorization: Bearer amb_..."
+
+# Org tools as well — add the dashboard session header
+claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp \
+  --header "Authorization: Bearer amb_..." \
+  --header "X-Mailgi-Session: &lt;session token&gt;"
+
+# No credentials yet — public tools only, for bootstrap
+claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp</pre></div>
+        <div class="panel" data-panel="mcp-claude-desktop" data-tabgroup="mcp"><pre class="code">// claude_desktop_config.json
+{
+  "mcpServers": {
+    "mailgi": {
+      "command": "npx",
+      "args": [
+        "-y", "mcp-remote", "https://api.mailgi.xyz/mcp",
+        "--header", "Authorization:${MAILGI_AUTH}"
+      ],
+      "env": { "MAILGI_AUTH": "Bearer amb_..." }
+    }
+  }
+}
+// The env indirection keeps the space in "Bearer amb_..."
+// from being split when the arguments are passed on.</pre></div>
+        <div class="panel" data-panel="mcp-cursor" data-tabgroup="mcp"><pre class="code">// .cursor/mcp.json (project) or ~/.cursor/mcp.json (global)
+{
+  "mcpServers": {
+    "mailgi": {
+      "url": "https://api.mailgi.xyz/mcp",
+      "headers": {
+        "Authorization": "Bearer amb_..."
+      }
+    }
+  }
+}</pre></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top" id="bootstrap">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Bootstrap: <em class="accent">from nothing to a key</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:680px">The server has no OAuth, so a credential can't be attached to the connection for you. The agent obtains one through a tool, and a human puts it into the client config once.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>An agent of its own</h3>
+        <p class="body">Connect with no headers and ask the agent to call <span class="mono">register_agent</span> (optionally with a <span class="mono">label</span>, or a <span class="mono">domainToken</span> and <span class="mono">localPart</span> to claim an address on a company domain). It returns the email address and an API key starting <span class="mono">amb_</span> — <strong>shown exactly once</strong>. Re-add the server with <span class="mono">Authorization: Bearer amb_…</span> and the agent tools appear. In Claude Code that is <span class="mono">claude mcp remove mailgi</span> followed by the <span class="mono">add</span> command above.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>Org admin, by emailed code</h3>
+        <p class="body">For the organisation tools — domains, members, registration tokens, the org wallet — the agent calls <span class="mono">org_login_request_code</span> with a human's email address. Mailgi emails that person a six-digit code; they tell the agent, which passes it to <span class="mono">org_login_verify</span> and gets back a dashboard session token. Add it to the connection as <span class="mono">X-Mailgi-Session</span>. Call <span class="mono">org_logout</span> to end that session when you're done with it.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Both at once</h3>
+        <p class="body">The two headers are independent. Send both and the connection has agent and org tools together — for example an admin agent that creates a registration token with <span class="mono">regtoken_create</span> and hands it to another agent to self-register on the company domain.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface" id="tools">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">All 67 <em class="accent">tools</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:720px">Tool names map one-to-one to REST endpoints, and each behaves exactly like the endpoint it names. For request and response fields, read the endpoint in the <a class="link-serif" href="https://api.mailgi.xyz/docs">API docs</a> or <a class="link-serif" href="/SKILL.md">SKILL.md</a>. Tools that delete, revoke or remove carry the MCP <span class="mono">destructiveHint</span> annotation, so a client that honours it asks before calling them.</p>
+
+    <h3 style="font-size:20px;margin:0 0 6px">Agent tools <span class="verified-note">· 25 · need Authorization: Bearer amb_…</span></h3>
+    <p class="body" style="margin-bottom:18px;max-width:720px">Everything an agent does with its own mailbox and wallet.</p>
+<div class="table-scroll">
+<table class="cmp tools">
+<caption class="sr-only">Agent tools</caption>
+<thead><tr><th scope="col">Tool</th><th scope="col">REST endpoint</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><th scope="row" class="mono">agent_get</th><td class="mono">GET /v1/agents/me</td><td>This agent&#x27;s profile and address</td></tr>
+<tr><th scope="row" class="mono">agent_usage</th><td class="mono">GET /v1/agents/me/usage</td><td>This agent&#x27;s usage, by day</td></tr>
+<tr><th scope="row" class="mono">agent_delete</th><td class="mono">DELETE /v1/agents/me</td><td>Delete the agent — permanent, burns the address <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">mail_list</th><td class="mono">GET /v1/mail</td><td>List messages</td></tr>
+<tr><th scope="row" class="mono">mail_get</th><td class="mono">GET /v1/mail/{id}</td><td>Read a message with its body</td></tr>
+<tr><th scope="row" class="mono">mail_send</th><td class="mono">POST /v1/mail/send</td><td>Send a message (metered exactly like REST)</td></tr>
+<tr><th scope="row" class="mono">mail_delete</th><td class="mono">DELETE /v1/mail/{id}</td><td>Move a message to Trash <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">mail_move</th><td class="mono">PATCH /v1/mail/{id}/move</td><td>Move a message to another mailbox</td></tr>
+<tr><th scope="row" class="mono">mail_set_flags</th><td class="mono">PATCH /v1/mail/{id}/flags</td><td>Set seen / flagged</td></tr>
+<tr><th scope="row" class="mono">mailbox_list</th><td class="mono">GET /v1/mailboxes</td><td>List mailboxes (folders)</td></tr>
+<tr><th scope="row" class="mono">mailbox_create</th><td class="mono">POST /v1/mailboxes</td><td>Create a mailbox</td></tr>
+<tr><th scope="row" class="mono">mailbox_rename</th><td class="mono">PATCH /v1/mailboxes/{id}</td><td>Rename a mailbox</td></tr>
+<tr><th scope="row" class="mono">mailbox_delete</th><td class="mono">DELETE /v1/mailboxes/{id}</td><td>Delete a mailbox <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">apikey_list</th><td class="mono">GET /v1/apikeys</td><td>List API keys</td></tr>
+<tr><th scope="row" class="mono">apikey_create</th><td class="mono">POST /v1/apikeys</td><td>Create an API key</td></tr>
+<tr><th scope="row" class="mono">apikey_revoke</th><td class="mono">DELETE /v1/apikeys/{keyId}</td><td>Revoke an API key <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">billing_get</th><td class="mono">GET /v1/billing</td><td>Wallet balance, prices, how to top up</td></tr>
+<tr><th scope="row" class="mono">billing_topup</th><td class="mono">POST /v1/billing/topup</td><td>Create a card top-up link for a human to pay</td></tr>
+<tr><th scope="row" class="mono">billing_transactions</th><td class="mono">GET /v1/billing/transactions</td><td>Wallet ledger</td></tr>
+<tr><th scope="row" class="mono">webhook_list</th><td class="mono">GET /v1/webhook-endpoints</td><td>List webhook endpoints</td></tr>
+<tr><th scope="row" class="mono">webhook_create</th><td class="mono">POST /v1/webhook-endpoints</td><td>Register a webhook endpoint for inbound mail</td></tr>
+<tr><th scope="row" class="mono">webhook_delete</th><td class="mono">DELETE /v1/webhook-endpoints/{id}</td><td>Delete a webhook endpoint <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">webhook_deliveries</th><td class="mono">GET /v1/webhook-endpoints/{id}/deliveries</td><td>Recent delivery attempts</td></tr>
+<tr><th scope="row" class="mono">webhook_resend</th><td class="mono">POST /v1/webhook-endpoints/{id}/deliveries/{deliveryId}/resend</td><td>Re-queue a delivery</td></tr>
+<tr><th scope="row" class="mono">webhook_enable</th><td class="mono">POST /v1/webhook-endpoints/{id}/enable</td><td>Re-enable an endpoint switched off by failures</td></tr>
+</tbody>
+</table>
+</div>
+
+    <h3 style="font-size:20px;margin:56px 0 6px">Org tools <span class="verified-note">· 35 · need X-Mailgi-Session</span></h3>
+    <p class="body" style="margin-bottom:18px;max-width:720px">What a human does in the dashboard at <span class="mono">app.mailgi.xyz</span>, with that human's role in each organisation.</p>
+<div class="table-scroll">
+<table class="cmp tools">
+<caption class="sr-only">Organisation tools</caption>
+<thead><tr><th scope="col">Tool</th><th scope="col">REST endpoint</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><th scope="row" class="mono">org_me</th><td class="mono">GET /v1/auth/me</td><td>The signed-in user and their orgs</td></tr>
+<tr><th scope="row" class="mono">org_list</th><td class="mono">GET /v1/orgs</td><td>List organisations</td></tr>
+<tr><th scope="row" class="mono">org_create</th><td class="mono">POST /v1/orgs</td><td>Create an organisation</td></tr>
+<tr><th scope="row" class="mono">org_get</th><td class="mono">GET /v1/orgs/{orgId}</td><td>Get an organisation</td></tr>
+<tr><th scope="row" class="mono">org_rename</th><td class="mono">PATCH /v1/orgs/{orgId}</td><td>Rename an organisation</td></tr>
+<tr><th scope="row" class="mono">org_member_list</th><td class="mono">GET /v1/orgs/{orgId}/members</td><td>List members</td></tr>
+<tr><th scope="row" class="mono">org_member_set_role</th><td class="mono">PATCH /v1/orgs/{orgId}/members/{userId}</td><td>Change a member&#x27;s role</td></tr>
+<tr><th scope="row" class="mono">org_member_remove</th><td class="mono">DELETE /v1/orgs/{orgId}/members/{userId}</td><td>Remove a member (or leave) <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">org_invite_create</th><td class="mono">POST /v1/orgs/{orgId}/invites</td><td>Invite someone by email</td></tr>
+<tr><th scope="row" class="mono">org_invite_list</th><td class="mono">GET /v1/orgs/{orgId}/invites</td><td>List pending invites</td></tr>
+<tr><th scope="row" class="mono">org_invite_revoke</th><td class="mono">DELETE /v1/orgs/{orgId}/invites/{inviteId}</td><td>Revoke an invite <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">invite_accept</th><td class="mono">POST /v1/invites/accept</td><td>Accept an invite</td></tr>
+<tr><th scope="row" class="mono">domain_attach</th><td class="mono">POST /v1/orgs/{orgId}/domains</td><td>Attach a custom domain</td></tr>
+<tr><th scope="row" class="mono">domain_list</th><td class="mono">GET /v1/orgs/{orgId}/domains</td><td>List custom domains</td></tr>
+<tr><th scope="row" class="mono">domain_get</th><td class="mono">GET /v1/orgs/{orgId}/domains/{domainId}</td><td>Verification status and the DNS records to publish</td></tr>
+<tr><th scope="row" class="mono">domain_detach</th><td class="mono">DELETE /v1/orgs/{orgId}/domains/{domainId}</td><td>Detach a custom domain <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">domain_verify</th><td class="mono">POST /v1/orgs/{orgId}/domains/{domainId}/verify</td><td>Re-check DNS</td></tr>
+<tr><th scope="row" class="mono">domain_usage</th><td class="mono">GET /v1/orgs/{orgId}/usage/domains/{domainId}</td><td>Usage for one domain, by day</td></tr>
+<tr><th scope="row" class="mono">org_usage</th><td class="mono">GET /v1/orgs/{orgId}/usage</td><td>Usage for the organisation, by day</td></tr>
+<tr><th scope="row" class="mono">org_billing_get</th><td class="mono">GET /v1/orgs/{orgId}/billing</td><td>Organisation wallet</td></tr>
+<tr><th scope="row" class="mono">org_billing_topup</th><td class="mono">POST /v1/orgs/{orgId}/billing/topup</td><td>Create a card top-up link for the org wallet</td></tr>
+<tr><th scope="row" class="mono">org_billing_transactions</th><td class="mono">GET /v1/orgs/{orgId}/billing/transactions</td><td>Organisation wallet ledger</td></tr>
+<tr><th scope="row" class="mono">org_webhook_list</th><td class="mono">GET /v1/orgs/{orgId}/webhook-endpoints</td><td>List the org&#x27;s webhook endpoints</td></tr>
+<tr><th scope="row" class="mono">org_webhook_create</th><td class="mono">POST /v1/orgs/{orgId}/webhook-endpoints</td><td>Create a webhook endpoint for one of the org&#x27;s inboxes</td></tr>
+<tr><th scope="row" class="mono">org_webhook_delete</th><td class="mono">DELETE /v1/orgs/{orgId}/webhook-endpoints/{id}</td><td>Delete a webhook endpoint <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">org_webhook_deliveries</th><td class="mono">GET /v1/orgs/{orgId}/webhook-endpoints/{id}/deliveries</td><td>Recent delivery attempts</td></tr>
+<tr><th scope="row" class="mono">org_webhook_resend</th><td class="mono">POST /v1/orgs/{orgId}/webhook-endpoints/{id}/deliveries/{deliveryId}/resend</td><td>Re-queue a delivery</td></tr>
+<tr><th scope="row" class="mono">org_webhook_enable</th><td class="mono">POST /v1/orgs/{orgId}/webhook-endpoints/{id}/enable</td><td>Re-enable an endpoint</td></tr>
+<tr><th scope="row" class="mono">regtoken_create</th><td class="mono">POST /v1/orgs/{orgId}/domains/{domainId}/registration-tokens</td><td>Create a registration token (shown once)</td></tr>
+<tr><th scope="row" class="mono">regtoken_list</th><td class="mono">GET /v1/orgs/{orgId}/domains/{domainId}/registration-tokens</td><td>List registration tokens</td></tr>
+<tr><th scope="row" class="mono">regtoken_revoke</th><td class="mono">DELETE /v1/orgs/{orgId}/domains/{domainId}/registration-tokens/{tokenId}</td><td>Revoke a registration token <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">domain_inbox_list</th><td class="mono">GET /v1/orgs/{orgId}/domains/{domainId}/agents</td><td>List inboxes on a domain</td></tr>
+<tr><th scope="row" class="mono">domain_inbox_create</th><td class="mono">POST /v1/orgs/{orgId}/domains/{domainId}/agents</td><td>Create an inbox with a chosen local part</td></tr>
+<tr><th scope="row" class="mono">domain_inbox_delete</th><td class="mono">DELETE /v1/orgs/{orgId}/domains/{domainId}/agents/{agentId}</td><td>Remove an inbox from a domain <span class="destr">destructive</span></td></tr>
+<tr><th scope="row" class="mono">org_logout</th><td class="mono">POST /v1/auth/logout</td><td>End the dashboard session</td></tr>
+</tbody>
+</table>
+</div>
+
+    <h3 style="font-size:20px;margin:56px 0 6px">Public tools <span class="verified-note">· 7 · no credentials</span></h3>
+    <p class="body" style="margin-bottom:18px;max-width:720px">Bootstrap, paying for any agent's wallet by address, and a health check.</p>
+<div class="table-scroll">
+<table class="cmp tools">
+<caption class="sr-only">Public tools</caption>
+<thead><tr><th scope="col">Tool</th><th scope="col">REST endpoint</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><th scope="row" class="mono">register_agent</th><td class="mono">POST /v1/agents/register</td><td>Register an agent; returns the API key once</td></tr>
+<tr><th scope="row" class="mono">org_login_request_code</th><td class="mono">POST /v1/auth/email/request-code</td><td>Email a 6-digit login code</td></tr>
+<tr><th scope="row" class="mono">org_login_verify</th><td class="mono">POST /v1/auth/email/verify-code</td><td>Verify the code; returns a session token</td></tr>
+<tr><th scope="row" class="mono">topup_lookup</th><td class="mono">GET /v1/topup/lookup</td><td>Who a top-up for an address would pay for</td></tr>
+<tr><th scope="row" class="mono">topup_start</th><td class="mono">POST /v1/topup</td><td>Start a card payment for any agent&#x27;s wallet</td></tr>
+<tr><th scope="row" class="mono">topup_status</th><td class="mono">GET /v1/topup/sessions/{sessionId}</td><td>Status of a top-up payment</td></tr>
+<tr><th scope="row" class="mono">health</th><td class="mono">GET /health/ready</td><td>Readiness of the API and mail server</td></tr>
+</tbody>
+</table>
+</div>
+
+    <p class="body" style="margin-top:32px;max-width:720px;font-size:14px">Not exposed over MCP: DID authentication (not available in the API either), OAuth sign-in redirects, signup attribution, and the inbound webhooks from Mailgi's own providers.</p>
+  </div>
+</section>
+
+<section class="rule-top" id="limits">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Limits, <em class="accent">stated plainly</em></h2>
+    <div class="rows" style="margin-top:36px">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>One config edit after bootstrap</h3>
+        <p class="body">A key obtained through <span class="mono">register_agent</span> or a session from <span class="mono">org_login_verify</span> doesn't attach itself to the connection. A human has to add the header to the client config and reconnect. Until then only the public tools work.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>No OAuth, so no hosted connectors yet</h3>
+        <p class="body">claude.ai and ChatGPT add remote MCP servers as hosted custom connectors, which authenticate with OAuth rather than a header you type in. The server doesn't implement OAuth, so it can't be used from those today. Clients where you control the headers — Claude Code, Claude Desktop through <span class="mono">mcp-remote</span>, Cursor — work.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Org tools give an agent admin reach</h3>
+        <p class="body">A session token carries the signed-in human's role. An agent holding an owner's or admin's session can detach domains, remove members, revoke tokens and delete inboxes. The <span class="mono">destructiveHint</span> annotation only helps if your client asks before acting on it — only add <span class="mono">X-Mailgi-Session</span> to a connection you would trust with the dashboard, and end it with <span class="mono">org_logout</span>.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">04</div>
+        <h3>Same limits and prices as REST</h3>
+        <p class="body">MCP is not a separate tier. A <span class="mono">mail_send</span> is metered and rate-limited exactly like <span class="mono">POST /v1/mail/send</span> — see <a class="link-serif" href="/pricing.html">pricing</a> — and errors come back as the endpoint's own error.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <div class="inline-split">
+      <div style="flex:1;min-width:280px">
+        <h2 style="font-size:32px;margin-bottom:8px">Not using MCP?</h2>
+        <p class="body">The same API is plain HTTP, a CLI and a TypeScript SDK, and <span class="mono">SKILL.md</span> teaches any agent to use it directly.</p>
+      </div>
+      <div class="chips">
+        <a class="link-serif" style="font-size:16px" href="/agents.html">REST, CLI and SDK →</a>
+        <a class="link-serif" style="font-size:16px;margin-left:16px" href="/SKILL.md">read SKILL.md →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+<script>
+  // All tab-panel content is real HTML present in the DOM — a crawler or an
+  // LLM fetch with no JS execution still sees every tab's content. This only
+  // toggles which one is visible for a human in a browser.
+  document.querySelectorAll('.tabbar').forEach(function (bar) {
+    var group = bar.dataset.tabgroup;
+    var panels = document.querySelectorAll('.panel[data-tabgroup="' + group + '"]');
+    bar.querySelectorAll('.tab').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        bar.querySelectorAll('.tab').forEach(function (t) { t.setAttribute('aria-selected', 'false'); });
+        btn.setAttribute('aria-selected', 'true');
+        panels.forEach(function (p) {
+          if (p.dataset.panel === btn.dataset.tab) p.setAttribute('data-active', '');
+          else p.removeAttribute('data-active');
+        });
+      });
+    });
+  });
+</script>
+</body>
+</html>

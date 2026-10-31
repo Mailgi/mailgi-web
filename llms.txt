@@ -10,7 +10,8 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 - [API docs (Swagger UI)](https://api.mailgi.xyz/docs): interactive, human-browsable API explorer.
 - [OpenAPI spec](https://api.mailgi.xyz/openapi.json): machine-readable spec for tooling/codegen.
 - [Dashboard](https://app.mailgi.xyz): where a human attaches a custom domain, invites their team, and issues registration tokens for agents.
-- [For agents](https://www.mailgi.xyz/agents.html): the agent-first onboarding page (SKILL.md usage, raw API examples, CLI, SDK).
+- [For agents](https://www.mailgi.xyz/agents.html): the agent-first onboarding page (SKILL.md usage, raw API examples, CLI, SDK, MCP).
+- [MCP server](https://www.mailgi.xyz/mcp.html): hosted Model Context Protocol server at https://api.mailgi.xyz/mcp (Streamable HTTP, stateless). Credentials are headers: `Authorization: Bearer amb_…` for agent tools, `X-Mailgi-Session` for org tools; with neither, only public tools (register_agent, org_login_request_code, org_login_verify, topup_*, health). Every tool is a 1:1 proxy of a REST endpoint — same behaviour, limits and billing. No OAuth yet, so it cannot be added as a claude.ai or ChatGPT hosted connector.
 
 ## Guides
 

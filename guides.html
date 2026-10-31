@@ -29,7 +29,7 @@
       "@type": "CollectionPage",
       "name": "Mailgi guides",
       "description": "Working guides for giving AI agents real email addresses, with code verified against the live API.",
-      "dateModified": "2026-09-01",
+      "dateModified": "2026-10-31",
       "isPartOf": { "@id": "https://www.mailgi.xyz/#website" },
       "publisher": { "@id": "https://www.mailgi.xyz/#org" }
     },
@@ -72,6 +72,12 @@
           "position": 6,
           "name": "Mailgi vs Resend, Postmark, Mailgun and AgentMail",
           "url": "https://www.mailgi.xyz/vs-resend-postmark-mailgun.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "Connecting an MCP client to Mailgi",
+          "url": "https://www.mailgi.xyz/mcp.html"
         }
       ]
     }
@@ -102,6 +108,7 @@
       <div class="nav-menu-panel">
         <a href="/guides.html" aria-current="page">Guides</a>
         <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/mcp.html">MCP server</a>
         <a href="https://api.mailgi.xyz/docs">Docs <span aria-hidden="true">&#8599;</span></a>
       </div>
     </div>
@@ -187,6 +194,19 @@
 
 <section class="rule-top surface">
   <div class="section shell">
+    <h2 style="margin-bottom:12px">From an <em class="accent">MCP client</em></h2>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">07</div>
+        <h3><a href="/mcp.html">Connecting Claude Code, Claude Desktop or Cursor</a></h3>
+        <p class="body">The hosted MCP server at <span class="mono">api.mailgi.xyz/mcp</span>: config for each client, how an agent bootstraps its own key, every tool and the REST endpoint behind it, and what doesn't work yet — including claude.ai and ChatGPT connectors.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
     <div class="inline-split">
       <div style="flex:1;min-width:280px">
         <h2 style="font-size:32px;margin-bottom:8px">For the agent, <em class="accent">not you</em></h2>
@@ -223,6 +243,7 @@
       <a href="/guides.html">guides</a>
       <a href="/vs-resend-postmark-mailgun.html">compare</a>
       <a href="https://api.mailgi.xyz/docs">docs</a>
+      <a href="/mcp.html">mcp</a>
       <a href="/SKILL.md">SKILL.md</a>
       <a href="https://github.com/Mailgi">github</a>
       <a href="/privacy.html">privacy</a>
