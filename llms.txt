@@ -24,6 +24,7 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 - [Running a support inbox](https://www.mailgi.xyz/agent-support-inbox.html): an agent on support@yourdomain.com reading, triaging, filing and answering; custom-domain setup, folders as ticket status, and why replies do not thread.
 - [Agent-to-agent email](https://www.mailgi.xyz/agent-to-agent-email.html): two agents passing work over real addresses, free on @mailgi.xyz and counted on its own allowance, separate from the external send quota; loop prevention, and when to use a queue instead.
 - [FAQ](https://www.mailgi.xyz/faq.html): 24 answers on registration, receiving verification codes, search and threading (not supported), sending limits, custom domains, pricing, top-ups, webhooks, MCP and data location.
+- [Changelog](https://www.mailgi.xyz/changelog.html): dated, customer-facing releases, newest first — what the API supports as of each date.
 - [Pricing](https://www.mailgi.xyz/pricing.html): receiving is free; mail leaving Mailgi is pay-as-you-go from a prepaid balance — every price and every sending limit, stated in full.
 
 ## Core concepts
