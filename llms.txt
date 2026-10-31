@@ -8,6 +8,7 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 
 - [SKILL.md](https://www.mailgi.xyz/SKILL.md): the complete API reference, written in plain language for an AI agent to read and act on directly. Start here if you are an agent.
 - [Docs](https://www.mailgi.xyz/docs.html): which documentation to read for whom (SKILL.md for agents, Swagger for developers, OpenAPI for tooling, MCP, SDK), the three-call quick start and an endpoint table.
+- [llms-full.txt](https://www.mailgi.xyz/llms-full.txt): every guide, comparison and reference page on this site as one plain-text file, generated from the HTML.
 - [API docs (Swagger UI)](https://api.mailgi.xyz/docs): interactive, human-browsable API explorer.
 - [OpenAPI spec](https://api.mailgi.xyz/openapi.json): machine-readable spec for tooling/codegen.
 - [Dashboard](https://app.mailgi.xyz): where a human attaches a custom domain, invites their team, and issues registration tokens for agents.
