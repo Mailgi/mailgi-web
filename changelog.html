@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mailgi changelog: what shipped, and when — Mailgi</title>
+<meta name="description" content="Every customer-facing Mailgi release, newest first: MCP server, pay-as-you-go pricing, webhooks, custom domains, SDK. Dated from the commit history." />
+<link rel="canonical" href="https://www.mailgi.xyz/changelog.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Mailgi changelog: what shipped, and when — Mailgi" />
+<meta property="og:description" content="Every customer-facing Mailgi release, newest first: MCP server, pay-as-you-go pricing, webhooks, custom domains, SDK. Dated from the commit history." />
+<meta property="og:url" content="https://www.mailgi.xyz/changelog.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Mailgi changelog: what shipped, and when — Mailgi" />
+<meta name="twitter:description" content="Every customer-facing Mailgi release, newest first: MCP server, pay-as-you-go pricing, webhooks, custom domains, SDK. Dated from the commit history." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.mailgi.xyz/changelog.html",
+      "name": "Mailgi changelog",
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Changelog",
+          "item": "https://www.mailgi.xyz/changelog.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Changelog</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">What <em class="accent">shipped</em>, and when</h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Customer-facing changes to the API, SDK, dashboard and docs, newest first. Dates are when each change went live, taken from the commit history.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="/SKILL.md">Read the current API</a>
+      <a class="link-serif" href="/docs.html">or browse the docs →</a>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell changelog">
+    <article class="change" id="2026-10-31">
+      <time class="verified-note" datetime="2026-10-31">2026-10-31</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">Hosted MCP server</h2>
+      <ul class="change-list">
+          <li>Mailgi is now an MCP server at <span class="mono">https://api.mailgi.xyz/mcp</span> (Streamable HTTP, stateless). Every tool is a 1:1 proxy of a REST endpoint, with the same limits and billing. Works with Claude Code, Claude Desktop and Cursor. <a href="/mcp.html">Setup</a>.</li>
+          <li>SKILL.md 1.6.0 documents it in §15.</li>
+      </ul>
+    </article>
+    <article class="change" id="2026-10-30">
+      <time class="verified-note" datetime="2026-10-30">2026-10-30</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">Pay-as-you-go pricing</h2>
+      <ul class="change-list">
+          <li>Receiving stays free, and so does mail between your own agents. Mail that leaves Mailgi is paid from a prepaid balance: $0.0005 per external recipient, $0.02 once per new address, and $0.25 per GB-month of storage above 10 MB. <a href="/pricing.html">Pricing</a>.</li>
+          <li>Anyone can top up any agent by card at <span class="mono">app.mailgi.xyz/topup</span>, without an account. A send the balance cannot cover is refused whole with an itemised <span class="mono">402 PAYMENT_REQUIRED</span>.</li>
+          <li>Reads carry a <span class="mono">billing</span> notice when the balance runs low, with a top-up link the agent can forward.</li>
+          <li>TypeScript SDK and CLI 0.2.0 on npm: <span class="mono">PaymentRequiredError</span>, the billing notice, and webhook types.</li>
+      </ul>
+    </article>
+    <article class="change" id="2026-09-03">
+      <time class="verified-note" datetime="2026-09-03">2026-09-03</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">Inbound webhooks</h2>
+      <ul class="change-list">
+          <li>Register an HTTPS endpoint with <span class="mono">POST /v1/webhook-endpoints</span> and Mailgi POSTs a signed notification when mail arrives: sender, time, size and a fetch URL, never the content. Delivery log, resend and re-enable included, in the API and the dashboard.</li>
+          <li>Polling still works and is still the simpler choice for most agents.</li>
+      </ul>
+    </article>
+    <article class="change" id="2026-09-01">
+      <time class="verified-note" datetime="2026-09-01">2026-09-01</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">Agent-to-agent mail gets its own allowance</h2>
+      <ul class="change-list">
+          <li>Mail between Mailgi agents is counted on its own allowance (1,000 an hour, 5,000 a day per agent), so coordinating with other agents never uses your external sending quota.</li>
+          <li>Three working guides: <a href="/agent-email-verification.html">verification codes</a>, <a href="/agent-support-inbox.html">support inboxes</a> and <a href="/agent-to-agent-email.html">agent-to-agent email</a>.</li>
+      </ul>
+    </article>
+    <article class="change" id="2026-08-30">
+      <time class="verified-note" datetime="2026-08-30">2026-08-30</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">SKILL.md on ClawHub, and a published comparison</h2>
+      <ul class="change-list">
+          <li>SKILL.md is versioned and published as an OpenClaw skill on <a href="https://clawhub.ai/oyagev/skills/mailgi">ClawHub</a>.</li>
+          <li>New pages: <a href="/agent-email-address.html">how to give an AI agent an email address</a>, <a href="/vs-resend-postmark-mailgun.html">the comparison</a> and <a href="/pricing.html">pricing with every limit stated</a>.</li>
+      </ul>
+    </article>
+    <article class="change" id="2026-08-26">
+      <time class="verified-note" datetime="2026-08-26">2026-08-26</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">Custom domains send with your own DKIM, SPF and DMARC</h2>
+      <ul class="change-list">
+          <li>Once a domain's inbound records verify, the dashboard generates the outbound set: DKIM under Mailgi's own selector, a MAIL FROM subdomain for SPF alignment, and a recommended DMARC record. Sending stays blocked until they verify.</li>
+          <li>Dashboard sign-in by email and a one-time code.</li>
+      </ul>
+    </article>
+    <article class="change" id="2026-08-25">
+      <time class="verified-note" datetime="2026-08-25">2026-08-25</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">Organisations and custom domains</h2>
+      <ul class="change-list">
+          <li>Attach your own domain, verify it over DNS, and issue registration tokens so agents register chosen addresses like support@yourdomain.com.</li>
+          <li>Sending caps per agent and per organisation, scaled by domain age, with automatic suspension on bounces and complaints.</li>
+      </ul>
+    </article>
+    <article class="change" id="2026-04-18">
+      <time class="verified-note" datetime="2026-04-18">2026-04-18</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">TypeScript SDK and CLI</h2>
+      <ul class="change-list">
+          <li><span class="mono">npm install @mailgi/mailgi</span>: a typed client whose methods map 1:1 to the REST API, plus the <span class="mono">mailgi</span> command-line tool.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section class="rule-top related">
+  <div class="section shell">
+    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
+    <ul class="related-list">
+      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/changelog.html">changelog</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>
