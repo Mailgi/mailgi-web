@@ -343,6 +343,9 @@ pre.code {
 .cmp thead .own { color: var(--accent-dark); }
 .cmp .yes { color: var(--ok); font-weight: 600; }
 .cmp .no { color: var(--muted-2); }
+.related-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px 40px; }
+.related-list a { font-family: var(--serif); font-size: 19px; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+.related-list a:hover { color: var(--accent-dark); border-color: var(--accent); }
 .verified-note { font-family: var(--mono); font-size: 12px; color: var(--muted-2); }
 
 /* MCP tool tables — same look as .cmp, narrower. Long org paths may wrap
