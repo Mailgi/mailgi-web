@@ -18,7 +18,7 @@ KEY=fe93e7cc883db5bd049b9b11bbb7b222
 HOST=www.mailgi.xyz
 
 if [ $# -gt 0 ]; then
-  urls=$(printf 'https://%s%s\n' "$HOST" "$@")
+  urls=$(printf "https://$HOST%s\n" "$@")
 else
   urls=$(sed -n 's:.*<loc>\(.*\)</loc>.*:\1:p' sitemap.xml)
 fi
