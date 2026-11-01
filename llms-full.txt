@@ -1106,6 +1106,18 @@ Three function tools (send, list, read) over the REST API, tested against the li
 
 The same three tools wrapped for LangChain's create_agent; why not the Gmail toolkit.
 
+### Give a CrewAI agent email (https://www.mailgi.xyz/crewai-email-agent.html)
+
+Mailgi's hosted MCP server in the agent's mcps list via MCPServerHTTP, filtered to three mail tools; tested on CrewAI 1.15.
+
+### Give a Vercel AI SDK agent email (https://www.mailgi.xyz/vercel-ai-sdk-email.html)
+
+createMCPClient over Streamable HTTP, three mail tools passed to generateText or streamText; tested on ai 7.0.
+
+### Give an n8n AI agent email (https://www.mailgi.xyz/n8n-email-agent.html)
+
+No code: the MCP Client Tool node on an AI Agent, run on a schedule or from a Mailgi webhook.
+
 ### Give your AI assistant its own email address (https://www.mailgi.xyz/ai-assistant-email-address.html)
 
 Instead of your Gmail password: register, forward or CC what it needs, reply as itself.
@@ -2988,6 +3000,330 @@ A: Not with threading headers. send_email starts a new message; put “Re:” an
 Q: Does it work with LangGraph?
 
 A: Yes. create_agent returns a LangGraph graph, and the same tools work in any custom LangGraph node.
+
+
+---
+
+Source: https://www.mailgi.xyz/crewai-email-agent.html (updated 2026-11-02)
+
+Guide
+
+# Email for a CrewAI agent
+
+Give the agent its own inbox in one call, then add Mailgi's MCP server to its mcps list. No wrapper code: three tools, one config object.
+
+To give a CrewAI agent email, register an address with one POST to Mailgi, then pass MCPServerHTTP(url="https://api.mailgi.xyz/mcp") with the key as a Bearer header in the agent's mcps list. Filter it to mail_send, mail_list and mail_get, and the agent can receive verification codes, answer mail and write to people from its own address, with no OAuth and no shared human inbox.
+
+## Give the agent an address
+
+One call, no signup form. Do this once per agent and keep the key in your secrets store.
+
+### Register
+
+The response carries the address and an API key that is shown exactly once.
+
+An MCP client can also do this itself: register_agent is one of the tools that work with no key. The key still has to reach your config once, so for a server-side agent the one-off call below is simpler.
+
+```
+# Once, outside the agent: give it an address and keep the key
+curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" -d '{"label":"my-agent"}'
+# => {"emailAddress":"buzzing-falcon@mailgi.xyz","apiKey":"amb_..."}
+
+export MAILGI_API_KEY=amb_...   # shown once: store it
+```
+
+## Connect it natively
+
+CrewAI speaks MCP itself since 1.0, so the hosted server plugs straight into the agent. Nothing to host, no tool functions to write.
+
+### The agent
+
+MCPServerHTTP uses Streamable HTTP, which is what Mailgi serves. The key goes in as an ordinary header.
+
+The server exposes 67 tools: domains, keys, webhooks, billing. The filter keeps the model to the three it needs; add mail_move or mail_delete if it should file or clean up.
+
+CrewAI prefixes each tool with the server's host, so the model sees api_mailgi_xyz_mcp_mail_send. The filter takes the plain names.
+
+The connection, filter and tool calls were run against the live API with CrewAI 1.15. The agent uses whichever LLM your CrewAI is configured for.
+
+```
+# pip install crewai
+import os
+from crewai import Agent, Crew, Task
+from crewai.mcp import MCPServerHTTP
+from crewai.mcp.filters import create_static_tool_filter
+
+mailgi = MCPServerHTTP(
+    url="https://api.mailgi.xyz/mcp",
+    headers={"Authorization": f"Bearer {os.environ['MAILGI_API_KEY']}"},
+    tool_filter=create_static_tool_filter(
+        allowed_tool_names=["mail_send", "mail_list", "mail_get"]),
+)
+
+agent = Agent(
+    role="Mail agent",
+    goal="Read and answer email sent to your own address",
+    backstory="You have your own email address. Never invent a message id.",
+    mcps=[mailgi],
+)
+
+task = Task(
+    description="Check the inbox and summarise anything new.",
+    expected_output="A short summary of new mail.",
+    agent=agent,
+)
+
+print(Crew(agents=[agent], tasks=[task]).kickoff())
+```
+
+## What the tools can't do yet
+
+Better to know before the model tries.
+
+### No search, no threads
+
+There is no search parameter; mail_list pages newest first and the model matches messages itself. Replies are new messages with “Re:” in the subject.
+
+### No attachments
+
+Send links instead. Incoming attachments are not exposed.
+
+### Mail to strangers is metered
+
+Sending to other @mailgi.xyz agents is free; to outside addresses it costs $0.0005 per recipient plus $0.02 the first time you write to a new address. With no balance, a send comes back as a tool result starting “HTTP 402” with the top-up link, not as an exception, so the agent can pass the link on.
+
+## Questions, answered
+
+Q: How do I give a CrewAI agent an email address?
+
+A: Register one with a single POST to https://api.mailgi.xyz/v1/agents/register, then add MCPServerHTTP(url="https://api.mailgi.xyz/mcp", headers={"Authorization": "Bearer <key>"}) to the agent's mcps list. No OAuth or human signup is needed.
+
+Q: Do I need crewai-tools or MCPServerAdapter?
+
+A: No. Since CrewAI 1.0 an Agent takes MCP servers directly in mcps. MCPServerAdapter from crewai-tools still works if you are on an older setup.
+
+Q: Can a CrewAI agent receive verification codes?
+
+A: Yes. Once it has its own address it can use mail_list and mail_get to find the code. Poll every few seconds after triggering the signup; most codes arrive within seconds.
+
+Q: What does it cost?
+
+A: Registering and receiving are free, and so is mail between Mailgi agents. Mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
+
+
+---
+
+Source: https://www.mailgi.xyz/vercel-ai-sdk-email.html (updated 2026-11-02)
+
+Guide
+
+# Email for a Vercel AI SDK agent
+
+Give the agent its own inbox in one call, then load Mailgi's tools with createMCPClient. About 25 lines of TypeScript, any model provider.
+
+To give a Vercel AI SDK agent email, register an address with one POST to Mailgi, then call createMCPClient from @ai-sdk/mcp with an http transport to https://api.mailgi.xyz/mcp and the key as a Bearer header. Pass mail_send, mail_list and mail_get to generateText or streamText, and the agent can receive verification codes, answer mail and write to people from its own address.
+
+## Give the agent an address
+
+One call, no signup form. Do this once per agent and keep the key in your secrets store.
+
+### Register
+
+The response carries the address and an API key that is shown exactly once.
+
+An MCP client can also do this itself: register_agent is one of the tools that work with no key. The key still has to reach your config once, so for a server-side agent the one-off call below is simpler.
+
+```
+# Once, outside the agent: give it an address and keep the key
+curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" -d '{"label":"my-agent"}'
+# => {"emailAddress":"buzzing-falcon@mailgi.xyz","apiKey":"amb_..."}
+
+export MAILGI_API_KEY=amb_...   # shown once: store it
+```
+
+## Load the tools over MCP
+
+The AI SDK's MCP client turns every tool on the server into an AI SDK tool, schema included. Nothing to host, no tool definitions to write.
+
+### The agent
+
+The http transport is Streamable HTTP, which is what Mailgi serves. The key goes in as an ordinary header.
+
+tools() returns all 67 tools: domains, keys, webhooks, billing. Destructuring the three mail tools keeps the model focused; add mail_move or mail_delete if it should file or clean up.
+
+Close the client when the request is done. In a route handler, close it in onFinish when you use streamText.
+
+The client and tool calls were run against the live API with ai 7.0 and @ai-sdk/mcp 2.0, and the example type-checks. Swap the model line for any provider.
+
+```
+// npm install ai @ai-sdk/mcp @ai-sdk/anthropic
+import { generateText, stepCountIs } from 'ai';
+import { createMCPClient } from '@ai-sdk/mcp';
+import { anthropic } from '@ai-sdk/anthropic';
+
+const mailgi = await createMCPClient({
+  transport: {
+    type: 'http',
+    url: 'https://api.mailgi.xyz/mcp',
+    headers: { Authorization: `Bearer ${process.env.MAILGI_API_KEY}` },
+  },
+});
+
+try {
+  const { mail_send, mail_list, mail_get } = await mailgi.tools();
+  const { text } = await generateText({
+    model: anthropic('claude-sonnet-5-5'),
+    tools: { mail_send, mail_list, mail_get },
+    stopWhen: stepCountIs(5),
+    prompt: 'Check my inbox and summarise anything new.',
+  });
+  console.log(text);
+} finally {
+  await mailgi.close();
+}
+```
+
+## What the tools can't do yet
+
+Better to know before the model tries.
+
+### No search, no threads
+
+There is no search parameter; mail_list pages newest first and the model matches messages itself. Replies are new messages with “Re:” in the subject.
+
+### No attachments
+
+Send links instead. Incoming attachments are not exposed.
+
+### Mail to strangers is metered
+
+Sending to other @mailgi.xyz agents is free; to outside addresses it costs $0.0005 per recipient plus $0.02 the first time you write to a new address. With no balance, a send comes back as a tool result starting “HTTP 402” with the top-up link, not as a thrown error, so the model can pass the link on.
+
+## Questions, answered
+
+Q: How do I give a Vercel AI SDK agent an email address?
+
+A: Register one with a single POST to https://api.mailgi.xyz/v1/agents/register, then load Mailgi's tools with createMCPClient from @ai-sdk/mcp, using an http transport to https://api.mailgi.xyz/mcp and the key as a Bearer header.
+
+Q: Does it work with streamText and any model?
+
+A: Yes. The MCP tools are ordinary AI SDK tools, so they work with generateText, streamText and agents, on any provider the AI SDK supports.
+
+Q: Can the agent receive verification codes?
+
+A: Yes. Once it has its own address it can use mail_list and mail_get to find the code. Poll every few seconds after triggering the signup; most codes arrive within seconds.
+
+Q: What does it cost?
+
+A: Registering and receiving are free, and so is mail between Mailgi agents. Mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
+
+
+---
+
+Source: https://www.mailgi.xyz/n8n-email-agent.html (updated 2026-11-02)
+
+Guide
+
+# Email for an n8n AI agent
+
+Give the agent its own inbox in one call, then attach Mailgi with n8n's MCP Client Tool node. No code, no Gmail credentials, no shared inbox.
+
+To give an n8n AI Agent email, register an address with one POST to Mailgi, then attach an MCP Client Tool node to the agent with the endpoint https://api.mailgi.xyz/mcp, HTTP Streamable transport and Bearer Auth set to the key. Select mail_send, mail_list and mail_get, and the agent can read and answer mail from its own address on a schedule or on demand.
+
+## Give the agent an address
+
+One call, no signup form. Do this once per agent and keep the key in your secrets store.
+
+### Register
+
+The response carries the address and an API key that is shown exactly once.
+
+An MCP client can also do this itself: register_agent is one of the tools that work with no key. The key still has to reach your config once, so for a server-side agent the one-off call below is simpler.
+
+```
+# Once, outside the agent: give it an address and keep the key
+curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" -d '{"label":"my-agent"}'
+# => {"emailAddress":"buzzing-falcon@mailgi.xyz","apiKey":"amb_..."}
+
+export MAILGI_API_KEY=amb_...   # shown once: store it
+```
+
+## Attach it to the agent
+
+n8n's AI Agent takes MCP servers as tools. The hosted server needs no community node and nothing to host.
+
+### The node
+
+Add an AI Agent node with any chat model, then add an MCP Client Tool under its Tool input.
+
+Create a Bearer Auth credential whose token is the amb_... key. n8n stores it encrypted like any other credential.
+
+The server offers 67 tools: domains, keys, webhooks, billing. Choose Selected and tick the three mail tools; add mail_move or mail_delete if the agent should file or clean up.
+
+Field names are from the MCP Client Tool node, version 1.4, in n8n 2.x. Older versions show “SSE Endpoint” instead: update the node, since Mailgi serves Streamable HTTP only.
+
+```
+AI Agent
+ └─ Tool: MCP Client Tool
+      Endpoint            https://api.mailgi.xyz/mcp
+      Server Transport    HTTP Streamable
+      Authentication      Bearer Auth
+      Credential          Bearer Token = amb_...
+      Tools to Include    Selected
+      Tools               mail_send, mail_list, mail_get
+```
+
+## Run it on a schedule
+
+### The workflow
+
+Put a Schedule Trigger in front of the agent, every five minutes or so, and give it the system message on the right.
+
+For mail as it arrives instead of polling, register an n8n Webhook URL with POST /v1/webhook-endpoints. Mailgi sends a signed notice with no content; the agent then reads the message with mail_get.
+
+```
+You have your own email address.
+Use mail_list and mail_get to check mail,
+and mail_send to reply. Never invent a
+message id. Summarise what you did.
+```
+
+## What the tools can't do yet
+
+Better to know before the model tries.
+
+### No search, no threads
+
+There is no search parameter; mail_list pages newest first and the model matches messages itself. Replies are new messages with “Re:” in the subject.
+
+### No attachments
+
+Send links instead. Incoming attachments are not exposed.
+
+### Mail to strangers is metered
+
+Sending to other @mailgi.xyz agents is free; to outside addresses it costs $0.0005 per recipient plus $0.02 the first time you write to a new address. With no balance, a send comes back as a tool result starting “HTTP 402” with the top-up link, so the agent can report it instead of the workflow failing.
+
+## Questions, answered
+
+Q: How do I give an n8n AI agent an email address?
+
+A: Register one with a single POST to https://api.mailgi.xyz/v1/agents/register, then attach an MCP Client Tool node to the AI Agent with the endpoint https://api.mailgi.xyz/mcp, HTTP Streamable transport and a Bearer Auth credential holding the key.
+
+Q: Why not use n8n's Gmail node?
+
+A: The Gmail node acts as a person's mailbox: the agent can read everything else in it and every message it sends is from that person. A Mailgi address belongs to the agent alone and needs no Google OAuth app.
+
+Q: Can the workflow react to new mail instead of polling?
+
+A: Yes. Register an n8n Webhook URL with POST /v1/webhook-endpoints. Mailgi posts a signed notification with no content when mail arrives, and the agent reads the message with mail_get.
+
+Q: What does it cost?
+
+A: Registering and receiving are free, and so is mail between Mailgi agents. Mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
 
 
 ---
