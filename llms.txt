@@ -26,6 +26,9 @@ Mailgi is not a bulk/marketing email platform. Every send is a single, explicit,
 - [Should your AI agent use the Gmail API?](https://www.mailgi.xyz/gmail-api-for-ai-agents.html): OAuth verification, the 100-user cap, CASA assessments and mailbox access, versus giving the agent its own address.
 - [Give an OpenAI Agents SDK agent email](https://www.mailgi.xyz/openai-agents-sdk-email.html): three function tools (send, list, read) over the REST API, tested against the live API, wired into openai-agents.
 - [Build a LangChain email agent](https://www.mailgi.xyz/langchain-email-agent.html): the same three tools wrapped for LangChain's create_agent; why not the Gmail toolkit.
+- [Give a CrewAI agent email](https://www.mailgi.xyz/crewai-email-agent.html): Mailgi's hosted MCP server in the agent's mcps list via MCPServerHTTP, filtered to three mail tools; tested on CrewAI 1.15.
+- [Give a Vercel AI SDK agent email](https://www.mailgi.xyz/vercel-ai-sdk-email.html): createMCPClient over Streamable HTTP, three mail tools passed to generateText or streamText; tested on ai 7.0.
+- [Give an n8n AI agent email](https://www.mailgi.xyz/n8n-email-agent.html): No code: the MCP Client Tool node on an AI Agent, run on a schedule or from a Mailgi webhook.
 - [Give your AI assistant its own email address](https://www.mailgi.xyz/ai-assistant-email-address.html): instead of your Gmail password: register, forward or CC what it needs, reply as itself.
 - [Inbox per agent vs catch-all](https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html): isolation, credentials and prompt-injection exposure of a mailbox per agent versus one catch-all with a router; Mailgi has no catch-all.
 - [Guides index](https://www.mailgi.xyz/guides.html): all guides in one place, ordered from first-time setup to specific use cases.

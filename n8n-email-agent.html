@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Give an n8n AI agent email — Mailgi</title>
+<meta name="description" content="Give an n8n AI Agent its own email address: register in one call, then add Mailgi's hosted MCP server with the MCP Client Tool node. No code." />
+<link rel="canonical" href="https://www.mailgi.xyz/n8n-email-agent.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Give an n8n AI agent email — Mailgi" />
+<meta property="og:description" content="Give an n8n AI Agent its own email address: register in one call, then add Mailgi's hosted MCP server with the MCP Client Tool node. No code." />
+<meta property="og:url" content="https://www.mailgi.xyz/n8n-email-agent.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Give an n8n AI agent email — Mailgi" />
+<meta name="twitter:description" content="Give an n8n AI Agent its own email address: register in one call, then add Mailgi's hosted MCP server with the MCP Client Tool node. No code." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "headline": "Give an n8n AI agent email",
+      "description": "Give an n8n AI Agent its own email address: register in one call, then add Mailgi's hosted MCP server with the MCP Client Tool node. No code.",
+      "datePublished": "2026-11-02",
+      "dateModified": "2026-11-02",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/n8n-email-agent.html"
+    },
+    {
+      "@type": "HowTo",
+      "name": "Give an n8n AI agent email",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Register an address",
+          "text": "POST https://api.mailgi.xyz/v1/agents/register and store the API key."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Attach the MCP Client Tool",
+          "text": "Endpoint https://api.mailgi.xyz/mcp, Server Transport HTTP Streamable, Bearer Auth with the key."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Select three tools",
+          "text": "Tools to Include: Selected, then mail_send, mail_list and mail_get."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I give an n8n AI agent an email address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Register one with a single POST to https://api.mailgi.xyz/v1/agents/register, then attach an MCP Client Tool node to the AI Agent with the endpoint https://api.mailgi.xyz/mcp, HTTP Streamable transport and a Bearer Auth credential holding the key."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why not use n8n's Gmail node?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Gmail node acts as a person's mailbox: the agent can read everything else in it and every message it sends is from that person. A Mailgi address belongs to the agent alone and needs no Google OAuth app."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can the workflow react to new mail instead of polling?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Register an n8n Webhook URL with POST /v1/webhook-endpoints. Mailgi posts a signed notification with no content when mail arrives, and the agent reads the message with mail_get."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does it cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Registering and receiving are free, and so is mail between Mailgi agents. Mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides",
+          "item": "https://www.mailgi.xyz/guides.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "OpenAI Agents SDK",
+          "item": "https://www.mailgi.xyz/n8n-email-agent.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Guide</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">Email for an <em class="accent">n8n</em> AI agent</h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Give the agent its own inbox in one call, then attach Mailgi with n8n's MCP Client Tool node. No code, no Gmail credentials, no shared inbox.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#setup">skip to the setup →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">To give an n8n AI Agent email, register an address with one POST to Mailgi, then attach an MCP Client Tool node to the agent with the endpoint https://api.mailgi.xyz/mcp, HTTP Streamable transport and Bearer Auth set to the key. Select mail_send, mail_list and mail_get, and the agent can read and answer mail from its own address on a schedule or on demand.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Give the agent <em class="accent">an address</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:620px">One call, no signup form. Do this once per agent and keep the key in your secrets store.</p>
+    <div class="stack-split" style="margin-bottom:56px">
+      <div>
+        <h3 style="margin-bottom:14px">Register</h3>
+        <p class="body">The response carries the address and an API key that is shown exactly once.</p>
+        <p class="body" style="margin-top:18px">An MCP client can also do this itself: <span class="mono">register_agent</span> is one of the tools that work with no key. The key still has to reach your config once, so for a server-side agent the one-off call below is simpler.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># Once, outside the agent: give it an address and keep the key
+curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" -d '{"label":"my-agent"}'
+# =&gt; {"emailAddress":"buzzing-falcon@mailgi.xyz","apiKey":"amb_..."}
+
+export MAILGI_API_KEY=amb_...   # shown once: store it</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top" id="setup">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Attach it to <em class="accent">the agent</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:620px">n8n's AI Agent takes MCP servers as tools. The hosted server needs no community node and nothing to host.</p>
+    <div class="stack-split" style="margin-bottom:56px">
+      <div>
+        <h3 style="margin-bottom:14px">The node</h3>
+        <p class="body">Add an <span class="mono">AI Agent</span> node with any chat model, then add an <span class="mono">MCP Client Tool</span> under its Tool input.</p>
+        <p class="body" style="margin-top:18px">Create a <span class="mono">Bearer Auth</span> credential whose token is the <span class="mono">amb_...</span> key. n8n stores it encrypted like any other credential.</p>
+        <p class="body" style="margin-top:18px">The server offers 67 tools: domains, keys, webhooks, billing. Choose Selected and tick the three mail tools; add <span class="mono">mail_move</span> or <span class="mono">mail_delete</span> if the agent should file or clean up.</p>
+        <p class="body" style="margin-top:18px">Field names are from the MCP Client Tool node, version 1.4, in n8n 2.x. Older versions show “SSE Endpoint” instead: update the node, since Mailgi serves Streamable HTTP only.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">AI Agent
+ └─ Tool: MCP Client Tool
+      Endpoint            https://api.mailgi.xyz/mcp
+      Server Transport    HTTP Streamable
+      Authentication      Bearer Auth
+      Credential          Bearer Token = amb_...
+      Tools to Include    Selected
+      Tools               mail_send, mail_list, mail_get</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Run it <em class="accent">on a schedule</em></h2>
+    <div class="stack-split" style="margin-bottom:56px">
+      <div>
+        <h3 style="margin-bottom:14px">The workflow</h3>
+        <p class="body">Put a <span class="mono">Schedule Trigger</span> in front of the agent, every five minutes or so, and give it the system message on the right.</p>
+        <p class="body" style="margin-top:18px">For mail as it arrives instead of polling, register an n8n <span class="mono">Webhook</span> URL with <span class="mono">POST /v1/webhook-endpoints</span>. Mailgi sends a signed notice with no content; the agent then reads the message with <span class="mono">mail_get</span>.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">You have your own email address.
+Use mail_list and mail_get to check mail,
+and mail_send to reply. Never invent a
+message id. Summarise what you did.</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">What the tools <em class="accent">can't do yet</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">Better to know before the model tries.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>No search, no threads</h3>
+        <p class="body">There is no search parameter; <span class="mono">mail_list</span> pages newest first and the model matches messages itself. Replies are new messages with “Re:” in the subject.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>No attachments</h3>
+        <p class="body">Send links instead. Incoming attachments are not exposed.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Mail to strangers is metered</h3>
+        <p class="body">Sending to other @mailgi.xyz agents is free; to outside addresses it costs $0.0005 per recipient plus $0.02 the first time you write to a new address. With no balance, a send comes back as a tool result starting “HTTP 402” with the top-up link, so the agent can report it instead of the workflow failing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">How do I give an n8n AI agent an email address?</span><span class="mark"></span></summary>
+        <p class="a">Register one with a single POST to https://api.mailgi.xyz/v1/agents/register, then attach an MCP Client Tool node to the AI Agent with the endpoint https://api.mailgi.xyz/mcp, HTTP Streamable transport and a Bearer Auth credential holding the key.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Why not use n8n&#x27;s Gmail node?</span><span class="mark"></span></summary>
+        <p class="a">The Gmail node acts as a person&#x27;s mailbox: the agent can read everything else in it and every message it sends is from that person. A Mailgi address belongs to the agent alone and needs no Google OAuth app.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Can the workflow react to new mail instead of polling?</span><span class="mark"></span></summary>
+        <p class="a">Yes. Register an n8n Webhook URL with POST /v1/webhook-endpoints. Mailgi posts a signed notification with no content when mail arrives, and the agent reads the message with mail_get.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">What does it cost?</span><span class="mark"></span></summary>
+        <p class="a">Registering and receiving are free, and so is mail between Mailgi agents. Mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top related">
+  <div class="section shell">
+    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
+    <ul class="related-list">
+      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+      <li><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></li>
+      <li><a href="/langchain-email-agent.html">Build a LangChain email agent</a></li>
+      <li><a href="/crewai-email-agent.html">Give a CrewAI agent email</a></li>
+      <li><a href="/vercel-ai-sdk-email.html">Give a Vercel AI SDK agent email</a></li>
+      <li><a href="/ai-assistant-email-address.html">Give your AI assistant its own email address</a></li>
+      <li><a href="/inbox-per-agent-vs-catch-all.html">Inbox per agent vs catch-all</a></li>
+      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+      <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
+      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/changelog.html">changelog</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/about.html">about</a>
+      <a href="/security.html">security</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>

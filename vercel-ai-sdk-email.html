@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Give a Vercel AI SDK agent email — Mailgi</title>
+<meta name="description" content="Give a Vercel AI SDK agent its own email address: register in one call, then load Mailgi's hosted MCP server with createMCPClient. Working TypeScript." />
+<link rel="canonical" href="https://www.mailgi.xyz/vercel-ai-sdk-email.html" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Mailgi" />
+<meta property="og:title" content="Give a Vercel AI SDK agent email — Mailgi" />
+<meta property="og:description" content="Give a Vercel AI SDK agent its own email address: register in one call, then load Mailgi's hosted MCP server with createMCPClient. Working TypeScript." />
+<meta property="og:url" content="https://www.mailgi.xyz/vercel-ai-sdk-email.html" />
+<meta property="og:image" content="https://www.mailgi.xyz/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Give a Vercel AI SDK agent email — Mailgi" />
+<meta name="twitter:description" content="Give a Vercel AI SDK agent its own email address: register in one call, then load Mailgi's hosted MCP server with createMCPClient. Working TypeScript." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="stylesheet" href="/styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "headline": "Give a Vercel AI SDK agent email",
+      "description": "Give a Vercel AI SDK agent its own email address: register in one call, then load Mailgi's hosted MCP server with createMCPClient. Working TypeScript.",
+      "datePublished": "2026-11-02",
+      "dateModified": "2026-11-02",
+      "author": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "publisher": {
+        "@id": "https://www.mailgi.xyz/#org"
+      },
+      "isPartOf": {
+        "@id": "https://www.mailgi.xyz/#website"
+      },
+      "mainEntityOfPage": "https://www.mailgi.xyz/vercel-ai-sdk-email.html"
+    },
+    {
+      "@type": "HowTo",
+      "name": "Give a Vercel AI SDK agent email",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Register an address",
+          "text": "POST https://api.mailgi.xyz/v1/agents/register and store the API key."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Create the MCP client",
+          "text": "createMCPClient({ transport: { type: 'http', url: 'https://api.mailgi.xyz/mcp', headers: { Authorization: 'Bearer amb_...' } } })."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Pass three tools to the model",
+          "text": "Take mail_send, mail_list and mail_get from client.tools() and give them to generateText or streamText."
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I give a Vercel AI SDK agent an email address?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Register one with a single POST to https://api.mailgi.xyz/v1/agents/register, then load Mailgi's tools with createMCPClient from @ai-sdk/mcp, using an http transport to https://api.mailgi.xyz/mcp and the key as a Bearer header."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it work with streamText and any model?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The MCP tools are ordinary AI SDK tools, so they work with generateText, streamText and agents, on any provider the AI SDK supports."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can the agent receive verification codes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Once it has its own address it can use mail_list and mail_get to find the code. Poll every few seconds after triggering the signup; most codes arrive within seconds."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does it cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Registering and receiving are free, and so is mail between Mailgi agents. Mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.mailgi.xyz/#org",
+      "name": "Mailgi",
+      "url": "https://www.mailgi.xyz/",
+      "email": "hello@mailgi.xyz",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.mailgi.xyz/brand/logo-256.png",
+        "width": 256,
+        "height": 256
+      },
+      "sameAs": [
+        "https://github.com/Mailgi",
+        "https://www.npmjs.com/package/@mailgi/mailgi",
+        "https://clawhub.ai/oyagev/skills/mailgi"
+      ],
+      "description": "Email infrastructure for AI agents: real inboxes over a REST API, with DKIM/SPF/DMARC handled automatically for both a shared platform domain and customer-owned custom domains."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Mailgi",
+          "item": "https://www.mailgi.xyz/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Guides",
+          "item": "https://www.mailgi.xyz/guides.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "OpenAI Agents SDK",
+          "item": "https://www.mailgi.xyz/vercel-ai-sdk-email.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/attribution.js" defer></script>
+<script src="/analytics.js" defer></script>
+<script src="/gtm.js" defer></script>
+<script src="/consent.js" defer></script>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<nav class="nav shell">
+  <a class="brand" href="/">
+    <img src="/favicon.svg" alt="" width="26" height="26" />
+    <span>mailgi</span>
+  </a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
+  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
+  <div class="nav-links">
+    <a href="/">Product</a>
+    <a href="/agents.html">For agents</a>
+    <a href="/pricing.html">Pricing</a>
+    <div class="nav-group">
+      <a class="nav-group-trigger" href="/guides.html">Resources</a>
+      <div class="nav-menu-panel">
+        <a href="/guides.html">Guides</a>
+        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
+        <a href="/docs.html">Docs</a>
+        <a href="/mcp.html">MCP server</a>
+        <a href="/faq.html">FAQ</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-end">
+    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
+    </a>
+    <span class="nav-note">receiving is free</span>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
+  </div>
+</nav>
+
+<main style="flex:1">
+
+<section class="hero shell">
+  <div class="kicker reveal" style="margin-bottom:26px">Guide</div>
+  <h1 class="reveal reveal-1" style="max-width:900px">Email for a <em class="accent">Vercel AI SDK</em> agent</h1>
+  <div class="hero-grid reveal reveal-2">
+    <p class="lede" style="max-width:520px">Give the agent its own inbox in one call, then load Mailgi's tools with <span class="mono">createMCPClient</span>. About 25 lines of TypeScript, any model provider.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
+      <a class="link-serif" href="#setup">skip to the code →</a>
+    </div>
+  </div>
+</section>
+
+<section class="dark" style="border-top:1px solid var(--rule)">
+  <div class="shell" style="padding-top:64px;padding-bottom:64px">
+    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">To give a Vercel AI SDK agent email, register an address with one POST to Mailgi, then call createMCPClient from @ai-sdk/mcp with an http transport to https://api.mailgi.xyz/mcp and the key as a Bearer header. Pass mail_send, mail_list and mail_get to generateText or streamText, and the agent can receive verification codes, answer mail and write to people from its own address.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Give the agent <em class="accent">an address</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:620px">One call, no signup form. Do this once per agent and keep the key in your secrets store.</p>
+    <div class="stack-split" style="margin-bottom:56px">
+      <div>
+        <h3 style="margin-bottom:14px">Register</h3>
+        <p class="body">The response carries the address and an API key that is shown exactly once.</p>
+        <p class="body" style="margin-top:18px">An MCP client can also do this itself: <span class="mono">register_agent</span> is one of the tools that work with no key. The key still has to reach your config once, so for a server-side agent the one-off call below is simpler.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code"># Once, outside the agent: give it an address and keep the key
+curl -s -X POST https://api.mailgi.xyz/v1/agents/register \
+  -H "Content-Type: application/json" -d '{"label":"my-agent"}'
+# =&gt; {"emailAddress":"buzzing-falcon@mailgi.xyz","apiKey":"amb_..."}
+
+export MAILGI_API_KEY=amb_...   # shown once: store it</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top" id="setup">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">Load the tools <em class="accent">over MCP</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:40px;max-width:620px">The AI SDK's MCP client turns every tool on the server into an AI SDK tool, schema included. Nothing to host, no tool definitions to write.</p>
+    <div class="stack-split" style="margin-bottom:56px">
+      <div>
+        <h3 style="margin-bottom:14px">The agent</h3>
+        <p class="body">The <span class="mono">http</span> transport is Streamable HTTP, which is what Mailgi serves. The key goes in as an ordinary header.</p>
+        <p class="body" style="margin-top:18px"><span class="mono">tools()</span> returns all 67 tools: domains, keys, webhooks, billing. Destructuring the three mail tools keeps the model focused; add <span class="mono">mail_move</span> or <span class="mono">mail_delete</span> if it should file or clean up.</p>
+        <p class="body" style="margin-top:18px">Close the client when the request is done. In a route handler, close it in <span class="mono">onFinish</span> when you use <span class="mono">streamText</span>.</p>
+        <p class="body" style="margin-top:18px">The client and tool calls were run against the live API with ai 7.0 and @ai-sdk/mcp 2.0, and the example type-checks. Swap the model line for any provider.</p>
+      </div>
+      <div style="min-width:0">
+<pre class="code">// npm install ai @ai-sdk/mcp @ai-sdk/anthropic
+import { generateText, stepCountIs } from &#x27;ai&#x27;;
+import { createMCPClient } from &#x27;@ai-sdk/mcp&#x27;;
+import { anthropic } from &#x27;@ai-sdk/anthropic&#x27;;
+
+const mailgi = await createMCPClient({
+  transport: {
+    type: &#x27;http&#x27;,
+    url: &#x27;https://api.mailgi.xyz/mcp&#x27;,
+    headers: { Authorization: `Bearer ${process.env.MAILGI_API_KEY}` },
+  },
+});
+
+try {
+  const { mail_send, mail_list, mail_get } = await mailgi.tools();
+  const { text } = await generateText({
+    model: anthropic(&#x27;claude-sonnet-5-5&#x27;),
+    tools: { mail_send, mail_list, mail_get },
+    stopWhen: stepCountIs(5),
+    prompt: &#x27;Check my inbox and summarise anything new.&#x27;,
+  });
+  console.log(text);
+} finally {
+  await mailgi.close();
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top surface">
+  <div class="section shell">
+    <h2 style="margin-bottom:12px">What the tools <em class="accent">can't do yet</em></h2>
+    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">Better to know before the model tries.</p>
+    <div class="rows">
+      <div class="row">
+        <div class="numeral">01</div>
+        <h3>No search, no threads</h3>
+        <p class="body">There is no search parameter; <span class="mono">mail_list</span> pages newest first and the model matches messages itself. Replies are new messages with “Re:” in the subject.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">02</div>
+        <h3>No attachments</h3>
+        <p class="body">Send links instead. Incoming attachments are not exposed.</p>
+      </div>
+      <div class="row">
+        <div class="numeral">03</div>
+        <h3>Mail to strangers is metered</h3>
+        <p class="body">Sending to other @mailgi.xyz agents is free; to outside addresses it costs $0.0005 per recipient plus $0.02 the first time you write to a new address. With no balance, a send comes back as a tool result starting “HTTP 402” with the top-up link, not as a thrown error, so the model can pass the link on.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="section shell">
+    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
+    <div class="faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">How do I give a Vercel AI SDK agent an email address?</span><span class="mark"></span></summary>
+        <p class="a">Register one with a single POST to https://api.mailgi.xyz/v1/agents/register, then load Mailgi&#x27;s tools with createMCPClient from @ai-sdk/mcp, using an http transport to https://api.mailgi.xyz/mcp and the key as a Bearer header.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Does it work with streamText and any model?</span><span class="mark"></span></summary>
+        <p class="a">Yes. The MCP tools are ordinary AI SDK tools, so they work with generateText, streamText and agents, on any provider the AI SDK supports.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">Can the agent receive verification codes?</span><span class="mark"></span></summary>
+        <p class="a">Yes. Once it has its own address it can use mail_list and mail_get to find the code. Poll every few seconds after triggering the signup; most codes arrive within seconds.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">What does it cost?</span><span class="mark"></span></summary>
+        <p class="a">Registering and receiving are free, and so is mail between Mailgi agents. Mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top related">
+  <div class="section shell">
+    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
+    <ul class="related-list">
+      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+      <li><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></li>
+      <li><a href="/langchain-email-agent.html">Build a LangChain email agent</a></li>
+      <li><a href="/crewai-email-agent.html">Give a CrewAI agent email</a></li>
+      <li><a href="/n8n-email-agent.html">Give an n8n AI agent email</a></li>
+      <li><a href="/ai-assistant-email-address.html">Give your AI assistant its own email address</a></li>
+      <li><a href="/inbox-per-agent-vs-catch-all.html">Inbox per agent vs catch-all</a></li>
+      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+      <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
+      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
+    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer-inner">
+    <span class="footer-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
+      <span class="dot"></span><span class="status-text">system status</span>
+    </a>
+    <span>built for agents, not humans</span>
+    <span class="footer-end">
+      <a href="https://app.mailgi.xyz">dashboard</a>
+      <a href="/guides.html">guides</a>
+      <a href="/vs-resend-postmark-mailgun.html">compare</a>
+      <a href="/docs.html">docs</a>
+      <a href="/faq.html">faq</a>
+      <a href="/changelog.html">changelog</a>
+      <a href="/mcp.html">mcp</a>
+      <a href="/SKILL.md">SKILL.md</a>
+      <a href="https://github.com/Mailgi">github</a>
+      <a href="/about.html">about</a>
+      <a href="/security.html">security</a>
+      <a href="/privacy.html">privacy</a>
+      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
+    </span>
+  </div>
+</footer>
+</div>
+<script src="/status.js" defer></script>
+</body>
+</html>
