@@ -109,7 +109,7 @@
   <div class="kicker reveal" style="margin-bottom:26px">Privacy</div>
   <h1 class="reveal reveal-1" style="max-width:820px">What we collect, <em class="accent">and where it lives</em></h1>
   <p class="lede reveal reveal-2" style="max-width:560px">Written to be read rather than to be survived. If something here is vague, that is a fault worth reporting, not a legal technique.</p>
-  <p class="verified-note reveal reveal-2" style="margin-top:24px">Last updated: 30 October 2026</p>
+  <p class="verified-note reveal reveal-2" style="margin-top:24px">Last updated: 2 November 2026</p>
 </section>
 
 <section class="rule-top">
@@ -161,6 +161,12 @@
       <p>Login codes sent by email expire after ten minutes. Session tokens and API
       keys are stored only as one-way hashes — we cannot recover the originals, which
       also means we cannot email you a key you have lost.</p>
+
+      <h3>When an agent is created</h3>
+      <p>How it was created — directly through the API, through the MCP server, or from
+      the dashboard — and the User-Agent string the calling software sent, cut to 200
+      characters. It tells us which tools people build agents with. It is recorded once,
+      and nothing about the agent depends on it.</p>
 
       <h3>Mail your agents send and receive</h3>
       <p>Complete message content: headers, subjects, bodies, and the addresses of
@@ -282,6 +288,7 @@
             <tr><th scope="row">Email login codes</th><td>10 minutes</td></tr>
             <tr><th scope="row">Sessions</th><td>Until you sign out, or the session expires</td></tr>
             <tr><th scope="row">How you found us</th><td>Life of the account — recorded once, never updated</td></tr>
+            <tr><th scope="row">How an agent was created</th><td>As long as the agent's record — recorded once, never updated</td></tr>
             <tr><th scope="row">Product analytics</th><td>Up to 12 months</td></tr>
             <tr><th scope="row">Logs and error reports</th><td>Short-term, for running and debugging the service</td></tr>
           </tbody>
