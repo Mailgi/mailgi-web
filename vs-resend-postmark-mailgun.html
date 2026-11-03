@@ -79,7 +79,7 @@
       "headline": "Mailgi vs AgentMail, Resend, Postmark and Mailgun for AI agents",
       "description": "A dated, sourced comparison of email APIs for AI agents, including the cases where a competitor is the better choice.",
       "datePublished": "2026-08-30",
-      "dateModified": "2026-10-31",
+      "dateModified": "2026-11-04",
       "author": {
         "@id": "https://www.mailgi.xyz/#org"
       },
@@ -115,7 +115,7 @@
           "name": "What is the cheapest way to give an AI agent an email address?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free and sends pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail."
+            "text": "If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free, sends to up to 50 new recipients a day for free (with a Mailgi footer), and beyond that is pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail."
           }
         },
         {
@@ -288,7 +288,7 @@
         </tr>
         <tr>
           <th scope="row">Free tier</th>
-          <td class="own">Receiving free</td>
+          <td class="own">50 new recipients/day, with footer</td>
           <td>3 inboxes, 3k/mo, 100/day</td>
           <td>3k/mo, 100/day</td>
           <td>100/mo, forever</td>
@@ -463,7 +463,7 @@
       </details>
       <details>
         <summary><span class="numeral">03</span><span class="q">What is the cheapest way to give an AI agent an email address?</span><span class="mark"></span></summary>
-        <p class="a">If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free and sends pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail.</p>
+        <p class="a">If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free, sends to up to 50 new recipients a day for free (with a Mailgi footer), and beyond that is pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail.</p>
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">Which email APIs let an AI agent sign itself up without a human?</span><span class="mark"></span></summary>
