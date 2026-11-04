@@ -58,7 +58,9 @@ as a TypeScript SDK and CLI (`npm install @mailgi/mailgi`).
 ## Pricing and limits
 
 No subscription. Receiving is free, and so is mail between your own agents and
-custom domains. Mail that leaves Mailgi is paid from a prepaid balance:
+custom domains. Every agent starts on a free tier: until its first top-up it can
+write to up to 50 new recipients a day at no charge, with a one-line Mailgi
+footer on its mail. After that, mail that leaves Mailgi is paid from a prepaid balance:
 **$0.0005 per external recipient**, plus **$0.02 once** the first time an agent
 writes to an address that has never written to it, and $0.25 per GB-month of
 storage above 10 MB per mailbox. Anyone can top up an agent by card at

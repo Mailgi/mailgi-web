@@ -1,7 +1,7 @@
 ---
 name: mailgi
-description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Also available as a hosted MCP server. Receiving and mail between agents are free; mail to outside addresses is prepaid, pay as you go.
-version: 1.6.0
+description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Also available as a hosted MCP server. Receiving and mail between agents are free. Until the first top-up, mail to up to 50 new outside addresses a day is free too, with a one-line footer; after it, outside mail is prepaid, pay as you go.
+version: 1.7.0
 homepage: https://www.mailgi.xyz
 metadata:
   openclaw:
@@ -144,13 +144,52 @@ usually looks right to a human — but there is no `In-Reply-To` header, so a
 strict client will show it as a separate message. There is also no `threadId`
 anywhere in the API: group related mail yourself, by subject and correspondent.
 
-Response: `{ "messageId": "..." }`
+Response: `{ "messageId": "..." }`, plus a `billing` object when there is
+something to tell you. On the free tier that is every send (see below).
 
 **Recipients must be bare addresses** — `someone@example.com`, never
 `Name <someone@example.com>`. A display name or group syntax is rejected with
 `400 VALIDATION_ERROR`. At most 50 addresses per field.
 
-### What sending costs
+### The free tier: before your first top-up
+
+Every wallet starts on the free tier and stays there until it is topped up for
+the first time:
+
+- **Sending is free.** No per-recipient price, no introduction fee.
+- **Up to 50 new recipients per UTC day** — addresses you have never
+  corresponded with. Known contacts (below) are not counted, so replies are
+  never capped by it. The usual rate limits still apply.
+- **Every message you send ends with one line**, added for you:
+  `Sent with Mailgi · Mailbox for AI agents` (after `--` in plain text; a
+  small grey line in HTML). Do not add it yourself. If you quote a
+  message that already has it, it is not added twice.
+- **Every successful send says so**, in the response's `billing` object:
+
+```json
+{
+  "messageId": "...",
+  "billing": {
+    "status": "unfunded",
+    "message": "Fund this mailbox to remove ads.",
+    "topupPage": "https://app.mailgi.xyz/topup?address=buzzing-falcon%40mailgi.xyz"
+  }
+}
+```
+
+  Forward `topupPage` to whoever you work for if the footer or the cap gets
+  in the way. `GET /v1/billing` → `freeTier` shows
+  `{ "active": true, "newRecipientsPerDay": 50, "newRecipientsUsedToday": 3 }`.
+- **Past the cap**, the whole send is refused with `402 PAYMENT_REQUIRED` and
+  nothing is sent: `details.reason` is `"free_tier_limit"`, with
+  `newRecipientsPerDay`, `newRecipientsUsedToday`, `unknownRecipients` and
+  `topupPage`. Drop new recipients, wait for the next UTC day, or get topped up.
+
+**The first top-up ends the free tier for good**: no footer, no daily cap on
+new recipients, and from then on you pay the meters below. Running the balance
+down to zero later does not bring the free tier back; it means the 402 below.
+
+### What sending costs (after the first top-up)
 
 Everything external is metered and paid from a prepaid **wallet**. Receiving
 is free. Mail to any `@mailgi.xyz` address, or to any address on your own
@@ -207,6 +246,7 @@ negative. Your **low-balance level** is about one week of your own spend
 | below the level | `low_balance` | everything works; you are warned |
 | below $0 | `in_debt` | outside sending is refused (402); reading, receiving and internal mail work |
 | below **minus** the level | `reads_blocked` | reading stops too (agent wallets only) |
+| never topped up | `unfunded` | free tier, see above; shown on successful sends instead of `low_balance` |
 
 **You are told on every read.** While the status is not `ok`, `GET /v1/mail`,
 `GET /v1/mail/<id>` and a successful `POST /v1/mail/send` carry a `billing`
@@ -504,9 +544,11 @@ Common codes:
 - `400 VALIDATION_ERROR` — a field failed validation; `error.details` lists which
 - `401 UNAUTHORIZED` — missing or invalid API key
 - `402 PAYMENT_REQUIRED` — your wallet cannot cover this send's external
-  recipients, or (`details.reason: "debt_limit"`) its debt is past the limit
-  and reading is paused. `error.details` says how much is needed and where to
-  top up. See §4, "What sending costs" and "Running low, and debt".
+  recipients, or (`details.reason: "free_tier_limit"`) the send would go past
+  the free tier's 50 new recipients today, or (`details.reason: "debt_limit"`)
+  its debt is past the limit and reading is paused. `error.details` says how
+  much is needed and where to top up. See §4, "The free tier", "What sending
+  costs" and "Running low, and debt".
 - `403 FORBIDDEN` — your domain has not finished outbound setup, or sending is
   suspended for your organisation
 - `404 NOT_FOUND` — message or mailbox not found
@@ -556,9 +598,9 @@ EMAIL=$(echo $RESP | jq -r .emailAddress)
 KEY=$(echo $RESP | jq -r .apiKey)
 
 # 2. Send a message to yourself (free: mail between Mailgi addresses costs
-# nothing). Mail to outside addresses needs a balance; without one you get a
-# 402 with a top-up link (see §4). Give the mailbox a moment first: sending
-# right after registering can 500 while it is provisioned. Retry once if so.
+# nothing). On the free tier you can also write to up to 50 new outside
+# addresses a day, with a footer (see §4). Give the mailbox a moment first:
+# sending right after registering can 500 while it is provisioned. Retry once.
 sleep 3
 curl -s -X POST https://api.mailgi.xyz/v1/mail/send \
   -H "Authorization: Bearer $KEY" \
