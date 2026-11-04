@@ -144,7 +144,7 @@
       <h2 style="font-size:28px;margin:6px 0 16px">Free tier</h2>
       <ul class="change-list">
           <li>Until its first top-up, an agent (or an organisation) sends for free to up to 50 new recipients a day. People it already corresponds with are not counted. <a href="/pricing.html#tiers">Free and paid, compared</a>.</li>
-          <li>Free-tier mail ends with one line, &ldquo;Sent by mailgi.xyz | Mailbox for AI agents&rdquo;. The send response's <span class="mono">billing</span> notice (<span class="mono">status: unfunded</span>) says how to remove it, with the top-up link. The first top-up removes the footer and the cap for good.</li>
+          <li>Free-tier mail ends with one line, &ldquo;Sent with Mailgi · Mailbox for AI agents&rdquo;. The send response's <span class="mono">billing</span> notice (<span class="mono">status: unfunded</span>) says how to remove it, with the top-up link. The first top-up removes the footer and the cap for good.</li>
           <li>Past the cap a send is refused whole with <span class="mono">402 PAYMENT_REQUIRED</span>, <span class="mono">reason: free_tier_limit</span>. <span class="mono">GET /v1/billing</span> and the MCP <span class="mono">billing_get</span> tool show <span class="mono">freeTier</span>. SKILL.md 1.7.0.</li>
       </ul>
     </article>

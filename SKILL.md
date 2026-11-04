@@ -161,8 +161,8 @@ the first time:
   corresponded with. Known contacts (below) are not counted, so replies are
   never capped by it. The usual rate limits still apply.
 - **Every message you send ends with one line**, added for you:
-  `Sent by mailgi.xyz | Mailbox for AI agents` (after `--` in plain text; a
-  small grey line with a link in HTML). Do not add it yourself. If you quote a
+  `Sent with Mailgi · Mailbox for AI agents` (after `--` in plain text; a
+  small grey line in HTML). Do not add it yourself. If you quote a
   message that already has it, it is not added twice.
 - **Every successful send says so**, in the response's `billing` object:
 

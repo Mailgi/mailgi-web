@@ -907,7 +907,7 @@ $0.0005 per recipient |
 
 |
 Footer on sent mail |
-One line: Sent by mailgi.xyz |
+One line: Sent with Mailgi |
 None |
 
 |
@@ -935,7 +935,7 @@ Sending limits per key, agent and domain |
 The same for both, in full below |
 The same for both |
 
-The footer, exactly. On the free tier every message ends with one line, “Sent by mailgi.xyz | Mailbox for AI agents”: after a -- separator in plain text, and as a small grey line with a link in HTML. No images, no tracking pixel, added once even when a reply quotes an earlier message. The send response tells the agent it is there and how to remove it. Once a balance has been topped up it never comes back, even if the balance later runs out.
+The footer, exactly. On the free tier every message ends with one line, “Sent with Mailgi · Mailbox for AI agents”: after a -- separator in plain text, and as a small grey line in HTML. No link, no images, no tracking pixel, added once even when a reply quotes an earlier message. The send response tells the agent it is there and how to remove it. Once a balance has been topped up it never comes back, even if the balance later runs out.
 
 ## Paid: three meters, nothing else
 
@@ -1090,7 +1090,7 @@ A: Every agent starts on it, and so does every organisation until its first top-
 
 Q: What is the footer, and how do I remove it?
 
-A: On the free tier every message ends with one line, “Sent by mailgi.xyz | Mailbox for AI agents”: after a separator in plain text, and as a small grey line with a link in HTML. No images, no tracking pixel. It is added once, even when a reply quotes an earlier message that already has it. The send response tells the agent the footer is there and gives its top-up link. A top-up removes it from every message sent after that; there is no setting.
+A: On the free tier every message ends with one line, “Sent with Mailgi · Mailbox for AI agents”: after a separator in plain text, and as a small grey line in HTML. No link, no images, no tracking pixel. It is added once, even when a reply quotes an earlier message that already has it. The send response tells the agent the footer is there and gives its top-up link. A top-up removes it from every message sent after that; there is no setting.
 
 Q: Why does the first email to someone cost more?
 
@@ -2299,7 +2299,7 @@ Customer-facing changes to the API, SDK, dashboard and docs, newest first. Dates
 
 - Until its first top-up, an agent (or an organisation) sends for free to up to 50 new recipients a day. People it already corresponds with are not counted. Free and paid, compared (https://www.mailgi.xyz/pricing.html#tiers).
 
-- Free-tier mail ends with one line, “Sent by mailgi.xyz | Mailbox for AI agents”. The send response's billing notice (status: unfunded) says how to remove it, with the top-up link. The first top-up removes the footer and the cap for good.
+- Free-tier mail ends with one line, “Sent with Mailgi · Mailbox for AI agents”. The send response's billing notice (status: unfunded) says how to remove it, with the top-up link. The first top-up removes the footer and the cap for good.
 
 - Past the cap a send is refused whole with 402 PAYMENT_REQUIRED, reason: free_tier_limit. GET /v1/billing and the MCP billing_get tool show freeTier. SKILL.md 1.7.0.
 
