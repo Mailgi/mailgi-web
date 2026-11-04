@@ -20,7 +20,10 @@
 <meta name="twitter:description" content="Give every AI agent its own real email address in one API call. Send, receive and read mail as JSON. Free inbound; your own domain with DKIM, SPF, DMARC." />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="stylesheet" href="/styles.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500&amp;display=swap" />
+<link rel="stylesheet" href="/home.css" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -120,297 +123,367 @@
 <script src="/consent.js" defer></script>
 </head>
 <body>
-<div style="min-height:100vh;display:flex;flex-direction:column">
 
-<nav class="nav shell">
-  <a class="brand" href="/">
-    <img src="/favicon.svg" alt="" width="26" height="26" />
-    <span>mailgi</span>
-  </a>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
-  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
-  <div class="nav-links">
-    <a href="/" aria-current="page">Product</a>
-    <a href="/agents.html">For agents</a>
-    <a href="/pricing.html">Pricing</a>
-    <div class="nav-group">
-      <a class="nav-group-trigger" href="/guides.html">Resources</a>
-      <div class="nav-menu-panel">
-        <a href="/guides.html">Guides</a>
-        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
-        <a href="/docs.html">Docs</a>
-        <a href="/mcp.html">MCP server</a>
-        <a href="/faq.html">FAQ</a>
-      </div>
+<header class="hn">
+  <div class="hn-inner">
+    <a class="hn-brand" href="/" aria-label="Mailgi home"><span class="hn-mark" aria-hidden="true"></span>mailgi</a>
+    <nav class="hn-links" aria-label="Main">
+      <a data-i="0" href="/" aria-current="page">Product</a>
+      <a data-i="1" href="/agents.html">For agents</a>
+      <a data-i="2" href="/pricing.html">Pricing</a>
+      <a data-i="3" href="/mcp.html">MCP</a>
+      <a data-i="4" href="/guides.html">Guides</a>
+      <a data-i="5" href="/vs-resend-postmark-mailgun.html">Compare</a>
+      <a data-i="6" href="/faq.html">FAQ</a>
+      <a data-i="7" href="/docs.html">Docs</a>
+      <details class="hn-more">
+        <summary>More</summary>
+        <div class="hn-menu">
+          <a data-i="0" href="/">Product</a>
+          <a data-i="1" href="/agents.html">For agents</a>
+          <a data-i="2" href="/pricing.html">Pricing</a>
+          <a data-i="3" href="/mcp.html">MCP</a>
+          <a data-i="4" href="/guides.html">Guides</a>
+          <a data-i="5" href="/vs-resend-postmark-mailgun.html">Compare</a>
+          <a data-i="6" href="/faq.html">FAQ</a>
+          <a data-i="7" href="/docs.html">Docs</a>
+        </div>
+      </details>
+    </nav>
+    <div class="hn-end">
+      <a class="hn-gh" href="https://github.com/Mailgi">github</a>
+      <a class="hn-cta" href="https://app.mailgi.xyz"><span class="long">Open dashboard</span><span class="short">Dashboard</span></a>
     </div>
   </div>
-  <div class="nav-end">
-    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
-      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
-    </a>
-    <span class="nav-note">receiving is free</span>
-    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
-  </div>
-</nav>
+</header>
 
-<main style="flex:1">
+<main>
 
-  <section class="hero shell">
-    <div class="kicker reveal" style="margin-bottom:26px">Email infrastructure for AI agents</div>
-    <h1 class="reveal reveal-1" style="max-width:980px">Email for <em class="accent">AI Agents</em></h1>
-    <div class="hero-grid reveal reveal-2">
-      <p class="lede" style="max-width:480px">Real inboxes. Real deliverability. One REST API. Your agents send and receive as your company, with DKIM, SPF and DMARC quietly handled for you.</p>
-      <div class="hero-actions">
-        <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
-        <a class="link-serif" href="/agents.html">or let your agent set itself up →</a>
+  <section class="frame hero">
+    <div class="eyebrow"><span class="dot" aria-hidden="true"></span>Email infrastructure for AI agents</div>
+    <h1>Email for <span class="dim">AI agents.</span></h1>
+    <p class="lede">Real inboxes, real deliverability, one REST API. Agents send and receive as your company. DKIM, SPF and DMARC are handled for you.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="https://app.mailgi.xyz">Start free</a>
+      <a class="btn" href="/agents.html">Let your agent set itself up →</a>
+    </div>
+    <div class="hero-code">
+      <div class="tabs">
+        <input type="radio" name="hero-tab" id="t-curl" checked />
+        <input type="radio" name="hero-tab" id="t-py" />
+        <input type="radio" name="hero-tab" id="t-ts" />
+        <div class="tabs-bar">
+          <label for="t-curl">curl</label>
+          <label for="t-py">Python</label>
+          <label for="t-ts">TypeScript</label>
+          <span class="tabs-meta"><span>no signup form</span><button class="copy" type="button" hidden>copy</button></span>
+        </div>
+<div class="panel" id="p-curl"><pre class="code"># one POST, no signup form
+curl -X POST https://api.mailgi.xyz/v1/agents/register \
+  -d '{"label":"my-agent"}'
+# =&gt; { "emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_…" }
+
+# send
+curl -X POST https://api.mailgi.xyz/v1/mail/send \
+  -H "Authorization: Bearer $KEY" \
+  -d '{"to":["alice@example.com"],"subject":"Hi","textBody":"Hello"}'
+
+# read the inbox
+curl https://api.mailgi.xyz/v1/mail -H "Authorization: Bearer $KEY"</pre></div>
+<div class="panel" id="p-py"><pre class="code">import requests
+
+API = "https://api.mailgi.xyz/v1"
+
+# one POST, no signup form
+agent = requests.post(f"{API}/agents/register", json={"label": "my-agent"}).json()
+# =&gt; {"emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_…"}
+
+auth = {"Authorization": f"Bearer {agent['apiKey']}"}
+
+requests.post(f"{API}/mail/send", headers=auth, json={
+    "to": ["alice@example.com"], "subject": "Hi", "textBody": "Hello",
+})
+
+inbox = requests.get(f"{API}/mail", headers=auth).json()</pre></div>
+<div class="panel" id="p-ts"><pre class="code">// npm install @mailgi/mailgi
+import { AgentMailboxClient } from '@mailgi/mailgi';
+
+const client = AgentMailboxClient.withApiKey(
+  'https://api.mailgi.xyz',
+  process.env.MAILGI_API_KEY,
+);
+
+await client.mail.send({
+  to: ['alice@example.com'],
+  subject: 'Hi',
+  textBody: 'Hello from my agent.',
+});
+
+const { messages } = await client.mail.list({ limit: 20, sort: 'desc' });</pre></div>
       </div>
     </div>
   </section>
 
-  <section class="section shell illo" aria-labelledby="illo-title">
-    <h2 id="illo-title" style="margin-bottom:14px">Humans and agents, <em class="accent">same inbox</em></h2>
-    <p class="lede" style="max-width:640px;margin-bottom:32px">Email is the one network everyone already shares. Your agents use it to reach customers, teammates and services — and each other — with no special integration for any of them.</p>
-
-    <div class="illo-stage" role="img" aria-label="A Mailgi agent at the centre of an email exchange with a customer, a teammate, a sign-up service and another agent.">
-      <iframe class="illo-frame" src="/embeds/constellation.html" title="Animated illustration: a Mailgi agent emailing a customer, a teammate, a sign-up service and another agent." loading="lazy" tabindex="-1"></iframe>
-    </div>
-
-    <ul class="illo-cases">
-      <li><span class="illo-role">Support</span><span class="mono">“Re: refund on order #8842 — sorted, thanks”</span></li>
-      <li><span class="illo-role">Scheduling</span><span class="mono">“Thursday 3pm works for the call”</span></li>
-      <li><span class="illo-role">Sign-up &amp; verification</span><span class="mono">“Your verification code is 481920”</span></li>
-      <li><span class="illo-role">Agent-to-agent</span><span class="mono">“Handoff — pricing data attached ✓”</span></li>
-    </ul>
-  </section>
-
-  <script>
-  /* The illustration is decorative. The list above carries the same information
-     and is server-rendered, so crawlers and reduced-motion visitors lose nothing.
-     This only sizes the same-origin iframe to what its player expects: the
-     player contain-fits a fixed-size scene canvas and reserves 44px for a
-     (hidden) playback bar, so height = width * canvasH/canvasW + 44. Reading
-     the canvas size live keeps this right if the mobile layout changes shape.
-     A no-op under reduced motion, where CSS has already hidden the stage. */
-  (function () {
-    var f = document.querySelector('.illo-frame');
-    if (!f) return;
-    var BAR = 44, tries = 0;
-    function fit() {
-      try {
-        var d = f.contentWindow.document;
-        var svg = d.querySelector('[data-om-starter] svg');
-        var W = +(svg && svg.getAttribute('width')) || 1920;
-        var H = +(svg && svg.getAttribute('height')) || 1080;
-        f.style.height = Math.round(f.clientWidth * H / W + BAR) + 'px';
-        return !!svg;
-      } catch (e) { return false; }
-    }
-    // The engine mounts the scene asynchronously (it compiles it in-page), so
-    // retry briefly until the canvas exists, then settle.
-    function settle() { if (!fit() && tries++ < 25) setTimeout(settle, 200); }
-    f.addEventListener('load', settle);
-    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(fit, 120); });
-  })();
-  </script>
-
-  <section class="dark" style="border-top:1px solid var(--rule)">
-    <div class="shell split">
-      <div class="quote">
-        <div class="pull">“An agent registers itself in one POST, gets a handle like <span class="mono">buzzing-falcon@mailgi.xyz</span>, and starts sending.”</div>
-        <div class="caps-note">No OAuth · No dashboard · No feelings</div>
-      </div>
-      <div class="code codeblock">
-        <div class="c"># one POST, no signup form</div>
-        <div>curl -X POST api.mailgi.xyz/v1/agents/register \</div>
-        <div>&nbsp;&nbsp;-d '{"label":"my-agent"}'</div>
-        <div class="c" style="margin-top:10px"># =&gt;</div>
-        <div class="v">{ "emailAddress": "buzzing-falcon@mailgi.xyz",</div>
-        <div class="v">&nbsp;&nbsp;"apiKey": "amb_…" }</div>
-      </div>
+  <section class="frame works" aria-label="Works with">
+    <div class="works-label eyebrow">Works with</div>
+    <div class="works-track-wrap">
+      <ul class="works-track">
+        <li>Claude Code</li>
+        <li>Cursor</li>
+        <li>Claude Desktop</li>
+        <li>OpenAI Agents SDK</li>
+        <li>LangChain</li>
+        <li>CrewAI</li>
+        <li>Vercel AI SDK</li>
+        <li>n8n</li>
+        <li>OpenClaw</li>
+        <li>any system prompt</li>
+      </ul>
     </div>
   </section>
 
-  <section class="section shell">
-    <h2 style="margin-bottom:40px">Zero to sending, <em class="accent">in three steps</em></h2>
-    <div class="rows">
-      <div class="row">
-        <div class="numeral">01</div>
+  <section class="frame split">
+    <div class="split-text">
+      <div class="eyebrow">[01] Shared network</div>
+      <h2 class="h2">Humans and agents, <span class="dim">same inbox.</span></h2>
+      <p class="body">Everyone already has email. Agents use it to reach customers, teammates, services and each other, with no integration on the other side.</p>
+      <blockquote class="pull">An agent registers itself in one POST, gets a handle like <span class="mono">buzzing-falcon@mailgi.xyz</span>, and starts sending.</blockquote>
+      <div class="caps-note">No OAuth · No dashboard · No feelings</div>
+    </div>
+    <div class="split-side inbox" aria-label="Example inbox">
+      <div class="inbox-head">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="addr">buzzing-falcon@mailgi.xyz</span>
+        <span class="meta">GET /v1/mail · example</span>
+      </div>
+      <ol id="inbox">
+        <li class="msg"><div><div class="msg-from">support · dana@northwind.co</div><div class="msg-subj">Re: refund on order #8842 — sorted, thanks</div></div><time>41s</time></li>
+        <li class="msg"><div><div class="msg-from">scheduling · li.wei@fabrikam.io</div><div class="msg-subj">Thursday 3pm works for the call</div></div><time>1m</time></li>
+        <li class="msg"><div><div class="msg-from">verification · no-reply@toolhub.dev</div><div class="msg-subj">Your verification code is 481920</div></div><time>2m</time></li>
+        <li class="msg"><div><div class="msg-from">agent-to-agent · quiet-otter@mailgi.xyz</div><div class="msg-subj">Handoff — pricing data attached ✓</div></div><time>3m</time></li>
+        <li class="msg"><div><div class="msg-from">support · sam@contoso.com</div><div class="msg-subj">Password reset link not arriving</div></div><time>3m</time></li>
+      </ol>
+<pre class="inbox-json" id="inbox-json" aria-hidden="true"><span class="c"># GET /v1/mail?limit=1</span>
+{
+  "from": "dana@northwind.co",
+  "to": "buzzing-falcon@mailgi.xyz",
+  "subject": "Re: refund on order #8842 — sorted, thanks",
+  "seen": false
+}</pre>
+    </div>
+  </section>
+
+  <section class="frame">
+    <div class="sec-head">
+      <div class="eyebrow">[02] Setup</div>
+      <h2 class="h2">Zero to sending <span class="dim">in three steps.</span></h2>
+    </div>
+    <div class="cells">
+      <div class="cell">
+        <span class="step-n">01</span>
         <h3>Attach your domain</h3>
-        <p class="body">Add mail.yourdomain.com in the dashboard, publish the DNS records we give you, and watch each one verify — live, record by record.</p>
+        <p>Add mail.yourdomain.com, publish the DNS records we generate, and watch each one verify live.</p>
       </div>
-      <div class="row">
-        <div class="numeral">02</div>
+      <div class="cell">
+        <span class="step-n">02</span>
         <h3>Create inboxes</h3>
-        <p class="body">support@, billing@, ops@ — each a real, deliverable mailbox with one API key, shown once at creation.</p>
+        <p>support@, billing@, ops@. Each is a real, deliverable mailbox with its own API key, shown once.</p>
       </div>
-      <div class="row">
-        <div class="numeral">03</div>
+      <div class="cell">
+        <span class="step-n">03</span>
         <h3>Hand keys to agents</h3>
-        <p class="body">Agents send, receive and read mail over REST with that key. No OAuth flows, no IMAP client code, no browser.</p>
+        <p>Agents send, receive and read over REST. No OAuth, no IMAP client, no browser.</p>
       </div>
     </div>
   </section>
 
-  <section class="rule-top surface">
-    <div class="section shell">
-      <h2 style="margin-bottom:56px">Everything a mailbox should do, <em class="accent">over HTTP</em></h2>
-      <div class="grid-3">
-        <div>
-          <div class="cap-label">POST /v1/mail/send</div>
-          <h3>Send</h3>
-          <p class="small">Plain text or HTML, from any of your inboxes.</p>
-        </div>
-        <div>
-          <div class="cap-label">← inbound</div>
-          <h3>Receive</h3>
-          <p class="small">Mail from any sender lands in the inbox, readable over the API seconds later.</p>
-        </div>
-        <div>
-          <div class="cap-label">GET /v1/mail</div>
-          <h3>Read &amp; list</h3>
-          <p class="small">Page through the inbox and fetch messages as clean JSON — no MIME parsing on your side.</p>
-        </div>
-        <div>
-          <div class="cap-label">DKIM · SPF · DMARC</div>
-          <h3>Deliverability handled</h3>
-          <p class="small">Set up per domain, so your agents' mail lands in inboxes, not spam.</p>
-        </div>
-        <div>
-          <div class="cap-label">@you or @mailgi.xyz</div>
-          <h3>Your domain or ours</h3>
-          <p class="small">Start instantly on a free handle; move to your own domain when ready.</p>
-        </div>
-        <div>
-          <div class="cap-label">100 / day / key</div>
-          <h3>Rate-limited by design</h3>
-          <p class="small">Keeps the platform clean and your domain reputation safe.</p>
-        </div>
-      </div>
+  <section class="frame">
+    <div class="sec-head">
+      <div class="eyebrow">[03] API</div>
+      <h2 class="h2">A whole mailbox, <span class="dim">over HTTP.</span></h2>
+    </div>
+    <div class="cells" style="--min:320px">
+      <div class="cell feat"><span class="tag">POST /v1/mail/send</span><h3>Send</h3><p>Plain text or HTML, from any of your inboxes.</p></div>
+      <div class="cell feat"><span class="tag">← inbound</span><h3>Receive</h3><p>Mail from any sender is readable over the API seconds after it lands.</p></div>
+      <div class="cell feat"><span class="tag">GET /v1/mail</span><h3>Read &amp; list</h3><p>Page through the inbox as clean JSON. No MIME parsing on your side.</p></div>
+      <div class="cell feat"><span class="tag">DKIM · SPF · DMARC</span><h3>Deliverability handled</h3><p>Configured per domain, so agent mail lands in inboxes, not spam.</p></div>
+      <div class="cell feat"><span class="tag">@you or @mailgi.xyz</span><h3>Your domain or ours</h3><p>Start on a free handle today. Move to your own domain when ready.</p></div>
+      <div class="cell feat"><span class="tag">100 / day / key</span><h3>Rate-limited by design</h3><p>Keeps the platform clean and your domain reputation intact.</p></div>
     </div>
   </section>
 
-  <section class="rule-top">
-    <div class="section shell">
-      <h2 style="margin-bottom:12px">What agents <em class="accent">do</em> with an inbox</h2>
-      <p class="body" style="font-size:16px;margin-bottom:48px;max-width:560px">Email is a stable, verifiable identity. Once an agent has one, whole categories of work open up.</p>
-      <div class="tiles">
-        <div class="tile">
-          <span class="numeral">01</span>
-          <h3><a href="/agent-support-inbox.html">Customer support</a></h3>
-          <p class="small" style="font-size:14px">An agent triages support@, reads every message as JSON, and replies in context — around the clock.</p>
-        </div>
-        <div class="tile">
-          <span class="numeral">02</span>
-          <h3>Scheduling</h3>
-          <p class="small" style="font-size:14px">Back-and-forth time negotiation over real email threads, with humans who never leave their inbox.</p>
-        </div>
-        <div class="tile">
-          <span class="numeral">03</span>
-          <h3><a href="/agent-email-verification.html">Signups &amp; verifications</a></h3>
-          <p class="small" style="font-size:14px">A real address means an agent can register for tools and receive verification codes on its own.</p>
-        </div>
-        <div class="tile">
-          <span class="numeral">04</span>
-          <h3><a href="/agent-to-agent-email.html">Agent-to-agent</a></h3>
-          <p class="small" style="font-size:14px">Agents coordinate work over @mailgi.xyz handles — free, fully auditable, and readable by a human when something breaks.</p>
-        </div>
-      </div>
+  <section class="frame">
+    <div class="sec-head">
+      <div class="eyebrow">[04] Use cases</div>
+      <h2 class="h2">What agents do <span class="dim">with an inbox.</span></h2>
+      <p class="body">An address is a stable, verifiable identity. Give an agent one and whole categories of work open up.</p>
+    </div>
+    <div class="cells" style="--min:260px">
+      <a class="cell case" href="/agent-support-inbox.html"><span class="case-n"><span>01</span><span aria-hidden="true">↗</span></span><h3>Customer support</h3><p>Triage support@, read every message as JSON, reply in context around the clock.</p></a>
+      <a class="cell case" href="/agents.html"><span class="case-n"><span>02</span><span aria-hidden="true">↗</span></span><h3>Scheduling</h3><p>Negotiate times over real threads with people who never leave their inbox.</p></a>
+      <a class="cell case" href="/agent-email-verification.html"><span class="case-n"><span>03</span><span aria-hidden="true">↗</span></span><h3>Signups &amp; verifications</h3><p>Register for tools and receive verification codes without a human.</p></a>
+      <a class="cell case" href="/agent-to-agent-email.html"><span class="case-n"><span>04</span><span aria-hidden="true">↗</span></span><h3>Agent-to-agent</h3><p>Coordinate over @mailgi.xyz handles. Free, auditable, and readable by a human when something breaks.</p></a>
     </div>
   </section>
 
-  <section class="rule-top surface">
-    <div class="section shell">
-      <h2 style="margin-bottom:12px">Guides, <em class="accent">with working code</em></h2>
-      <p class="body" style="font-size:16px;margin-bottom:40px;max-width:560px">Every sample was run against the live API before it was published.</p>
-      <ul class="related-list">
+  <section class="frame split" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">
+    <div class="split-text">
+      <div class="eyebrow">[05] Guides</div>
+      <h2 class="h2">Guides <span class="dim">with working code.</span></h2>
+      <p class="body">Every sample ran against the live API before it was published.</p>
+      <a class="more-link" href="/guides.html">all guides →</a>
+    </div>
+    <div class="split-side">
+      <ul class="list">
         <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
         <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
         <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
         <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
         <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
-        <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
         <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
-        <li><a href="/docs.html">API docs: REST, SKILL.md, OpenAPI</a></li>
-        <li><a href="/faq.html">FAQ: email for AI agents</a></li>
+        <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
       </ul>
     </div>
   </section>
 
-  <section class="rule-top">
-    <div class="section-sm shell inline-split">
-      <div style="flex:1;min-width:280px">
-        <h2 style="font-size:32px;margin-bottom:8px">Works with your <em class="accent">agent stack</em></h2>
-        <p class="body">Give your agent an inbox in one paste — point it at SKILL.md and it onboards itself, or connect the <a href="/mcp.html">hosted MCP server</a>.</p>
-      </div>
-      <div class="chips">
-        <span class="chip">Claude Code</span>
-        <span class="chip">OpenClaw</span>
-        <span class="chip">Cursor</span>
-        <span class="chip">any system prompt</span>
-        <a class="link-serif" style="font-size:16px;margin-left:8px" href="/agents.html">see setups →</a>
-      </div>
+  <section class="frame split" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))">
+    <div class="split-text">
+      <div class="eyebrow">[06] FAQ</div>
+      <h2 class="h2">Questions, <span class="dim">answered.</span></h2>
+      <a class="more-link" href="/faq.html">all questions →</a>
+    </div>
+    <div class="split-side faq">
+      <details>
+        <summary><span class="numeral">01</span><span class="q">How does an AI agent get an email address?</span><span class="mark"></span></summary>
+        <p class="a">One POST request to <span class="mono">api.mailgi.xyz/v1/agents/register</span> with an optional label. The response returns a friendly address like <span class="mono">buzzing-falcon@mailgi.xyz</span> and an API key shown once. No signup form, no OAuth flow.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">02</span><span class="q">Can agents send as our own company domain instead of @mailgi.xyz?</span><span class="mark"></span></summary>
+        <p class="a">Yes. Attach a domain in the dashboard and publish the DNS records it shows you — Mailgi generates them all for you, DKIM, SPF and a recommended DMARC, and verifies each one as it goes live. Once the domain is verified, generate a registration token so agents can self-register onto it with a chosen address like <span class="mono">support@yourdomain.com</span>.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">03</span><span class="q">What does it cost?</span><span class="mark"></span></summary>
+        <p class="a">Receiving mail from any sender is free, and so is mail between your own agents. Until its first top-up an agent is on the free tier: it can write to up to 50 new recipients a day at no charge, and its mail carries Mailgi branding. After that, mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus a one-time $0.02 the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top up from $5 by card, with no account needed. Sending is also rate-limited: 100 a day per API key and 300 a day per agent, with per-organisation caps that grow with domain age. Full detail on the <a href="/pricing.html">pricing page</a>.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">04</span><span class="q">Is there a machine-readable spec an AI agent can read to onboard itself?</span><span class="mark"></span></summary>
+        <p class="a">Yes — <a href="/SKILL.md">SKILL.md</a> is a plain-language description of the entire API, written specifically for an AI agent to read and immediately start sending and receiving mail. It is small enough to fit in any context window.</p>
+      </details>
     </div>
   </section>
 
-  <section class="rule-top">
-    <div class="section shell">
-      <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
-      <div class="faq">
-        <details>
-          <summary><span class="numeral">01</span><span class="q">How does an AI agent get an email address?</span><span class="mark"></span></summary>
-          <p class="a">One POST request to <span class="mono">api.mailgi.xyz/v1/agents/register</span> with an optional label. The response returns a friendly address like <span class="mono">buzzing-falcon@mailgi.xyz</span> and an API key shown once. No signup form, no OAuth flow.</p>
-        </details>
-        <details>
-          <summary><span class="numeral">02</span><span class="q">Can agents send as our own company domain instead of @mailgi.xyz?</span><span class="mark"></span></summary>
-          <p class="a">Yes. Attach a domain in the dashboard and publish the DNS records it shows you — Mailgi generates them all for you, DKIM, SPF and a recommended DMARC, and verifies each one as it goes live. Once the domain is verified, generate a registration token so agents can self-register onto it with a chosen address like <span class="mono">support@yourdomain.com</span>.</p>
-        </details>
-        <details>
-          <summary><span class="numeral">03</span><span class="q">What does it cost?</span><span class="mark"></span></summary>
-          <p class="a">Receiving mail from any sender is free, and so is mail between your own agents. Until its first top-up an agent is on the free tier: it can write to up to 50 new recipients a day at no charge, and its mail carries Mailgi branding. After that, mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus a one-time $0.02 the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top up from $5 by card, with no account needed. Sending is also rate-limited: 100 a day per API key and 300 a day per agent, with per-organisation caps that grow with domain age. Full detail on the <a href="/pricing.html">pricing page</a>.</p>
-        </details>
-        <details>
-          <summary><span class="numeral">04</span><span class="q">Is there a machine-readable spec an AI agent can read to onboard itself?</span><span class="mark"></span></summary>
-          <p class="a">Yes — <a href="/SKILL.md">SKILL.md</a> is a plain-language description of the entire API, written specifically for an AI agent to read and immediately start sending and receiving mail. It is small enough to fit in any context window.</p>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <section class="rule-top">
-    <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
-      <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">Receiving is free.</h2>
-      <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:460px">So is mail between your agents, and writing to 50 new people a day on the free tier. After that, $0.0005 a recipient, plus two cents to introduce yourself. No subscription, no card to start.</p>
-      <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
-    </div>
+  <section class="frame cta">
+      <h2>Receiving is free.</h2>
+      <p>So is mail between your agents, and writing to 50 new people a day. After that, $0.0005 a recipient plus two cents to introduce yourself. No subscription, no card to start.</p>
+      <a class="btn btn-solid" href="https://app.mailgi.xyz">Open the dashboard →</a>
   </section>
 
 </main>
 
-<footer class="footer">
-  <div class="shell footer-inner">
-    <span class="footer-brand">mailgi</span>
-    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
-      <span class="dot"></span><span class="status-text">system status</span>
-    </a>
+<footer class="frame hf">
+  <div class="hf-top">
+    <span class="hf-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown"><span class="dot"></span><span class="status-text">system status</span></a>
+  </div>
+  <nav class="hf-links" aria-label="Footer">
+    <a href="https://app.mailgi.xyz">dashboard</a>
+    <a href="/guides.html">guides</a>
+    <a href="/vs-resend-postmark-mailgun.html">compare</a>
+    <a href="/docs.html">docs</a>
+    <a href="/faq.html">faq</a>
+    <a href="/changelog.html">changelog</a>
+    <a href="/mcp.html">mcp</a>
+    <a href="/SKILL.md">SKILL.md</a>
+    <a href="https://github.com/Mailgi">github</a>
+    <a href="/about.html">about</a>
+    <a href="/security.html">security</a>
+    <a href="/privacy.html">privacy</a>
+  </nav>
+  <div class="hf-base">
     <span>built for agents, not humans</span>
-    <span class="footer-end">
-      <a href="https://app.mailgi.xyz">dashboard</a>
-      <a href="/guides.html">guides</a>
-      <a href="/vs-resend-postmark-mailgun.html">compare</a>
-      <a href="/docs.html">docs</a>
-      <a href="/faq.html">faq</a>
-      <a href="/changelog.html">changelog</a>
-      <a href="/mcp.html">mcp</a>
-      <a href="/SKILL.md">SKILL.md</a>
-      <a href="https://github.com/Mailgi">github</a>
-      <a href="/about.html">about</a>
-      <a href="/security.html">security</a>
-      <a href="/privacy.html">privacy</a>
-      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
-    </span>
+    <span>support: hello@mailgi.xyz</span>
   </div>
 </footer>
-</div>
+
+<script>
+/* Progressive enhancement only. Every word above is in the served HTML; this
+   adds code colouring, a copy button, the marquee loop and the example inbox
+   rotation. Without JS the page is complete and static. */
+(function () {
+  // Code colouring: comments grey, results green.
+  document.querySelectorAll('.tabs .code').forEach(function (pre) {
+    pre.innerHTML = pre.textContent.split('\n').map(function (line) {
+      var s = line.trim(), esc = line.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      if (/^(#|\/\/)/.test(s) && s.indexOf('=>') === -1) return '<span class="c">' + esc + '</span>';
+      if (s.indexOf('=>') !== -1) return '<span class="v">' + esc + '</span>';
+      return esc;
+    }).join('\n');
+  });
+
+  // Copy the visible tab.
+  var copy = document.querySelector('.copy');
+  if (copy && navigator.clipboard) {
+    copy.hidden = false;
+    copy.addEventListener('click', function () {
+      var on = document.querySelector('.tabs input:checked');
+      var pre = on && document.getElementById('p-' + on.id.slice(2));
+      if (!pre) return;
+      navigator.clipboard.writeText(pre.textContent).then(function () {
+        copy.textContent = 'copied';
+        clearTimeout(copy._t); copy._t = setTimeout(function () { copy.textContent = 'copy'; }, 1400);
+      });
+    });
+  }
+
+  // Marquee: duplicate the list once (hidden from assistive tech) so it loops.
+  var track = document.querySelector('.works-track');
+  if (track) {
+    Array.prototype.slice.call(track.children).forEach(function (li) {
+      var c = li.cloneNode(true); c.setAttribute('aria-hidden', 'true'); track.appendChild(c);
+    });
+    track.classList.add('is-moving');
+  }
+
+  // Example inbox: a new message arrives every few seconds.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var list = document.getElementById('inbox'), json = document.getElementById('inbox-json');
+  if (!list || !json) return;
+  var POOL = [
+    ['support', 'dana@northwind.co', 'Re: refund on order #8842 — sorted, thanks'],
+    ['scheduling', 'li.wei@fabrikam.io', 'Thursday 3pm works for the call'],
+    ['verification', 'no-reply@toolhub.dev', 'Your verification code is 481920'],
+    ['agent-to-agent', 'quiet-otter@mailgi.xyz', 'Handoff — pricing data attached ✓'],
+    ['support', 'sam@contoso.com', 'Password reset link not arriving'],
+    ['billing', 'ap@globex.net', 'Invoice INV-2207 received'],
+    ['agent-to-agent', 'amber-heron@mailgi.xyz', 'Triage done: 14 tickets filed to /open'],
+    ['verification', 'accounts@deploybox.app', 'Confirm your email address'],
+    ['scheduling', 'mara@initech.com', 'Can we push to Friday morning?']
+  ];
+  var t0 = Date.now(), i = 5;
+  var items = POOL.slice(0, 5).map(function (m, k) { return { m: m, at: t0 - (k + 1) * 41000 }; });
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function age(at) {
+    var s = Math.max(0, Math.round((Date.now() - at) / 1000));
+    return s < 4 ? 'now' : s < 60 ? s + 's' : Math.round(s / 60) + 'm';
+  }
+  function render() {
+    list.innerHTML = items.map(function (it, k) {
+      var fresh = k === 0 && Date.now() - it.at < 2500;
+      return '<li class="msg' + (fresh ? ' fresh' : '') + '"><div><div class="msg-from">' + it.m[0] + ' · ' + it.m[1] +
+        '</div><div class="msg-subj">' + esc(it.m[2]) + '</div></div><time>' + age(it.at) + '</time></li>';
+    }).join('');
+    var top = items[0].m;
+    json.innerHTML = '<span class="c"># GET /v1/mail?limit=1</span>\n{\n  "from": "' + top[1] + '",\n  "to": "buzzing-falcon@mailgi.xyz",\n  "subject": "' + esc(top[2]).replace(/"/g, '\\"') + '",\n  "seen": false\n}';
+  }
+  render();
+  setInterval(function () {
+    items.unshift({ m: POOL[i++ % POOL.length], at: Date.now() });
+    items = items.slice(0, 5);
+    render();
+  }, 3200);
+  setInterval(render, 1000);
+})();
+</script>
 <script src="/status.js" defer></script>
 </body>
 </html>

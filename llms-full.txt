@@ -11,113 +11,218 @@ Source: https://www.mailgi.xyz/ (updated 2026-11-04)
 
 Email infrastructure for AI agents
 
-# Email for AI Agents
+# Email for AI agents.
 
-Real inboxes. Real deliverability. One REST API. Your agents send and receive as your company, with DKIM, SPF and DMARC quietly handled for you.
+Real inboxes, real deliverability, one REST API. Agents send and receive as your company. DKIM, SPF and DMARC are handled for you.
 
-## Humans and agents, same inbox
+curl
+Python
+TypeScript
+no signup formcopy
 
-Email is the one network everyone already shares. Your agents use it to reach customers, teammates and services — and each other — with no special integration for any of them.
+```
+# one POST, no signup form
+curl -X POST https://api.mailgi.xyz/v1/agents/register \
+  -d '{"label":"my-agent"}'
+# => { "emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_…" }
 
-- Support“Re: refund on order #8842 — sorted, thanks”
+# send
+curl -X POST https://api.mailgi.xyz/v1/mail/send \
+  -H "Authorization: Bearer $KEY" \
+  -d '{"to":["alice@example.com"],"subject":"Hi","textBody":"Hello"}'
 
-- Scheduling“Thursday 3pm works for the call”
+# read the inbox
+curl https://api.mailgi.xyz/v1/mail -H "Authorization: Bearer $KEY"
+```
 
-- Sign-up & verification“Your verification code is 481920”
+```
+import requests
 
-- Agent-to-agent“Handoff — pricing data attached ✓”
+API = "https://api.mailgi.xyz/v1"
 
-“An agent registers itself in one POST, gets a handle like buzzing-falcon@mailgi.xyz, and starts sending.”
+# one POST, no signup form
+agent = requests.post(f"{API}/agents/register", json={"label": "my-agent"}).json()
+# => {"emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_…"}
+
+auth = {"Authorization": f"Bearer {agent['apiKey']}"}
+
+requests.post(f"{API}/mail/send", headers=auth, json={
+    "to": ["alice@example.com"], "subject": "Hi", "textBody": "Hello",
+})
+
+inbox = requests.get(f"{API}/mail", headers=auth).json()
+```
+
+```
+// npm install @mailgi/mailgi
+import { AgentMailboxClient } from '@mailgi/mailgi';
+
+const client = AgentMailboxClient.withApiKey(
+  'https://api.mailgi.xyz',
+  process.env.MAILGI_API_KEY,
+);
+
+await client.mail.send({
+  to: ['alice@example.com'],
+  subject: 'Hi',
+  textBody: 'Hello from my agent.',
+});
+
+const { messages } = await client.mail.list({ limit: 20, sort: 'desc' });
+```
+
+Works with
+
+- Claude Code
+
+- Cursor
+
+- Claude Desktop
+
+- OpenAI Agents SDK
+
+- LangChain
+
+- CrewAI
+
+- Vercel AI SDK
+
+- n8n
+
+- OpenClaw
+
+- any system prompt
+
+[01] Shared network
+
+## Humans and agents, same inbox.
+
+Everyone already has email. Agents use it to reach customers, teammates, services and each other, with no integration on the other side.
+An agent registers itself in one POST, gets a handle like buzzing-falcon@mailgi.xyz, and starts sending.
 
 No OAuth · No dashboard · No feelings
 
-# one POST, no signup form
+buzzing-falcon@mailgi.xyz
+GET /v1/mail · example
 
-curl -X POST api.mailgi.xyz/v1/agents/register \
+-
 
--d '{"label":"my-agent"}'
+support · dana@northwind.co
+Re: refund on order #8842 — sorted, thanks41s
 
-# =>
+-
 
-{ "emailAddress": "buzzing-falcon@mailgi.xyz",
+scheduling · li.wei@fabrikam.io
+Thursday 3pm works for the call1m
 
-"apiKey": "amb_…" }
+-
 
-## Zero to sending, in three steps
+verification · no-reply@toolhub.dev
+Your verification code is 4819202m
+
+-
+
+agent-to-agent · quiet-otter@mailgi.xyz
+Handoff — pricing data attached ✓3m
+
+-
+
+support · sam@contoso.com
+Password reset link not arriving3m
+
+# GET /v1/mail?limit=1
+{
+"from": "dana@northwind.co",
+"to": "buzzing-falcon@mailgi.xyz",
+"subject": "Re: refund on order #8842 — sorted, thanks",
+"seen": false
+}
+
+[02] Setup
+
+## Zero to sending in three steps.
+
+01
 
 ### Attach your domain
 
-Add mail.yourdomain.com in the dashboard, publish the DNS records we give you, and watch each one verify — live, record by record.
+Add mail.yourdomain.com, publish the DNS records we generate, and watch each one verify live.
+
+02
 
 ### Create inboxes
 
-support@, billing@, ops@ — each a real, deliverable mailbox with one API key, shown once at creation.
+support@, billing@, ops@. Each is a real, deliverable mailbox with its own API key, shown once.
+
+03
 
 ### Hand keys to agents
 
-Agents send, receive and read mail over REST with that key. No OAuth flows, no IMAP client code, no browser.
+Agents send, receive and read over REST. No OAuth, no IMAP client, no browser.
 
-## Everything a mailbox should do, over HTTP
+[03] API
+
+## A whole mailbox, over HTTP.
 
 POST /v1/mail/send
 
 ### Send
-
 Plain text or HTML, from any of your inboxes.
 
 ← inbound
 
 ### Receive
-
-Mail from any sender lands in the inbox, readable over the API seconds later.
+Mail from any sender is readable over the API seconds after it lands.
 
 GET /v1/mail
 
 ### Read & list
-
-Page through the inbox and fetch messages as clean JSON — no MIME parsing on your side.
+Page through the inbox as clean JSON. No MIME parsing on your side.
 
 DKIM · SPF · DMARC
 
 ### Deliverability handled
-
-Set up per domain, so your agents' mail lands in inboxes, not spam.
+Configured per domain, so agent mail lands in inboxes, not spam.
 
 @you or @mailgi.xyz
 
 ### Your domain or ours
-
-Start instantly on a free handle; move to your own domain when ready.
+Start on a free handle today. Move to your own domain when ready.
 
 100 / day / key
 
 ### Rate-limited by design
+Keeps the platform clean and your domain reputation intact.
 
-Keeps the platform clean and your domain reputation safe.
+[04] Use cases
 
-## What agents do with an inbox
+## What agents do with an inbox.
 
-Email is a stable, verifiable identity. Once an agent has one, whole categories of work open up.
+An address is a stable, verifiable identity. Give an agent one and whole categories of work open up.
 
-### Customer support (https://www.mailgi.xyz/agent-support-inbox.html)
+01↗
 
-An agent triages support@, reads every message as JSON, and replies in context — around the clock.
+### Customer support
+Triage support@, read every message as JSON, reply in context around the clock.
+02↗
 
 ### Scheduling
+Negotiate times over real threads with people who never leave their inbox.
+03↗
 
-Back-and-forth time negotiation over real email threads, with humans who never leave their inbox.
+### Signups & verifications
+Register for tools and receive verification codes without a human.
+04↗
 
-### Signups & verifications (https://www.mailgi.xyz/agent-email-verification.html)
+### Agent-to-agent
+Coordinate over @mailgi.xyz handles. Free, auditable, and readable by a human when something breaks.
 
-A real address means an agent can register for tools and receive verification codes on its own.
+[05] Guides
 
-### Agent-to-agent (https://www.mailgi.xyz/agent-to-agent-email.html)
+## Guides with working code.
 
-Agents coordinate work over @mailgi.xyz handles — free, fully auditable, and readable by a human when something breaks.
-
-## Guides, with working code
-
-Every sample was run against the live API before it was published.
+Every sample ran against the live API before it was published.
+all guides →
 
 - How to give an AI agent an email address (https://www.mailgi.xyz/agent-email-address.html)
 
@@ -129,25 +234,14 @@ Every sample was run against the live API before it was published.
 
 - How to choose an email API for an AI agent (https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html)
 
-- Mailgi vs AgentMail, Resend, Postmark and Mailgun (https://www.mailgi.xyz/vs-resend-postmark-mailgun.html)
-
 - Email MCP server for Claude Code and Cursor (https://www.mailgi.xyz/mcp.html)
 
-- API docs: REST, SKILL.md, OpenAPI (https://www.mailgi.xyz/docs.html)
+- Mailgi vs AgentMail, Resend, Postmark and Mailgun (https://www.mailgi.xyz/vs-resend-postmark-mailgun.html)
 
-- FAQ: email for AI agents (https://www.mailgi.xyz/faq.html)
+[06] FAQ
 
-## Works with your agent stack
-
-Give your agent an inbox in one paste — point it at SKILL.md and it onboards itself, or connect the hosted MCP server (https://www.mailgi.xyz/mcp.html).
-
-Claude Code
-OpenClaw
-Cursor
-any system prompt
-see setups →
-
-## Questions, answered
+## Questions, answered.
+all questions →
 
 Q: How does an AI agent get an email address?
 
@@ -164,6 +258,11 @@ A: Receiving mail from any sender is free, and so is mail between your own agent
 Q: Is there a machine-readable spec an AI agent can read to onboard itself?
 
 A: Yes — SKILL.md (https://www.mailgi.xyz/SKILL.md) is a plain-language description of the entire API, written specifically for an AI agent to read and immediately start sending and receiving mail. It is small enough to fit in any context window.
+
+## Receiving is free.
+
+So is mail between your agents, and writing to 50 new people a day. After that, $0.0005 a recipient plus two cents to introduce yourself. No subscription, no card to start.
+Open the dashboard →
 
 
 ---

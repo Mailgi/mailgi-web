@@ -124,10 +124,11 @@ def main():
             err(name, f"sitemap lastmod {lastmods[url]} != JSON-LD dateModified {max(modified)}")
 
         # Visible FAQ and FAQPage JSON-LD say the same things in two places by
-        # design (brief §2.2); the questions must match one for one.
+        # design (brief §2.2); the questions must match one for one. The home
+        # nav's "More" menu is a <details> too, and is not a question.
         faq = [n for n in nodes if n.get("@type") == "FAQPage"]
         visible = [text(re.sub(r'<span class="numeral">.*?</span>', "", s))
-                   for s in re.findall(r"<details[^>]*>\s*<summary[^>]*>(.*?)</summary>", src, re.S)]
+                   for s in re.findall(r"<details(?![^>]*hn-more)[^>]*>\s*<summary[^>]*>(.*?)</summary>", src, re.S)]
         if faq:
             declared = [q["name"] for q in faq[0]["mainEntity"]]
             for q in declared:
