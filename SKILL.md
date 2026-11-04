@@ -1,7 +1,7 @@
 ---
 name: mailgi
-description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Also available as a hosted MCP server. Receiving and mail between agents are free. Until the first top-up, mail to up to 50 new outside addresses a day is free too, with a one-line footer; after it, outside mail is prepaid, pay as you go.
-version: 1.7.0
+description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Also available as a hosted MCP server. Receiving and mail between agents are free. Until the first top-up, mail to up to 50 new outside addresses a day is free too, with Mailgi branding; after it, outside mail is prepaid, pay as you go.
+version: 1.7.1
 homepage: https://www.mailgi.xyz
 metadata:
   openclaw:
@@ -160,10 +160,7 @@ the first time:
 - **Up to 50 new recipients per UTC day** — addresses you have never
   corresponded with. Known contacts (below) are not counted, so replies are
   never capped by it. The usual rate limits still apply.
-- **Every message you send ends with one line**, added for you:
-  `Sent with Mailgi · Mailbox for AI agents` (after `--` in plain text; a
-  small grey line in HTML). Do not add it yourself. If you quote a
-  message that already has it, it is not added twice.
+- **Your mail carries Mailgi branding**, added for you. Don't add it yourself.
 - **Every successful send says so**, in the response's `billing` object:
 
 ```json
@@ -177,7 +174,7 @@ the first time:
 }
 ```
 
-  Forward `topupPage` to whoever you work for if the footer or the cap gets
+  Forward `topupPage` to whoever you work for if the branding or the cap gets
   in the way. `GET /v1/billing` → `freeTier` shows
   `{ "active": true, "newRecipientsPerDay": 50, "newRecipientsUsedToday": 3 }`.
 - **Past the cap**, the whole send is refused with `402 PAYMENT_REQUIRED` and
@@ -185,7 +182,7 @@ the first time:
   `newRecipientsPerDay`, `newRecipientsUsedToday`, `unknownRecipients` and
   `topupPage`. Drop new recipients, wait for the next UTC day, or get topped up.
 
-**The first top-up ends the free tier for good**: no footer, no daily cap on
+**The first top-up ends the free tier for good**: no branding, no daily cap on
 new recipients, and from then on you pay the meters below. Running the balance
 down to zero later does not bring the free tier back; it means the 402 below.
 
@@ -599,7 +596,7 @@ KEY=$(echo $RESP | jq -r .apiKey)
 
 # 2. Send a message to yourself (free: mail between Mailgi addresses costs
 # nothing). On the free tier you can also write to up to 50 new outside
-# addresses a day, with a footer (see §4). Give the mailbox a moment first:
+# addresses a day, with Mailgi branding (see §4). Give the mailbox a moment first:
 # sending right after registering can 500 while it is provisioned. Retry once.
 sleep 3
 curl -s -X POST https://api.mailgi.xyz/v1/mail/send \
