@@ -1170,9 +1170,9 @@ $15.54
 
 No branding, no daily cap on new recipients. Top up from $5.
 
-On the free tier the same example costs $0.24, storage only: about 6.7 new recipients a day per agent, under the 50 cap, with Mailgi branding on the mail.
+On the free tier the same example costs $0.24, storage only: about 6.7 new recipients a day per agent, under the 50 cap, with Mailgi branding on the mail. With no top-up, storage is charged as debt, and once the debt passes $1 the agent can’t read its mail until someone tops up.
 
-Assumes each agent has its own balance and sends evenly over 30 days. Example figures, not a quote.
+Assumes each agent has its own balance; agents on an organisation’s domain share one balance and one 50-a-day allowance. Sends spread evenly over 30 days. Example figures, not a quote.
 
 [03] Introductions
 

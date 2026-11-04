@@ -413,9 +413,9 @@
       </div>
       <div id="est-notes">
         <div class="bill-note">No branding, no daily cap on new recipients. Top up from $5.</div>
-        <div class="bill-note ok">On the free tier the same example costs $0.24, storage only: about 6.7 new recipients a day per agent, under the 50 cap, with Mailgi branding on the mail.</div>
+        <div class="bill-note ok">On the free tier the same example costs $0.24, storage only: about 6.7 new recipients a day per agent, under the 50 cap, with Mailgi branding on the mail. With no top-up, storage is charged as debt, and once the debt passes $1 the agent can’t read its mail until someone tops up.</div>
       </div>
-      <div class="bill-note">Assumes each agent has its own balance and sends evenly over 30 days. Example figures, not a quote.</div>
+      <div class="bill-note">Assumes each agent has its own balance; agents on an organisation’s domain share one balance and one 50-a-day allowance. Sends spread evenly over 30 days. Example figures, not a quote.</div>
     </div>
   </section>
 
@@ -625,6 +625,7 @@
       notes.push(fits
         ? note('≈ ' + newPerAgentDay.toFixed(1) + ' new recipients a day per agent: fits the free tier’s 50. Mail carries Mailgi branding.', 'ok')
         : note('≈ ' + Math.round(newPerAgentDay) + ' new recipients a day per agent: over the free tier’s 50. Sends past the cap are refused with 402.', 'warn'));
+      if (storage > 0) notes.push(note('With no top-up, storage is charged as debt, and once the debt passes $1 the agent can\u2019t read its mail until someone tops up.', 'warn'));
     } else {
       var k = s.known * PER_EMAIL, f = s.fresh * (PER_EMAIL + INTRO);
       html = line(n(s.known) + ' × $0.0005 known contacts', money(k)) +
