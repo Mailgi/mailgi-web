@@ -20,7 +20,64 @@
 <meta name="twitter:description" content="Working guides for giving AI agents email: verification codes, support inboxes, agent-to-agent mail and choosing an API. Code run against the live API." />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="stylesheet" href="/styles.css" />
+<link rel="preload" href="/fonts/geist-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="/chrome.css" />
+<link rel="stylesheet" href="/grid.css" />
+<style>
+/* Guides hub: left-aligned hero, filter bar (JS only), grouped guide lists. */
+.g-hero {
+  padding: clamp(64px, 9vw, 120px) var(--gutter) clamp(48px, 6vw, 80px);
+  display: flex; flex-direction: column; gap: 24px;
+}
+.g-hero .eyebrow { color: var(--label); }
+.g-hero h1 {
+  font-size: clamp(46px, 7.5vw, 104px); line-height: .96; letter-spacing: -0.045em;
+  max-width: 1000px; text-wrap: balance;
+}
+.g-hero .lede { max-width: 600px; font-size: clamp(17px, 1.6vw, 19px); color: var(--body); text-wrap: pretty; }
+.g-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.g-filters[hidden] { display: none; }
+.g-filters button {
+  all: unset; cursor: pointer; font-family: var(--mono); font-size: 13px; padding: 8px 14px; white-space: nowrap;
+  border: 1px solid var(--line); color: var(--bright);
+}
+.g-filters button:hover { border-color: var(--mute); color: var(--ink); }
+.g-filters button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.g-filters button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.g-group { display: flex; flex-wrap: wrap; }
+.g-group[hidden] { display: none; }
+.g-head {
+  flex: 1 1 300px; padding: clamp(40px, 5vw, 64px) var(--gutter);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.g-head h2 { font-size: clamp(26px, 3vw, 36px); line-height: 1.1; letter-spacing: -0.03em; }
+.g-head p { color: var(--body); font-size: 15px; max-width: 360px; text-wrap: pretty; }
+.g-list {
+  flex: 2 1 520px; min-width: 0; list-style: none; margin: 0; padding: 0;
+  border-left: 1px solid var(--line); display: flex; flex-direction: column;
+}
+.g-list a {
+  display: grid; grid-template-columns: 36px minmax(0, 1fr) 20px; gap: 16px;
+  padding: 24px var(--cell); border-bottom: 1px solid var(--line); color: var(--ink);
+}
+.g-list li:last-child a { border-bottom: 0; }
+.g-list a:hover { background: var(--raised); color: var(--ink); }
+.g-n { font-family: var(--mono); font-size: 13px; color: var(--mute); padding-top: 3px; }
+.g-t { display: flex; flex-direction: column; gap: 6px; }
+.g-title { font-size: 18px; font-weight: 500; letter-spacing: -0.015em; }
+.g-body { color: var(--body); font-size: 14.5px; text-wrap: pretty; }
+.g-arrow { font-family: var(--mono); color: var(--accent); padding-top: 3px; }
+.mono { font-family: var(--mono); font-size: .92em; }
+.g-skill {
+  padding: clamp(56px, 8vw, 112px) var(--gutter); background: var(--raised);
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 32px;
+}
+.g-skill-text { display: flex; flex-direction: column; gap: 16px; max-width: 600px; }
+.g-skill .body { max-width: none; }
+.g-skill .btn { padding: 14px 24px; }
+.cta { background: var(--bg); }
+@media (max-width: 821px) { .g-list { border-left: 0; border-top: 1px solid var(--line); } }
+</style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -135,224 +192,170 @@
 <body>
 <div style="min-height:100vh;display:flex;flex-direction:column">
 
-<nav class="nav shell">
-  <a class="brand" href="/">
-    <img src="/favicon.svg" alt="" width="26" height="26" />
-    <span>mailgi</span>
-  </a>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
-  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
-  <div class="nav-links">
-    <a href="/">Product</a>
-    <a href="/agents.html">For agents</a>
-    <a href="/pricing.html">Pricing</a>
-    <div class="nav-group">
-      <a class="nav-group-trigger" href="/guides.html">Resources</a>
-      <div class="nav-menu-panel">
-        <a href="/guides.html" aria-current="page">Guides</a>
-        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
-        <a href="/docs.html">Docs</a>
-        <a href="/mcp.html">MCP server</a>
-        <a href="/faq.html">FAQ</a>
-      </div>
+<header class="hn">
+  <div class="hn-inner">
+    <a class="hn-brand" href="/" aria-label="Mailgi home"><span class="hn-mark" aria-hidden="true"></span>mailgi</a>
+    <nav class="hn-links" aria-label="Main">
+      <a href="/" data-i="0">Product</a>
+      <a href="/agents.html" data-i="1">For agents</a>
+      <a href="/pricing.html" data-i="2">Pricing</a>
+      <a href="/mcp.html" data-i="3">MCP</a>
+      <a href="/guides.html" aria-current="page" data-i="4">Guides</a>
+      <a href="/vs-resend-postmark-mailgun.html" data-i="5">Compare</a>
+      <a href="/faq.html" data-i="6">FAQ</a>
+      <a href="/docs.html" data-i="7">Docs</a>
+      <details class="hn-more">
+        <summary>More</summary>
+        <div class="hn-menu">
+          <a href="/" data-i="0">Product</a>
+          <a href="/agents.html" data-i="1">For agents</a>
+          <a href="/pricing.html" data-i="2">Pricing</a>
+          <a href="/mcp.html" data-i="3">MCP</a>
+          <a href="/guides.html" data-i="4">Guides</a>
+          <a href="/vs-resend-postmark-mailgun.html" data-i="5">Compare</a>
+          <a href="/faq.html" data-i="6">FAQ</a>
+          <a href="/docs.html" data-i="7">Docs</a>
+        </div>
+      </details>
+    </nav>
+    <div class="hn-end">
+      <a class="hn-gh" href="https://github.com/Mailgi">github</a>
+      <a class="hn-cta" href="https://app.mailgi.xyz"><span class="long">Open dashboard</span><span class="short">Dashboard</span></a>
     </div>
   </div>
-  <div class="nav-end">
-    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
-      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
-    </a>
-    <span class="nav-note">receiving is free</span>
-    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
-  </div>
-</nav>
+</header>
 
 <main style="flex:1">
 
-<section class="hero shell">
-  <div class="kicker reveal" style="margin-bottom:26px">Guides</div>
-  <h1 class="reveal reveal-1" style="max-width:900px">How to actually <em class="accent">build the thing</em></h1>
-  <div class="hero-grid reveal reveal-2">
-    <p class="lede" style="max-width:520px">Every code sample on these pages was run against the live API before it was published. Where the API can't do something, the guide says so instead of routing around it quietly.</p>
-    <div class="hero-actions">
-      <a class="btn btn-solid btn-lg" href="/agent-email-address.html">Start at the beginning</a>
-      <a class="link-serif" href="/SKILL.md">or read SKILL.md →</a>
+  <section class="frame g-hero">
+    <div class="eyebrow">Guides</div>
+    <h1>How to actually <span class="dim">build the thing.</span></h1>
+    <p class="lede">Every code sample on these pages was run against the live API before it was published. Where the API can't do something, the guide says so instead of routing around it quietly.</p>
+    <div class="g-filters" role="group" aria-label="Filter guides" hidden>
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="start" aria-pressed="false">Start here</button>
+      <button type="button" data-f="build" aria-pressed="false">Use cases</button>
+      <button type="button" data-f="framework" aria-pressed="false">Frameworks</button>
+      <button type="button" data-f="choose" aria-pressed="false">Comparisons</button>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="rule-top">
-  <div class="section shell">
-    <h2 style="margin-bottom:12px">Start here</h2>
-    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">If you've not given an agent an address before, read this one first.</p>
-    <div class="rows">
-      <div class="row">
-        <div class="numeral">01</div>
-        <h3><a href="/agent-email-address.html">How to give an AI agent an email address</a></h3>
-        <p class="body">Why an agent needs a mailbox of its own, the four approaches people try and how each one fails, a working setup, and what DKIM, SPF and DMARC actually do rather than just what they're called.</p>
-      </div>
+  <section class="frame g-group" id="start" data-g="start">
+    <div class="g-head">
+      <div class="eyebrow">Start here</div>
+      <h2>First time?</h2>
+      <p>If you've not given an agent an address before, read this one first.</p>
     </div>
-  </div>
-</section>
+    <ol class="g-list">
+      <li><a href="/agent-email-address.html"><span class="g-n">01</span><span class="g-t"><span class="g-title">How to give an AI agent an email address</span><span class="g-body">Why an agent needs a mailbox of its own, the four approaches people try and how each one fails, a working setup, and what DKIM, SPF and DMARC actually do rather than just what they're called.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+    </ol>
+  </section>
 
-<section class="rule-top surface">
-  <div class="section shell">
-    <h2 style="margin-bottom:12px">By what you're <em class="accent">building</em></h2>
-    <p class="body" style="font-size:16px;margin-bottom:48px;max-width:640px">Three use cases, each with the full loop in runnable code and an honest list of what the API can't do yet.</p>
-    <div class="rows">
-      <div class="row">
-        <div class="numeral">02</div>
-        <h3><a href="/agent-email-verification.html">Receiving a verification code</a></h3>
-        <p class="body">The wall most agents hit first: it can fill in the signup form but has no address for the confirmation email. Register an inbox, poll, pull the code out — plus the four mistakes that make this flaky in production.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">03</div>
-        <h3><a href="/agent-support-inbox.html">Running a support inbox</a></h3>
-        <p class="body">An agent on <span class="mono">support@yourdomain.com</span> reading, triaging, filing and answering. Covers the custom-domain setup, using folders as ticket status, and why replies don't thread the way you'd expect.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">04</div>
-        <h3><a href="/agent-to-agent-email.html">Agent-to-agent coordination</a></h3>
-        <p class="body">Two agents passing work over real addresses — free on the shared domain, on its own allowance separate from your external quota. Includes the loop-prevention rules, and a straight answer about when you should use a queue instead.</p>
-      </div>
+  <section class="frame g-group" id="build" data-g="build">
+    <div class="g-head">
+      <div class="eyebrow">By use case</div>
+      <h2>What you're building</h2>
+      <p>Three use cases, each with the full loop in runnable code and an honest list of what the API can't do yet.</p>
     </div>
-  </div>
-</section>
+    <ol class="g-list">
+      <li><a href="/agent-email-verification.html"><span class="g-n">02</span><span class="g-t"><span class="g-title">Receiving a verification code</span><span class="g-body">The wall most agents hit first: it can fill in the signup form but has no address for the confirmation email. Register an inbox, poll, pull the code out — plus the four mistakes that make this flaky in production.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/agent-support-inbox.html"><span class="g-n">03</span><span class="g-t"><span class="g-title">Running a support inbox</span><span class="g-body">An agent on <span class="mono">support@yourdomain.com</span> reading, triaging, filing and answering. Covers the custom-domain setup, using folders as ticket status, and why replies don't thread the way you'd expect.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/agent-to-agent-email.html"><span class="g-n">04</span><span class="g-t"><span class="g-title">Agent-to-agent coordination</span><span class="g-body">Two agents passing work over real addresses — free on the shared domain, on its own allowance separate from your external quota. Includes the loop-prevention rules, and a straight answer about when you should use a queue instead.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+    </ol>
+  </section>
 
-<section class="rule-top">
-  <div class="section shell">
-    <h2 style="margin-bottom:12px">With your <em class="accent">framework</em>, and design choices</h2>
-    <div class="rows">
-      <div class="row">
-        <div class="numeral">01</div>
-        <h3><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></h3>
-        <p class="body">Three function tools (send, list, read) over the REST API, tested against the live API, wired into openai-agents.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">02</div>
-        <h3><a href="/langchain-email-agent.html">Build a LangChain email agent</a></h3>
-        <p class="body">The same three tools wrapped for LangChain's create_agent; why not the Gmail toolkit.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">03</div>
-        <h3><a href="/crewai-email-agent.html">Give a CrewAI agent email</a></h3>
-        <p class="body">Mailgi's hosted MCP server in the agent's mcps list via MCPServerHTTP, filtered to three mail tools; tested on CrewAI 1.15.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">04</div>
-        <h3><a href="/vercel-ai-sdk-email.html">Give a Vercel AI SDK agent email</a></h3>
-        <p class="body">createMCPClient over Streamable HTTP, three mail tools passed to generateText or streamText; tested on ai 7.0.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">05</div>
-        <h3><a href="/n8n-email-agent.html">Give an n8n AI agent email</a></h3>
-        <p class="body">No code: the MCP Client Tool node on an AI Agent, run on a schedule or from a Mailgi webhook.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">06</div>
-        <h3><a href="/ai-assistant-email-address.html">Give your AI assistant its own email address</a></h3>
-        <p class="body">Instead of your Gmail password: register, forward or CC what it needs, reply as itself.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">07</div>
-        <h3><a href="/inbox-per-agent-vs-catch-all.html">Inbox per agent vs catch-all</a></h3>
-        <p class="body">Isolation, credentials and prompt-injection exposure of a mailbox per agent versus one catch-all with a router; Mailgi has no catch-all.</p>
-      </div>
+  <section class="frame g-group" id="framework" data-g="framework">
+    <div class="g-head">
+      <div class="eyebrow">By framework</div>
+      <h2>With your stack</h2>
+      <p>Tested integrations, design choices, and the hosted MCP server.</p>
     </div>
-  </div>
-</section>
+    <ol class="g-list">
+      <li><a href="/openai-agents-sdk-email.html"><span class="g-n">05</span><span class="g-t"><span class="g-title">Give an OpenAI Agents SDK agent email</span><span class="g-body">Three function tools (send, list, read) over the REST API, tested against the live API, wired into openai-agents.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/langchain-email-agent.html"><span class="g-n">06</span><span class="g-t"><span class="g-title">Build a LangChain email agent</span><span class="g-body">The same three tools wrapped for LangChain's create_agent; why not the Gmail toolkit.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/crewai-email-agent.html"><span class="g-n">07</span><span class="g-t"><span class="g-title">Give a CrewAI agent email</span><span class="g-body">Mailgi's hosted MCP server in the agent's mcps list via MCPServerHTTP, filtered to three mail tools; tested on CrewAI 1.15.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/vercel-ai-sdk-email.html"><span class="g-n">08</span><span class="g-t"><span class="g-title">Give a Vercel AI SDK agent email</span><span class="g-body">createMCPClient over Streamable HTTP, three mail tools passed to generateText or streamText; tested on ai 7.0.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/n8n-email-agent.html"><span class="g-n">09</span><span class="g-t"><span class="g-title">Give an n8n AI agent email</span><span class="g-body">No code: the MCP Client Tool node on an AI Agent, run on a schedule or from a Mailgi webhook.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/ai-assistant-email-address.html"><span class="g-n">10</span><span class="g-t"><span class="g-title">Give your AI assistant its own email address</span><span class="g-body">Instead of your Gmail password: register, forward or CC what it needs, reply as itself.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/inbox-per-agent-vs-catch-all.html"><span class="g-n">11</span><span class="g-t"><span class="g-title">Inbox per agent vs catch-all</span><span class="g-body">Isolation, credentials and prompt-injection exposure of a mailbox per agent versus one catch-all with a router; Mailgi has no catch-all.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/mcp.html"><span class="g-n">12</span><span class="g-t"><span class="g-title">Connecting Claude Code, Claude Desktop or Cursor</span><span class="g-body">The hosted MCP server at <span class="mono">api.mailgi.xyz/mcp</span>: config for each client, how an agent bootstraps its own key, every tool and the REST endpoint behind it, and what doesn't work yet — including claude.ai and ChatGPT connectors.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+    </ol>
+  </section>
 
-<section class="rule-top surface">
-  <div class="section shell">
-    <h2 style="margin-bottom:12px">Before you <em class="accent">commit to anything</em></h2>
-    <div class="rows">
-      <div class="row">
-        <div class="numeral">05</div>
-        <h3><a href="/choosing-an-email-api-for-ai-agents.html">Choosing an email API for an agent</a></h3>
-        <p class="body">Why deliverability is the wrong axis to compare on, and the four questions that actually decide the build — mailbox or webhook, who creates the account, how long mail is kept, whose domain.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">06</div>
-        <h3><a href="/vs-resend-postmark-mailgun.html">Mailgi vs the alternatives</a></h3>
-        <p class="body">A dated, sourced comparison against AgentMail, Resend, Postmark, Mailgun, SendGrid, Cloudflare and the free options — with an explicit section on when to pick one of them over us.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">07</div>
-        <h3><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></h3>
-        <p class="body">Eight options ranked on what decides an agent build — real mailbox, human signup, search, price — with AgentMail first on capability.</p>
-      </div>
-      <div class="row">
-        <div class="numeral">08</div>
-        <h3><a href="/agentmail-alternative.html">AgentMail alternative</a>, <a href="/resend-for-ai-agents.html">Resend for agents</a>, <a href="/gmail-api-for-ai-agents.html">Gmail API for agents</a></h3>
-        <p class="body">One page per alternative: a line-by-line table, when to pick them instead of us, and sources.</p>
-      </div>
+  <section class="frame g-group" id="choose" data-g="choose">
+    <div class="g-head">
+      <div class="eyebrow">Before you commit</div>
+      <h2>Choosing an API</h2>
+      <p>Dated, sourced, and explicit about when to pick someone else.</p>
     </div>
-  </div>
-</section>
+    <ol class="g-list">
+      <li><a href="/choosing-an-email-api-for-ai-agents.html"><span class="g-n">13</span><span class="g-t"><span class="g-title">Choosing an email API for an agent</span><span class="g-body">Why deliverability is the wrong axis to compare on, and the four questions that actually decide the build — mailbox or webhook, who creates the account, how long mail is kept, whose domain.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/vs-resend-postmark-mailgun.html"><span class="g-n">14</span><span class="g-t"><span class="g-title">Mailgi vs the alternatives</span><span class="g-body">A dated, sourced comparison against AgentMail, Resend, Postmark, Mailgun, SendGrid, Cloudflare and the free options — with an explicit section on when to pick one of them over us.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/best-email-api-for-ai-agents.html"><span class="g-n">15</span><span class="g-t"><span class="g-title">Best email API for AI agents in 2026</span><span class="g-body">Eight options ranked on what decides an agent build — real mailbox, human signup, search, price — with AgentMail first on capability.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/agentmail-alternative.html"><span class="g-n">16</span><span class="g-t"><span class="g-title">AgentMail alternative</span><span class="g-body">A line-by-line table against AgentMail, when to pick them instead of us, and sources.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/resend-for-ai-agents.html"><span class="g-n">17</span><span class="g-t"><span class="g-title">Resend for agents</span><span class="g-body">A line-by-line table against Resend, when to pick them instead of us, and sources.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+      <li><a href="/gmail-api-for-ai-agents.html"><span class="g-n">18</span><span class="g-t"><span class="g-title">Gmail API for agents</span><span class="g-body">A line-by-line table against the Gmail API, when to pick it instead of us, and sources.</span></span><span class="g-arrow" aria-hidden="true">→</span></a></li>
+    </ol>
+  </section>
 
-<section class="rule-top">
-  <div class="section shell">
-    <h2 style="margin-bottom:12px">From an <em class="accent">MCP client</em></h2>
-    <div class="rows">
-      <div class="row">
-        <div class="numeral">09</div>
-        <h3><a href="/mcp.html">Connecting Claude Code, Claude Desktop or Cursor</a></h3>
-        <p class="body">The hosted MCP server at <span class="mono">api.mailgi.xyz/mcp</span>: config for each client, how an agent bootstraps its own key, every tool and the REST endpoint behind it, and what doesn't work yet — including claude.ai and ChatGPT connectors.</p>
-      </div>
+  <section class="frame g-skill">
+    <div class="g-skill-text">
+      <h2 class="h2">For the agent, <span class="dim">not you.</span></h2>
+      <p class="body">These guides are written for a person building something. <span class="mono">SKILL.md</span> is the same API written for an agent to read at runtime and act on directly.</p>
     </div>
-  </div>
-</section>
+    <a class="btn btn-solid" href="/SKILL.md">Read SKILL.md →</a>
+  </section>
 
-<section class="rule-top surface">
-  <div class="section shell">
-    <div class="inline-split">
-      <div style="flex:1;min-width:280px">
-        <h2 style="font-size:32px;margin-bottom:8px">For the agent, <em class="accent">not you</em></h2>
-        <p class="body">These guides are written for a person building something. <span class="mono">SKILL.md</span> is the same API written for an agent to read at runtime and act on directly.</p>
-      </div>
-      <div class="chips">
-        <span class="chip">plain language</span>
-        <span class="chip">no SDK</span>
-        <a class="link-serif" style="font-size:16px;margin-left:8px" href="/SKILL.md">read SKILL.md →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="rule-top">
-  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
-    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
-    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
-    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
-  </div>
-</section>
+  <section class="frame cta">
+    <h2>One POST to start.</h2>
+    <p>No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </section>
 
 </main>
 
-<footer class="footer">
-  <div class="shell footer-inner">
-    <span class="footer-brand">mailgi</span>
-    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
-      <span class="dot"></span><span class="status-text">system status</span>
-    </a>
+<footer class="frame hf">
+  <div class="hf-top">
+    <span class="hf-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown"><span class="dot"></span><span class="status-text">system status</span></a>
+  </div>
+  <nav class="hf-links" aria-label="Footer">
+    <a href="https://app.mailgi.xyz">dashboard</a>
+    <a href="/guides.html">guides</a>
+    <a href="/vs-resend-postmark-mailgun.html">compare</a>
+    <a href="/docs.html">docs</a>
+    <a href="/faq.html">faq</a>
+    <a href="/changelog.html">changelog</a>
+    <a href="/mcp.html">mcp</a>
+    <a href="/SKILL.md">SKILL.md</a>
+    <a href="https://github.com/Mailgi">github</a>
+    <a href="/about.html">about</a>
+    <a href="/security.html">security</a>
+    <a href="/privacy.html">privacy</a>
+  </nav>
+  <div class="hf-base">
     <span>built for agents, not humans</span>
-    <span class="footer-end">
-      <a href="https://app.mailgi.xyz">dashboard</a>
-      <a href="/guides.html">guides</a>
-      <a href="/vs-resend-postmark-mailgun.html">compare</a>
-      <a href="/docs.html">docs</a>
-      <a href="/faq.html">faq</a>
-      <a href="/changelog.html">changelog</a>
-      <a href="/mcp.html">mcp</a>
-      <a href="/SKILL.md">SKILL.md</a>
-      <a href="https://github.com/Mailgi">github</a>
-      <a href="/about.html">about</a>
-      <a href="/security.html">security</a>
-      <a href="/privacy.html">privacy</a>
-      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
-    </span>
+    <span>support: hello@mailgi.xyz</span>
   </div>
 </footer>
 </div>
+<script>
+/* Progressive enhancement only: every guide is in the served HTML. This shows
+   the filter bar and hides the groups that don't match the chosen filter. */
+(function () {
+  var bar = document.querySelector('.g-filters');
+  if (!bar) return;
+  var btns = bar.querySelectorAll('button'), groups = document.querySelectorAll('.g-group');
+  bar.hidden = false;
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    var f = b.getAttribute('data-f');
+    btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    groups.forEach(function (g) { g.hidden = f !== 'all' && g.getAttribute('data-g') !== f; });
+  });
+})();
+</script>
 <script src="/status.js" defer></script>
 </body>
 </html>

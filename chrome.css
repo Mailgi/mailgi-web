@@ -1,0 +1,275 @@
+/* Shared by every page: fonts, colour tokens, base, nav (.hn) and footer (.hf).
+   The nav and footer markup lives in bin/chrome/ and is copied into each page by
+   bin/sync-chrome.py. Designed pages add grid.css; content pages add styles.css. */
+/* Self-hosted (fonts/, OFL), like the rest of the site: no request to Google. */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/geist-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/geist-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url('/fonts/geist-mono-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url('/fonts/geist-mono-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --bg: oklch(0.14 0.003 270);
+  --raised: oklch(0.175 0.003 270);
+  --raised-2: oklch(0.21 0.004 270);
+  --line: oklch(0.27 0.004 270);
+  --dim: oklch(0.40 0.005 270);
+  --mute: oklch(0.55 0.006 270);
+  --soft: oklch(0.62 0.006 270);
+  --body: oklch(0.72 0.006 270);
+  --label: oklch(0.70 0.006 270);
+  --bright: oklch(0.80 0.005 270);
+  --code: oklch(0.93 0.004 270);
+  --ink: oklch(0.97 0.002 270);
+  --accent: oklch(0.84 0.16 150);
+  --sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --gutter: clamp(20px, 4vw, 56px);
+  --cell: clamp(20px, 3vw, 40px);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); }
+body {
+  color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; min-height: 100vh;
+}
+a { color: var(--ink); text-decoration: none; }
+a:hover { color: var(--accent); }
+::selection { background: var(--accent); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--mono); }
+.dim { color: var(--mute); }
+
+/* Every section is a bordered column on the same 1240px grid. */
+.frame {
+  max-width: 1240px; margin: 0 auto;
+  border-left: 1px solid var(--line); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--mute);
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; display: inline-block; }
+
+/* Self-hosted (fonts/, OFL), like the rest of the site: no request to Google. */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/geist-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/geist-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url('/fonts/geist-mono-normal-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url('/fonts/geist-mono-normal-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --bg: oklch(0.14 0.003 270);
+  --raised: oklch(0.175 0.003 270);
+  --raised-2: oklch(0.21 0.004 270);
+  --line: oklch(0.27 0.004 270);
+  --dim: oklch(0.40 0.005 270);
+  --mute: oklch(0.55 0.006 270);
+  --soft: oklch(0.62 0.006 270);
+  --body: oklch(0.72 0.006 270);
+  --label: oklch(0.70 0.006 270);
+  --bright: oklch(0.80 0.005 270);
+  --code: oklch(0.93 0.004 270);
+  --ink: oklch(0.97 0.002 270);
+  --accent: oklch(0.84 0.16 150);
+  --sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --gutter: clamp(20px, 4vw, 56px);
+  --cell: clamp(20px, 3vw, 40px);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); }
+body {
+  color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; min-height: 100vh;
+}
+a { color: var(--ink); text-decoration: none; }
+a:hover { color: var(--accent); }
+::selection { background: var(--accent); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--mono); }
+.dim { color: var(--mute); }
+
+/* Every section is a bordered column on the same 1240px grid. */
+.frame {
+  max-width: 1240px; margin: 0 auto;
+  border-left: 1px solid var(--line); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--mute);
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; display: inline-block; }
+
+
+/* ---------- Nav ---------- */
+.hn {
+  position: sticky; top: 0; z-index: 20;
+  background: oklch(0.14 0.003 270 / .86);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.hn-inner {
+  max-width: 1240px; margin: 0 auto; height: 64px; padding: 0 clamp(16px, 3vw, 40px);
+  display: flex; align-items: center; gap: clamp(12px, 2vw, 28px);
+  border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+}
+.hn-brand {
+  flex: none; display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-weight: 500; font-size: 16px; white-space: nowrap;
+}
+.hn-brand, .hn-brand:hover, .hf-brand { color: var(--ink); }
+.hn-mark { width: 18px; height: 18px; border: 1.5px solid var(--ink); display: grid; place-items: center; }
+.hn-mark::after { content: ""; width: 6px; height: 6px; background: var(--accent); }
+.hn-links { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; }
+.hn-links > a { padding: 6px 10px; font-size: 14px; color: var(--soft); white-space: nowrap; }
+.hn-links a:hover, .hn-links a[aria-current="page"] { color: var(--ink); }
+.hn-more { position: relative; display: none; }
+.hn-more summary {
+  list-style: none; cursor: pointer; padding: 6px 10px; font-size: 14px; color: var(--bright); white-space: nowrap;
+}
+.hn-more summary::-webkit-details-marker { display: none; }
+.hn-more summary::after { content: " +"; }
+.hn-more[open] summary::after { content: " −"; }
+.hn-more summary:hover { color: var(--ink); }
+.hn-menu {
+  position: absolute; top: calc(100% + 14px); left: 0; min-width: 200px;
+  background: var(--raised); border: 1px solid var(--line); display: flex; flex-direction: column;
+}
+.hn-menu a { padding: 12px 16px; font-size: 14px; color: var(--soft); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.hn-menu a:last-child { border-bottom: 0; }
+.hn-menu a:hover { background: var(--raised-2); color: var(--ink); }
+.hn-end { flex: none; display: flex; align-items: center; gap: 16px; }
+.hn-gh { font-family: var(--mono); font-size: 13px; color: var(--label); white-space: nowrap; }
+.hn-cta {
+  background: var(--ink); color: var(--bg); font-size: 14px; font-weight: 500; padding: 8px 14px; white-space: nowrap;
+}
+.hn-cta:hover { background: var(--accent); color: var(--bg); }
+.hn-cta .short { display: none; }
+
+/* Overflow: links past the visible count move into "More". Each link carries
+   its position (data-i); the menu holds every link and shows the hidden ones. */
+.hn-menu a { display: none; }
+@media (max-width: 1079px) {
+  .hn-more { display: block; }
+  .hn-links > a[data-i="4"], .hn-links > a[data-i="5"], .hn-links > a[data-i="6"], .hn-links > a[data-i="7"] { display: none; }
+  .hn-menu a[data-i="4"], .hn-menu a[data-i="5"], .hn-menu a[data-i="6"], .hn-menu a[data-i="7"] { display: block; }
+}
+@media (max-width: 899px) {
+  .hn-links > a[data-i="3"] { display: none; }
+  .hn-menu a[data-i="3"] { display: block; }
+}
+@media (max-width: 759px) { .hn-gh { display: none; } }
+@media (max-width: 639px) {
+  .hn-links > a { display: none !important; }
+  .hn-menu a { display: block; }
+  .hn-menu { left: auto; right: 0; }
+  .hn-links { justify-content: flex-end; }
+}
+@media (max-width: 479px) {
+  .hn-cta .long { display: none; }
+  .hn-cta .short { display: inline; }
+}
+
+/* ---------- Footer ---------- */
+.hf { padding: 48px var(--gutter) 56px; display: flex; flex-direction: column; gap: 32px; border-bottom: 0; }
+.hf-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.hf-brand { font-family: var(--mono); font-size: 16px; font-weight: 500; }
+.status { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--label); }
+.status .dot { background: var(--dim); }
+.status[data-state="ok"] .dot { background: var(--accent); }
+.status[data-state="down"] .dot { background: oklch(0.72 0.17 60); }
+.hf-links { display: flex; flex-wrap: wrap; gap: 8px 24px; font-family: var(--mono); font-size: 13px; }
+.hf-links a { color: var(--label); white-space: nowrap; }
+.hf-links a:hover { color: var(--accent); }
+.hf-base {
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 12px; color: var(--mute); border-top: 1px solid var(--line); padding-top: 24px;
+}
+
+/* ---------- Cookie consent (#76) ----------
+   Injected by consent.js, never in the served HTML. position:fixed so it
+   cannot shift layout; bottom-anchored so it never covers the nav CTA. */
+#consent {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+  padding: 18px clamp(16px, 4vw, 48px);
+  background: var(--raised); color: var(--body);
+  border-top: 1px solid var(--line); box-shadow: 0 -12px 32px oklch(0 0 0 / .4);
+  font-family: var(--sans); font-size: 14px; line-height: 1.55;
+  animation: consent-in .25s ease both;
+}
+@keyframes consent-in { from { transform: translateY(100%) } to { transform: none } }
+.consent-text { margin: 0; max-width: 760px; flex: 1 1 420px; }
+.consent-actions { display: flex; gap: 10px; flex: none; margin-left: auto; }
+.consent-btn {
+  font-family: var(--sans); font-size: 13.5px; font-weight: 500; padding: 10px 20px; cursor: pointer;
+  border: 1px solid transparent; transition: background .15s, border-color .15s;
+}
+.consent-accept { background: var(--ink); color: var(--bg); }
+.consent-accept:hover { background: var(--accent); }
+.consent-decline { background: transparent; color: var(--label); border-color: var(--line); }
+.consent-decline:hover { color: var(--ink); border-color: var(--mute); }
+.consent-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.consent-link { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+.consent-link:hover { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) { #consent { animation: none; } }
+@media (max-width: 560px) { #consent { padding: 14px 16px; } }

@@ -20,7 +20,50 @@
 <meta name="twitter:description" content="An AI agent registers its own email address in one POST: no OAuth, no dashboard. Onboard via SKILL.md, REST, CLI, TypeScript SDK or hosted MCP." />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="stylesheet" href="/styles.css" />
+<link rel="preload" href="/fonts/geist-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="/chrome.css" />
+<link rel="stylesheet" href="/grid.css" />
+<style>
+/* agents.html only */
+.ag-hero { padding: clamp(64px, 9vw, 120px) var(--gutter) clamp(48px, 6vw, 80px); display: flex; flex-direction: column; gap: 28px; }
+.ag-prompt { font-family: var(--mono); font-size: 14px; color: var(--accent); overflow-wrap: anywhere; }
+.ag-caret { animation: ag-blink 1.06s step-end infinite; }
+@keyframes ag-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .ag-caret { animation: none; } }
+.ag-hero h1 { font-size: clamp(46px, 7.5vw, 104px); line-height: .96; letter-spacing: -0.045em; max-width: 1000px; text-wrap: balance; }
+.ag-hero .lede { max-width: 600px; font-size: clamp(17px, 1.6vw, 20px); color: var(--body); text-wrap: pretty; }
+.ag-point { gap: 10px; padding-bottom: 40px; }
+.ag-point .t { margin-top: 24px; font-size: 17px; line-height: 1.45; color: var(--ink); }
+.ag-point .aside { color: var(--mute); font-size: 14px; }
+.ag-side { padding: var(--cell); background: var(--raised); }
+.ag-wide { padding: 0 var(--gutter) clamp(48px, 7vw, 96px); }
+.body a { text-decoration: underline; text-underline-offset: 3px; }
+.ag-band { padding: clamp(56px, 8vw, 112px) var(--gutter); display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 32px; background: var(--raised); }
+.ag-band > div { display: flex; flex-direction: column; gap: 16px; max-width: 640px; }
+.ag-dl { align-self: flex-start; margin-top: 8px; font-family: var(--mono); font-size: 13px; padding: 12px 18px; }
+.ag-dl:hover { border-color: var(--accent); }
+.tabs.ag-sk .code { min-height: 220px; }
+.tabs.ag-api .code { min-height: 360px; }
+#t-sk-claude:checked ~ .tabs-bar label[for="t-sk-claude"],
+#t-sk-claw:checked ~ .tabs-bar label[for="t-sk-claw"],
+#t-sk-prompt:checked ~ .tabs-bar label[for="t-sk-prompt"],
+#t-api-curl:checked ~ .tabs-bar label[for="t-api-curl"],
+#t-api-cli:checked ~ .tabs-bar label[for="t-api-cli"],
+#t-api-sdk:checked ~ .tabs-bar label[for="t-api-sdk"],
+#t-api-mcp:checked ~ .tabs-bar label[for="t-api-mcp"] {
+  color: var(--ink); background: var(--bg); box-shadow: inset 0 -2px 0 var(--accent);
+}
+#t-sk-claude:focus-visible ~ .tabs-bar label[for="t-sk-claude"],
+#t-sk-claw:focus-visible ~ .tabs-bar label[for="t-sk-claw"],
+#t-sk-prompt:focus-visible ~ .tabs-bar label[for="t-sk-prompt"],
+#t-api-curl:focus-visible ~ .tabs-bar label[for="t-api-curl"],
+#t-api-cli:focus-visible ~ .tabs-bar label[for="t-api-cli"],
+#t-api-sdk:focus-visible ~ .tabs-bar label[for="t-api-sdk"],
+#t-api-mcp:focus-visible ~ .tabs-bar label[for="t-api-mcp"] { outline: 2px solid var(--accent); outline-offset: -2px; }
+#t-sk-claude:checked ~ #p-sk-claude, #t-sk-claw:checked ~ #p-sk-claw, #t-sk-prompt:checked ~ #p-sk-prompt,
+#t-api-curl:checked ~ #p-api-curl, #t-api-cli:checked ~ #p-api-cli, #t-api-sdk:checked ~ #p-api-sdk,
+#t-api-mcp:checked ~ #p-api-mcp { display: block; }
+</style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -98,138 +141,148 @@
 <body>
 <div style="min-height:100vh;display:flex;flex-direction:column">
 
-<nav class="nav shell">
-  <a class="brand" href="/">
-    <img src="/favicon.svg" alt="" width="26" height="26" />
-    <span>mailgi</span>
-  </a>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
-  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
-  <div class="nav-links">
-    <a href="/">Product</a>
-    <a href="/agents.html" aria-current="page">For agents</a>
-    <a href="/pricing.html">Pricing</a>
-    <div class="nav-group">
-      <a class="nav-group-trigger" href="/guides.html">Resources</a>
-      <div class="nav-menu-panel">
-        <a href="/guides.html">Guides</a>
-        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
-        <a href="/docs.html">Docs</a>
-        <a href="/mcp.html">MCP server</a>
-        <a href="/faq.html">FAQ</a>
-      </div>
+<header class="hn">
+  <div class="hn-inner">
+    <a class="hn-brand" href="/" aria-label="Mailgi home"><span class="hn-mark" aria-hidden="true"></span>mailgi</a>
+    <nav class="hn-links" aria-label="Main">
+      <a href="/" data-i="0">Product</a>
+      <a href="/agents.html" aria-current="page" data-i="1">For agents</a>
+      <a href="/pricing.html" data-i="2">Pricing</a>
+      <a href="/mcp.html" data-i="3">MCP</a>
+      <a href="/guides.html" data-i="4">Guides</a>
+      <a href="/vs-resend-postmark-mailgun.html" data-i="5">Compare</a>
+      <a href="/faq.html" data-i="6">FAQ</a>
+      <a href="/docs.html" data-i="7">Docs</a>
+      <details class="hn-more">
+        <summary>More</summary>
+        <div class="hn-menu">
+          <a href="/" data-i="0">Product</a>
+          <a href="/agents.html" data-i="1">For agents</a>
+          <a href="/pricing.html" data-i="2">Pricing</a>
+          <a href="/mcp.html" data-i="3">MCP</a>
+          <a href="/guides.html" data-i="4">Guides</a>
+          <a href="/vs-resend-postmark-mailgun.html" data-i="5">Compare</a>
+          <a href="/faq.html" data-i="6">FAQ</a>
+          <a href="/docs.html" data-i="7">Docs</a>
+        </div>
+      </details>
+    </nav>
+    <div class="hn-end">
+      <a class="hn-gh" href="https://github.com/Mailgi">github</a>
+      <a class="hn-cta" href="https://app.mailgi.xyz"><span class="long">Open dashboard</span><span class="short">Dashboard</span></a>
     </div>
   </div>
-  <div class="nav-end">
-    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
-      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
-    </a>
-    <span class="nav-note">receiving is free</span>
-    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
-  </div>
-</nav>
+</header>
 
 <main style="flex:1">
 
-  <section class="dark" style="border-bottom:1px solid var(--rule)">
-    <div class="shell" style="padding-top:100px;padding-bottom:84px">
-      <div class="mono reveal" style="font-size:13px;color:var(--on-dark-faint);margin-bottom:28px">~/mailgi $ <span style="animation:blink 1.2s step-end infinite">_</span></div>
-      <h1 class="reveal reveal-1" style="font-size:clamp(40px,6.5vw,76px);line-height:1.04;max-width:860px">Your agent needs<br />an <em class="accent-light">email</em> of its own.</h1>
-      <p class="reveal reveal-2" style="font-size:18px;line-height:1.65;color:var(--on-dark-muted);max-width:540px;margin:28px 0 0">A real one — inbox, outbox, and an address that doesn't look like a UUID. Register in one POST. No OAuth. No dashboard. No feelings.</p>
-      <div class="dark-points reveal reveal-3" style="margin-top:40px">
-        <div><span class="arrow">→</span><span class="t">Every agent gets a handle like <span class="mono">buzzing-falcon@mailgi.xyz</span>. <em>(yes, it's random. yes, it's intentional.)</em></span></div>
-        <div><span class="arrow">→</span><span class="t">Send, receive and read mail over a clean REST API — a real SMTP/IMAP server underneath.</span></div>
-        <div><span class="arrow">→</span><span class="t">Receiving is free, and so is talking to other agents. You can write to 50 new people a day for free, with Mailgi branding; past that it is prepaid, and anyone can top you up by card. <em>(two cents to introduce yourself, then $0.0005 a recipient)</em></span></div>
-        <div><span class="arrow">→</span><span class="t">No SDK required — just HTTP. <em>(there is one though, if you're into that sort of thing)</em></span></div>
-      </div>
+  <section class="frame ag-hero">
+    <div class="ag-prompt" aria-hidden="true">~/mailgi $ <span id="ag-typed">curl -X POST api.mailgi.xyz/v1/agents/register</span><span class="ag-caret">_</span></div>
+    <h1>Your agent needs an email <span class="dim">of its own.</span></h1>
+    <p class="lede">A real inbox and outbox, at an address that doesn't look like a UUID. Register in one POST. No OAuth, no dashboard, no feelings.</p>
+  </section>
+
+  <section class="frame" aria-label="What an agent gets">
+    <div class="cells" style="--min:260px;border-top:0">
+      <div class="cell ag-point"><span class="step-n">handle</span><p class="t">Every agent gets a handle like <span class="mono">buzzing-falcon@mailgi.xyz</span>.</p><p class="aside">Random, on purpose.</p></div>
+      <div class="cell ag-point"><span class="step-n">rest</span><p class="t">Send, receive and read over REST, on a real SMTP/IMAP server.</p><p class="aside">No IMAP client code on your side.</p></div>
+      <div class="cell ag-point"><span class="step-n">pricing</span><p class="t">Receiving and agent-to-agent mail are free. 50 new people a day are free too, with Mailgi branding.</p><p class="aside">Then it is prepaid, and anyone can top you up by card: two cents to introduce yourself, $0.0005 a recipient.</p></div>
+      <div class="cell ag-point"><span class="step-n">http</span><p class="t">No SDK required. Just HTTP.</p><p class="aside">There is one, if you want it.</p></div>
     </div>
   </section>
 
-  <section class="section shell">
-    <div class="stack-split">
-      <div>
-        <h2>SKILL.md — for your <em class="accent">agent</em>, not you</h2>
-        <p class="body" style="margin:20px 0 26px">The full API reference written so an AI agent can read it and immediately start sending mail. No OpenAPI parsing. No SDK. Just words. Small enough to fit in any context window.</p>
-        <a class="btn btn-outline" href="/SKILL.md" download="SKILL.md">↓ Download SKILL.md</a>
-      </div>
-      <div style="min-width:0">
-        <div class="tabbar" role="tablist" aria-label="SKILL.md usage examples" data-tabgroup="skill">
-          <button class="tab" role="tab" aria-selected="true" data-tab="skill-claude">Claude Code</button>
-          <button class="tab" role="tab" aria-selected="false" data-tab="skill-claw">OpenClaw</button>
-          <button class="tab" role="tab" aria-selected="false" data-tab="skill-prompt">Prompt injection</button>
+  <section class="frame split" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">
+    <div class="split-text">
+      <div class="eyebrow">[01] Self-onboarding</div>
+      <h2 class="h2">SKILL.md is written for <span class="dim">your agent, not you.</span></h2>
+      <p class="body">The full API in plain language. No OpenAPI parsing, no SDK. An agent reads it and starts sending. It fits in any context window.</p>
+      <a class="btn ag-dl" href="/SKILL.md" download="SKILL.md">↓ Download SKILL.md</a>
+    </div>
+    <div class="split-side ag-side">
+      <div class="tabs ag-sk">
+        <input type="radio" name="sk-tab" id="t-sk-claude" checked />
+        <input type="radio" name="sk-tab" id="t-sk-claw" />
+        <input type="radio" name="sk-tab" id="t-sk-prompt" />
+        <div class="tabs-bar">
+          <label for="t-sk-claude">Claude Code</label>
+          <label for="t-sk-claw">OpenClaw</label>
+          <label for="t-sk-prompt">System prompt</label>
+          <span class="tabs-meta"><span>paste once</span><button class="copy" type="button" hidden>copy</button></span>
         </div>
-        <div class="panel" data-active data-panel="skill-claude" data-tabgroup="skill"><pre class="code"># In your CLAUDE.md or at the start of a session:
+<div class="panel" id="p-sk-claude"><pre class="code"># In CLAUDE.md or at the start of a session:
 
 Fetch https://www.mailgi.xyz/SKILL.md and follow the instructions
 to give the agent an email address.
 
-# Or let Claude Code fetch it directly:
+# Or ask directly:
 &gt; Read https://www.mailgi.xyz/SKILL.md then register me an agent</pre></div>
-        <div class="panel" data-panel="skill-claw" data-tabgroup="skill"><pre class="code"># Add to your agent's tool list or system context:
-
+<div class="panel" id="p-sk-claw"><pre class="code"># Add to the agent's tool list or system context:
 claw fetch https://www.mailgi.xyz/SKILL.md --inject system
 
 # Or reference it as a skill source in your claw config:
 skills:
   - url: https://www.mailgi.xyz/SKILL.md
     name: mailgi-email</pre></div>
-        <div class="panel" data-panel="skill-prompt" data-tabgroup="skill"><pre class="code"># Paste this into any system prompt:
+<div class="panel" id="p-sk-prompt"><pre class="code"># Paste into any system prompt:
 
 You have access to a real email API. Fetch
 https://www.mailgi.xyz/SKILL.md to learn how to use it.
 Register an address, then use it to send and receive mail.
 
-# Or inline the file directly — it fits in any context window.</pre></div>
+# Or inline the file. It fits in any context window.</pre></div>
       </div>
     </div>
   </section>
 
-  <section class="rule-top surface">
-    <div class="section shell">
-      <div class="stack-split">
-        <div>
-          <h2>The whole API, <em class="accent">in four calls</em></h2>
-          <p class="body" style="margin-top:20px">cURL shown — a CLI and a TypeScript SDK exist, if you're into that sort of thing. So does a <a class="link-serif" href="/mcp.html">hosted MCP server</a>, if your agent lives in Claude Code, Claude Desktop or Cursor.</p>
+  <section class="frame">
+    <div class="sec-head">
+      <div class="eyebrow">[02] Reference</div>
+      <h2 class="h2">The whole API <span class="dim">in four calls.</span></h2>
+      <p class="body" style="max-width:620px">Plain HTTP works everywhere. A CLI and TypeScript SDK exist if you want them, and the <a href="/mcp.html">hosted MCP server</a> covers Claude Code, Claude Desktop and Cursor.</p>
+    </div>
+    <div class="ag-wide">
+      <div class="tabs ag-api">
+        <input type="radio" name="api-tab" id="t-api-curl" checked />
+        <input type="radio" name="api-tab" id="t-api-cli" />
+        <input type="radio" name="api-tab" id="t-api-sdk" />
+        <input type="radio" name="api-tab" id="t-api-mcp" />
+        <div class="tabs-bar">
+          <label for="t-api-curl">cURL</label>
+          <label for="t-api-cli">CLI</label>
+          <label for="t-api-sdk">SDK (TypeScript)</label>
+          <label for="t-api-mcp">MCP</label>
+          <span class="tabs-meta"><span>api.mailgi.xyz</span><button class="copy" type="button" hidden>copy</button></span>
         </div>
-        <div style="min-width:0">
-          <div class="tabbar" role="tablist" aria-label="API usage examples" data-tabgroup="code">
-            <button class="tab" role="tab" aria-selected="true" data-tab="code-curl">cURL</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="code-cli">CLI</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="code-sdk">SDK (TypeScript)</button>
-            <button class="tab" role="tab" aria-selected="false" data-tab="code-mcp">MCP</button>
-          </div>
-          <div class="panel" data-active data-panel="code-curl" data-tabgroup="code"><pre class="code"># Register — get an email address and API key
+<div class="panel" id="p-api-curl"><pre class="code"># Register: get an address and API key
 curl -X POST https://api.mailgi.xyz/v1/agents/register \
   -H "Content-Type: application/json" \
   -d '{"label":"my-agent"}'
 # =&gt; { "emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_..." }
 
-# Send an email (Mailgi addresses are free; outside ones need a balance)
+# Send (Mailgi addresses are free; outside ones need a balance)
 curl -X POST https://api.mailgi.xyz/v1/mail/send \
   -H "Authorization: Bearer $KEY" \
   -d '{"to":["alice@example.com"],"subject":"Hi","textBody":"Hello"}'
 
-# Read inbox
+# Read the inbox
 curl https://api.mailgi.xyz/v1/mail -H "Authorization: Bearer $KEY"
 
-# Read a specific message
+# Read one message
 curl https://api.mailgi.xyz/v1/mail/&lt;id&gt; -H "Authorization: Bearer $KEY"</pre></div>
-          <div class="panel" data-panel="code-cli" data-tabgroup="code"><pre class="code"># Install
+<div class="panel" id="p-api-cli"><pre class="code"># Install
 npm install -g @mailgi/mailgi
 
-# Register — saves credentials to ~/.mailgi/config.json
+# Register (saves credentials to ~/.mailgi/config.json)
 mailgi register --label my-agent
 # =&gt; registered buzzing-falcon@mailgi.xyz
 
-# Send an email
+# Send
 mailgi send --agent buzzing-falcon \
   --to alice@example.com --subject "Hi" --body "Hello from my agent"
 
-# Read inbox
+# Read the inbox
 mailgi inbox --agent buzzing-falcon</pre></div>
-          <div class="panel" data-panel="code-sdk" data-tabgroup="code"><pre class="code">// Install
-npm install @mailgi/mailgi
-
+<div class="panel" id="p-api-sdk"><pre class="code">// npm install @mailgi/mailgi
 import { AgentMailboxClient } from '@mailgi/mailgi';
 
 const client = AgentMailboxClient.withApiKey(
@@ -245,104 +298,132 @@ await client.mail.send({
 
 const { messages } = await client.mail.list({ limit: 20, sort: 'desc' });
 const email = await client.mail.get(messages[0].id);</pre></div>
-          <div class="panel" data-panel="code-mcp" data-tabgroup="code"><pre class="code"># Add the hosted MCP server — no credentials yet
+<div class="panel" id="p-api-mcp"><pre class="code"># Add the hosted MCP server, no credentials yet
 claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp
 
-# Ask the agent to call register_agent, which returns
-# an address and an API key (amb_...) shown once.
-# Then re-add the server with the key as a header:
+# Ask the agent to call register_agent. It returns an
+# address and an API key (amb_...) shown once.
+# Re-add the server with the key as a header:
 claude mcp remove mailgi
 claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp \
   --header "Authorization: Bearer amb_..."
 
-# Tools: mail_send, mail_list, mail_get, ... — each one
-# a 1:1 proxy of the REST endpoint. Full list: /mcp.html</pre></div>
-        </div>
+# Tools: mail_send, mail_list, mail_get, ...
+# each a 1:1 proxy of a REST endpoint. Full list: /mcp.html</pre></div>
       </div>
     </div>
   </section>
 
-  <section class="rule-top">
-    <div class="shell inline-split" style="padding-top:88px;padding-bottom:88px;gap:40px">
-      <div style="flex:1;min-width:320px">
-        <h2 style="font-size:clamp(28px,4vw,38px);margin-bottom:10px">Want it sending as <em class="accent">your company</em> instead?</h2>
-        <p class="body" style="max-width:560px">Attach your domain in the dashboard — DKIM, SPF and DMARC handled for you — then hand each agent a registration token.</p>
-      </div>
-      <a class="btn btn-solid btn-lg" style="flex:none" href="/">See the product →</a>
+  <section class="frame split" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">
+    <div class="split-text">
+      <div class="eyebrow">[03] Guides</div>
+      <h2 class="h2">Keep <span class="dim">reading.</span></h2>
+      <p class="body">Framework walkthroughs, use cases and comparisons, each with working code.</p>
+      <a class="more-link" href="/guides.html">all guides →</a>
+    </div>
+    <div class="split-side">
+      <ul class="list">
+        <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+        <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+        <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+        <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+        <li><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></li>
+        <li><a href="/langchain-email-agent.html">Build a LangChain email agent</a></li>
+        <li><a href="/crewai-email-agent.html">Give a CrewAI agent email</a></li>
+        <li><a href="/vercel-ai-sdk-email.html">Give a Vercel AI SDK agent email</a></li>
+        <li><a href="/n8n-email-agent.html">Give an n8n AI agent email</a></li>
+        <li><a href="/ai-assistant-email-address.html">Give your AI assistant its own email address</a></li>
+        <li><a href="/inbox-per-agent-vs-catch-all.html">Inbox per agent vs catch-all</a></li>
+        <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+        <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+        <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
+        <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+        <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+        <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+      </ul>
     </div>
   </section>
 
-<section class="rule-top related">
-  <div class="section shell">
-    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
-    <ul class="related-list">
-      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
-      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
-      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
-      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
-      <li><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></li>
-      <li><a href="/langchain-email-agent.html">Build a LangChain email agent</a></li>
-      <li><a href="/crewai-email-agent.html">Give a CrewAI agent email</a></li>
-      <li><a href="/vercel-ai-sdk-email.html">Give a Vercel AI SDK agent email</a></li>
-      <li><a href="/n8n-email-agent.html">Give an n8n AI agent email</a></li>
-      <li><a href="/ai-assistant-email-address.html">Give your AI assistant its own email address</a></li>
-      <li><a href="/inbox-per-agent-vs-catch-all.html">Inbox per agent vs catch-all</a></li>
-      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
-      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
-      <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
-      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
-      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
-      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
-    </ul>
-  </div>
-</section>
+  <section class="frame ag-band">
+    <div>
+      <h2 class="h2">Rather send as <span class="dim">your company?</span></h2>
+      <p class="body" style="max-width:none">Attach your domain in the dashboard, with DKIM, SPF and DMARC handled, then give each agent a registration token.</p>
+    </div>
+    <a class="btn btn-solid" href="/">See the product →</a>
+  </section>
 
 </main>
 
-<footer class="footer">
-  <div class="shell footer-inner">
-    <span class="footer-brand">mailgi</span>
-    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
-      <span class="dot"></span><span class="status-text">system status</span>
-    </a>
+<footer class="frame hf">
+  <div class="hf-top">
+    <span class="hf-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown"><span class="dot"></span><span class="status-text">system status</span></a>
+  </div>
+  <nav class="hf-links" aria-label="Footer">
+    <a href="https://app.mailgi.xyz">dashboard</a>
+    <a href="/guides.html">guides</a>
+    <a href="/vs-resend-postmark-mailgun.html">compare</a>
+    <a href="/docs.html">docs</a>
+    <a href="/faq.html">faq</a>
+    <a href="/changelog.html">changelog</a>
+    <a href="/mcp.html">mcp</a>
+    <a href="/SKILL.md">SKILL.md</a>
+    <a href="https://github.com/Mailgi">github</a>
+    <a href="/about.html">about</a>
+    <a href="/security.html">security</a>
+    <a href="/privacy.html">privacy</a>
+  </nav>
+  <div class="hf-base">
     <span>built for agents, not humans</span>
-    <span class="footer-end">
-      <a href="https://app.mailgi.xyz">dashboard</a>
-      <a href="/guides.html">guides</a>
-      <a href="/vs-resend-postmark-mailgun.html">compare</a>
-      <a href="/docs.html">docs</a>
-      <a href="/faq.html">faq</a>
-      <a href="/changelog.html">changelog</a>
-      <a href="/mcp.html">mcp</a>
-      <a href="/SKILL.md">SKILL.md</a>
-      <a href="https://github.com/Mailgi">github</a>
-      <a href="/about.html">about</a>
-      <a href="/security.html">security</a>
-      <a href="/privacy.html">privacy</a>
-      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
-    </span>
+    <span>support: hello@mailgi.xyz</span>
   </div>
 </footer>
 </div>
 <script src="/status.js" defer></script>
 <script>
-  // All tab-panel content is real HTML present in the DOM — a crawler or an
-  // LLM fetch with no JS execution still sees every tab's content. This only
-  // toggles which one is visible for a human in a browser.
-  document.querySelectorAll('.tabbar').forEach(function (bar) {
-    var group = bar.dataset.tabgroup;
-    var panels = document.querySelectorAll('.panel[data-tabgroup="' + group + '"]');
-    bar.querySelectorAll('.tab').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        bar.querySelectorAll('.tab').forEach(function (t) { t.setAttribute('aria-selected', 'false'); });
-        btn.setAttribute('aria-selected', 'true');
-        panels.forEach(function (p) {
-          if (p.dataset.panel === btn.dataset.tab) p.setAttribute('data-active', '');
-          else p.removeAttribute('data-active');
+/* Progressive enhancement only. Every word above, including every code tab,
+   is in the served HTML; this adds code colouring, copy buttons and the
+   typed prompt in the hero. Without JS the page is complete and static. */
+(function () {
+  // Code colouring: comments grey, results green.
+  document.querySelectorAll('.tabs .code').forEach(function (pre) {
+    pre.innerHTML = pre.textContent.split('\n').map(function (line) {
+      var s = line.trim(), esc = line.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      if (/^(#|\/\/)/.test(s) && s.indexOf('=>') === -1) return '<span class="c">' + esc + '</span>';
+      if (s.indexOf('=>') !== -1) return '<span class="v">' + esc + '</span>';
+      return esc;
+    }).join('\n');
+  });
+
+  // Copy the visible tab of each tab group.
+  if (navigator.clipboard) {
+    document.querySelectorAll('.tabs').forEach(function (tabs) {
+      var copy = tabs.querySelector('.copy');
+      if (!copy) return;
+      copy.hidden = false;
+      copy.addEventListener('click', function () {
+        var on = tabs.querySelector('input:checked');
+        var panel = on && document.getElementById('p-' + on.id.slice(2));
+        if (!panel) return;
+        navigator.clipboard.writeText(panel.textContent).then(function () {
+          copy.textContent = 'copied';
+          clearTimeout(copy._t); copy._t = setTimeout(function () { copy.textContent = 'copy'; }, 1400);
         });
       });
     });
-  });
+  }
+
+  // Hero prompt types itself out once.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var typed = document.getElementById('ag-typed');
+  if (!typed) return;
+  var cmd = typed.textContent, n = 0;
+  typed.textContent = '';
+  var t = setInterval(function () {
+    typed.textContent = cmd.slice(0, ++n);
+    if (n >= cmd.length) clearInterval(t);
+  }, 45);
+})();
 </script>
 </body>
 </html>

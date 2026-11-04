@@ -1,111 +1,35 @@
-/* Mailgi — "Editorial" design system.
-   Implemented from the Claude Design project e551a0cc ("Redesign C").
-   Serif display type (Newsreader) with italic accents, a grotesk body face,
-   mono for anything that is literally code or an address. */
-
-/* Self-hosted (see #84). These used to be imported from Google's font CDN,
-   which sent every visitor's IP to Google on every page load, in the critical
-   render path and therefore before any consent could be asked. Not gateable:
-   gating a stylesheet means an unstyled first paint for everyone.
-
-   One variable file per family/style/subset — Google serves a single file
-   covering the whole weight range, so the discrete weights it declares are
-   collapsed into a range here. Newsreader also carries an optical-size axis,
-   which font-optical-sizing handles by default.
-
-   Newsreader, Hanken Grotesk and JetBrains Mono are all SIL Open Font
-   License 1.1 — self-hosting is permitted; see fonts/LICENSE.txt. */
-
-@font-face {
-  font-family: 'Hanken Grotesk';
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/fonts/hanken-grotesk-normal-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Hanken Grotesk';
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/fonts/hanken-grotesk-normal-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 400 500;
-  font-display: swap;
-  src: url('/fonts/jetbrains-mono-normal-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 400 500;
-  font-display: swap;
-  src: url('/fonts/jetbrains-mono-normal-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: italic;
-  font-weight: 400 500;
-  font-display: swap;
-  src: url('/fonts/newsreader-italic-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: italic;
-  font-weight: 400 500;
-  font-display: swap;
-  src: url('/fonts/newsreader-italic-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: normal;
-  font-weight: 400 500;
-  font-display: swap;
-  src: url('/fonts/newsreader-normal-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Newsreader';
-  font-style: normal;
-  font-weight: 400 500;
-  font-display: swap;
-  src: url('/fonts/newsreader-normal-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
+/* Mailgi — content-page styles (guides, comparisons, docs, legal).
+   Loaded after chrome.css, which owns fonts, the nav and the footer. The class
+   names predate the 2026-11 dark "grid" redesign; the tokens below map them
+   onto it, and the overrides at the end of this file cover what tokens can't.
+   Newsreader/Hanken Grotesk/JetBrains Mono files stay in fonts/ but are no
+   longer referenced here. */
 
 :root {
-  --bg: #fbfbfa;
-  --surface: #f2f1ec;
-  --ink: #16211f;
-  --muted: #5c6a66;
-  --muted-2: #7e8a86;
-  --rule: #e3e5e2;
-  --rule-strong: #d7dad5;
-  --numeral: #c3cbc7;
+  --bg: oklch(0.14 0.003 270);
+  --surface: oklch(0.175 0.003 270);
+  --ink: oklch(0.97 0.002 270);
+  --muted: oklch(0.72 0.006 270);
+  --muted-2: oklch(0.55 0.006 270);
+  --rule: oklch(0.27 0.004 270);
+  --rule-strong: oklch(0.32 0.005 270);
+  --numeral: oklch(0.55 0.006 270);
 
-  --accent: oklch(0.52 0.11 200);
-  --accent-dark: oklch(0.42 0.11 200);
-  --accent-mid: oklch(0.35 0.08 200);
-  --accent-light: oklch(0.78 0.1 200);
+  --accent: oklch(0.84 0.16 150);
+  --accent-dark: oklch(0.90 0.12 150);
+  --accent-mid: oklch(0.84 0.16 150);
+  --accent-light: oklch(0.84 0.16 150);
 
-  --on-dark: #f2f1ec;
-  --on-dark-body: #cfd6d1;
-  --on-dark-muted: #a9b3ae;
-  --on-dark-dim: #8f9a95;
-  --on-dark-faint: #71807b;
-  --ok: #4a8a63;
+  --on-dark: oklch(0.97 0.002 270);
+  --on-dark-body: oklch(0.80 0.005 270);
+  --on-dark-muted: oklch(0.72 0.006 270);
+  --on-dark-dim: oklch(0.62 0.006 270);
+  --on-dark-faint: oklch(0.55 0.006 270);
+  --ok: oklch(0.84 0.16 150);
 
-  --serif: 'Newsreader', Georgia, serif;
-  --sans: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --serif: 'Geist', system-ui, -apple-system, sans-serif;
+  --sans: 'Geist', system-ui, -apple-system, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, Menlo, monospace;
 
   --shell: 1240px;
   --gutter: 48px;
@@ -372,41 +296,6 @@ pre.code {
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* ── Cookie consent (#76) ─────────────────────────────────────────────────
-   Injected by consent.js, never in the served HTML — see that file for why.
-   position:fixed so it cannot shift layout, and bottom-anchored so it never
-   covers the nav CTA or the hero. */
-#consent {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
-  display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
-  padding: 18px var(--gutter);
-  background: var(--ink); color: var(--on-dark-body);
-  border-top: 1px solid rgba(242, 241, 236, .14);
-  /* Lifts it off whatever is behind. The pages use full-width ink bands as a
-     device, and without this the banner merges into one at some scroll
-     positions. */
-  box-shadow: 0 -12px 32px rgba(22, 33, 31, .28);
-  font-size: 14px; line-height: 1.55;
-  animation: consent-in .25s ease both;
-}
-@keyframes consent-in { from { transform: translateY(100%) } to { transform: none } }
-.consent-text { margin: 0; max-width: 760px; flex: 1 1 420px; }
-.consent-actions { display: flex; gap: 10px; flex: none; margin-left: auto; }
-.consent-btn {
-  font-family: var(--sans); font-size: 13.5px; font-weight: 600;
-  padding: 10px 20px; border-radius: 6px; cursor: pointer;
-  border: 1px solid transparent; transition: background .15s, border-color .15s;
-}
-.consent-accept { background: var(--on-dark); color: var(--ink); }
-.consent-accept:hover { background: #fff; }
-.consent-decline {
-  background: transparent; color: var(--on-dark-muted);
-  border-color: rgba(242, 241, 236, .26);
-}
-.consent-decline:hover { color: var(--on-dark); border-color: rgba(242, 241, 236, .5); }
-.consent-btn:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
-.consent-link { color: var(--on-dark); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
-.consent-link:hover { color: #fff; }
 
 /* ── Prose pages (privacy, and anything else that is mostly text) ────────
    Narrow measure, real paragraph rhythm. The marketing pages are built from
@@ -647,3 +536,33 @@ pre.code {
 @media (prefers-reduced-motion: reduce) {
   .illo-stage { display: none; }
 }
+
+/* ── 2026-11 dark "grid" overrides ────────────────────────────────────────
+   Where the old light theme used --ink as a background, or relied on the
+   serif italic for emphasis. */
+body { line-height: 1.55; }
+main { max-width: var(--shell); margin: 0 auto; width: 100%; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); }
+main > section > .shell, main > .shell { max-width: none; }
+.display, h1, h2, h3.display { font-weight: 500; letter-spacing: -0.035em; text-wrap: balance; }
+h1 { letter-spacing: -0.045em; line-height: .98; }
+em.accent, em.accent-light { font-style: normal; color: var(--muted-2); }
+.kicker { font-family: var(--mono); font-weight: 400; letter-spacing: .08em; color: var(--muted-2); }
+.numeral { font-family: var(--mono); font-size: 13px !important; color: var(--accent); }
+.dark { background: var(--surface); color: var(--ink); }
+.surface { background: var(--surface); }
+pre.code { background: var(--surface); color: oklch(0.93 0.004 270); border: 1px solid var(--rule); }
+.btn { border-radius: 0; }
+.btn-solid:hover { background: var(--accent); color: var(--bg); }
+.btn-outline { border-color: var(--rule); }
+.btn-outline:hover { background: transparent; border-color: var(--muted-2); color: var(--ink); }
+.link-serif { font-family: var(--mono); font-style: normal; font-size: 14px; color: var(--accent); border-bottom: 0; }
+.link-serif:hover { color: var(--ink); }
+.chip { border-radius: 0; font-family: var(--mono); }
+.faq .mark { font-family: var(--mono); }
+.related-list a { font-family: var(--sans); font-size: 16px; }
+.split > .quote { border-right-color: var(--rule); }
+.tile { background: var(--bg); }
+.tile:hover { background: var(--surface); }
+.illo-stage { border-radius: 0; box-shadow: none; }
+@media (max-width: 700px) { main { border-left: 0; border-right: 0; } }
+.reveal, .reveal-1, .reveal-2, .reveal-3 { animation: none; }

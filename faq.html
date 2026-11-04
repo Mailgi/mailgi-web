@@ -20,7 +20,67 @@
 <meta name="twitter:description" content="Answers on giving AI agents email: registration, receiving codes, sending limits, custom domains, pricing, webhooks, MCP and where mail is stored." />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="stylesheet" href="/styles.css" />
+<link rel="preload" href="/fonts/geist-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="/chrome.css" />
+<link rel="stylesheet" href="/grid.css" />
+<style>
+/* FAQ page: left-aligned hero, sticky topic index, grouped questions. */
+.faq-hero {
+  padding: clamp(64px, 9vw, 120px) var(--gutter) clamp(48px, 6vw, 72px);
+  display: flex; flex-direction: column; gap: 24px;
+}
+.faq-hero h1 {
+  font-size: clamp(46px, 7.5vw, 104px); line-height: .96; letter-spacing: -0.045em;
+  max-width: 1000px; text-wrap: balance;
+}
+.faq-hero .lede { max-width: 620px; font-size: clamp(17px, 1.6vw, 19px); color: var(--body); text-wrap: pretty; }
+.faq-summary { max-width: 620px; font-size: 15px; line-height: 1.65; color: var(--soft); text-wrap: pretty; }
+.faq-search {
+  margin-top: 16px; max-width: 620px; display: flex; align-items: center; gap: 12px;
+  border: 1px solid var(--line); background: var(--raised); padding: 0 18px;
+}
+.faq-search[hidden] { display: none; }
+.faq-search:focus-within { border-color: var(--mute); }
+.faq-search .slash { font-family: var(--mono); font-size: 14px; color: var(--accent); }
+.faq-search input {
+  all: unset; flex: 1; min-width: 0; padding: 16px 0; font-size: 16px; color: var(--ink);
+}
+.faq-search input::placeholder { color: var(--mute); }
+.faq-search input::-webkit-search-cancel-button { display: none; }
+.faq-search .count { font-family: var(--mono); font-size: 12px; color: var(--mute); white-space: nowrap; }
+
+.faq-body { display: flex; flex-wrap: wrap; align-items: flex-start; }
+.faq-topics {
+  flex: 1 1 240px; max-width: 100%; position: sticky; top: 64px;
+  padding: 32px var(--cell); display: flex; flex-direction: column; gap: 4px;
+}
+.faq-topics .eyebrow { margin-bottom: 12px; }
+.faq-topics > a {
+  display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 15px; color: var(--bright);
+}
+.faq-topics > a:hover { color: var(--accent); }
+.faq-topics .n { font-family: var(--mono); font-size: 12px; color: var(--mute); }
+.faq-topics > a.is-empty { opacity: .4; }
+.faq-start {
+  margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 8px; font-family: var(--mono); font-size: 13px;
+}
+.faq-start a { color: var(--accent); }
+.faq-groups { flex: 3 1 560px; min-width: 0; border-left: 1px solid var(--line); }
+.faq-group { scroll-margin-top: 72px; }
+.faq-group + .faq-group { border-top: 1px solid var(--line); }
+.faq-group h2 {
+  padding: 40px var(--cell) 18px; font-size: clamp(24px, 2.6vw, 32px); letter-spacing: -0.03em;
+  border-bottom: 1px solid var(--line);
+}
+.faq-group[hidden], .faq details[hidden] { display: none; }
+.faq-empty { padding: 48px var(--cell); color: var(--body); }
+.faq-empty[hidden] { display: none; }
+@media (max-width: 860px) {
+  .faq-topics { position: static; border-bottom: 1px solid var(--line); }
+  .faq-groups { border-left: 0; }
+}
+</style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -285,61 +345,71 @@
 <body>
 <div style="min-height:100vh;display:flex;flex-direction:column">
 
-<nav class="nav shell">
-  <a class="brand" href="/">
-    <img src="/favicon.svg" alt="" width="26" height="26" />
-    <span>mailgi</span>
-  </a>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
-  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
-  <div class="nav-links">
-    <a href="/">Product</a>
-    <a href="/agents.html">For agents</a>
-    <a href="/pricing.html">Pricing</a>
-    <div class="nav-group">
-      <a class="nav-group-trigger" href="/guides.html">Resources</a>
-      <div class="nav-menu-panel">
-        <a href="/guides.html">Guides</a>
-        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
-        <a href="/docs.html">Docs</a>
-        <a href="/mcp.html">MCP server</a>
-        <a href="/faq.html" aria-current="page">FAQ</a>
+<header class="hn">
+  <div class="hn-inner">
+    <a class="hn-brand" href="/" aria-label="Mailgi home"><span class="hn-mark" aria-hidden="true"></span>mailgi</a>
+    <nav class="hn-links" aria-label="Main">
+      <a href="/" data-i="0">Product</a>
+      <a href="/agents.html" data-i="1">For agents</a>
+      <a href="/pricing.html" data-i="2">Pricing</a>
+      <a href="/mcp.html" data-i="3">MCP</a>
+      <a href="/guides.html" data-i="4">Guides</a>
+      <a href="/vs-resend-postmark-mailgun.html" data-i="5">Compare</a>
+      <a href="/faq.html" aria-current="page" data-i="6">FAQ</a>
+      <a href="/docs.html" data-i="7">Docs</a>
+      <details class="hn-more">
+        <summary>More</summary>
+        <div class="hn-menu">
+          <a href="/" data-i="0">Product</a>
+          <a href="/agents.html" data-i="1">For agents</a>
+          <a href="/pricing.html" data-i="2">Pricing</a>
+          <a href="/mcp.html" data-i="3">MCP</a>
+          <a href="/guides.html" data-i="4">Guides</a>
+          <a href="/vs-resend-postmark-mailgun.html" data-i="5">Compare</a>
+          <a href="/faq.html" data-i="6">FAQ</a>
+          <a href="/docs.html" data-i="7">Docs</a>
+        </div>
+      </details>
+    </nav>
+    <div class="hn-end">
+      <a class="hn-gh" href="https://github.com/Mailgi">github</a>
+      <a class="hn-cta" href="https://app.mailgi.xyz"><span class="long">Open dashboard</span><span class="short">Dashboard</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="frame faq-hero">
+    <div class="eyebrow">FAQ</div>
+    <h1>What people ask <span class="dim">before they start.</span></h1>
+    <p class="lede">24 answers, checked against the live API. Where something isn't built yet, the answer says so.</p>
+    <p class="faq-summary">Mailgi gives an AI agent its own real email address in one API call, with no human in the loop. Receiving is free, mail between your own agents is free, a free tier covers 50 new recipients a day, and beyond it mail to the outside world costs $0.0005 per recipient from a prepaid balance. Every answer below matches the live API; where something isn't built yet, it says so.</p>
+    <label class="faq-search" hidden>
+      <span class="slash" aria-hidden="true">/</span>
+      <input type="search" id="faq-q" placeholder="Search questions — webhooks, domains, limits…" aria-label="Search questions" autocomplete="off" />
+      <span class="count" id="faq-count" aria-live="polite">24 questions</span>
+    </label>
+  </section>
+
+  <section class="frame faq-body">
+    <aside class="faq-topics" aria-label="Topics">
+      <span class="eyebrow">Topics</span>
+      <a href="#address">Getting an address<span class="n">5</span></a>
+      <a href="#receiving">Receiving and reading<span class="n">6</span></a>
+      <a href="#sending">Sending and deliverability<span class="n">4</span></a>
+      <a href="#pricing">Pricing and billing<span class="n">4</span></a>
+      <a href="#tools">Tools and integrations<span class="n">3</span></a>
+      <a href="#security">Security and privacy<span class="n">2</span></a>
+      <div class="faq-start">
+        <a href="https://app.mailgi.xyz">Start free →</a>
+        <a href="/SKILL.md">Read SKILL.md →</a>
       </div>
-    </div>
-  </div>
-  <div class="nav-end">
-    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
-      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
-    </a>
-    <span class="nav-note">receiving is free</span>
-    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
-  </div>
-</nav>
-
-<main style="flex:1">
-
-<section class="hero shell">
-  <div class="kicker reveal" style="margin-bottom:26px">FAQ</div>
-  <h1 class="reveal reveal-1" style="max-width:900px">Everything people ask <em class="accent">before they start</em></h1>
-  <div class="hero-grid reveal reveal-2">
-    <p class="lede" style="max-width:520px">24 questions about giving an AI agent its own email address, answered against the live API.</p>
-    <div class="hero-actions">
-      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
-      <a class="link-serif" href="/SKILL.md">or read SKILL.md →</a>
-    </div>
-  </div>
-</section>
-
-<section class="dark" style="border-top:1px solid var(--rule)">
-  <div class="shell" style="padding-top:64px;padding-bottom:64px">
-    <p class="body" style="font-size:18px;line-height:1.7;color:var(--on-dark-body);max-width:760px;margin:0">Mailgi gives an AI agent its own real email address in one API call, with no human in the loop. Receiving is free, mail between your own agents is free, a free tier covers 50 new recipients a day, and beyond it mail to the outside world costs $0.0005 per recipient from a prepaid balance. Every answer below matches the live API; where something isn't built yet, it says so.</p>
-  </div>
-</section>
-
-<section class="rule-top">
-  <div class="section shell">
-    <h2 style="margin-bottom:40px">Getting an <em class="accent">address</em></h2>
-    <div class="faq">
+    </aside>
+    <div class="faq-groups">
+    <div class="faq-group" id="address">
+      <h2>Getting an <span class="dim">address</span></h2>
+      <div class="faq">
       <details>
         <summary><span class="numeral">01</span><span class="q">How does an AI agent get its own email address?</span><span class="mark"></span></summary>
         <p class="a">One unauthenticated POST to <span class="mono">https://api.mailgi.xyz/v1/agents/register</span>. The response carries a readable address like <span class="mono">buzzing-falcon@mailgi.xyz</span>, a second alias address that delivers to the same inbox, and an API key that is shown once. No signup form, no OAuth, no human approval. The full walkthrough is in <a href="/agent-email-address.html">how to give an AI agent an email address</a>.</p>
@@ -360,14 +430,11 @@
         <summary><span class="numeral">05</span><span class="q">Can an agent delete its own address?</span><span class="mark"></span></summary>
         <p class="a">Yes, with <span class="mono">DELETE /v1/agents/me</span>. It is permanent and burns the address: a deleted local part can never be registered again, by anyone. To start clean, register a new agent instead.</p>
       </details>
+      </div>
     </div>
-  </div>
-</section>
-
-<section class="rule-top surface">
-  <div class="section shell">
-    <h2 style="margin-bottom:40px">Receiving and <em class="accent">reading</em></h2>
-    <div class="faq">
+    <div class="faq-group" id="receiving">
+      <h2>Receiving and <span class="dim">reading</span></h2>
+      <div class="faq">
       <details>
         <summary><span class="numeral">06</span><span class="q">Can an AI agent receive verification codes by email?</span><span class="mark"></span></summary>
         <p class="a">Yes. That is the most common reason to give an agent an address. Register, trigger the signup, poll <span class="mono">GET /v1/mail</span> every few seconds until the message arrives, then read the code from the body. See <a href="/agent-email-verification.html">receiving a verification code</a> for working code and the four mistakes that make it flaky.</p>
@@ -392,14 +459,11 @@
         <summary><span class="numeral">11</span><span class="q">Can an agent organise mail into folders?</span><span class="mark"></span></summary>
         <p class="a">Yes. Create, rename and delete folders with <span class="mono">/v1/mailboxes</span>, move messages with <span class="mono">PATCH /v1/mail/&lt;id&gt;/move</span> and mark them read with <span class="mono">PATCH /v1/mail/&lt;id&gt;/flags</span>. Folders work well as ticket status in a support inbox.</p>
       </details>
+      </div>
     </div>
-  </div>
-</section>
-
-<section class="rule-top">
-  <div class="section shell">
-    <h2 style="margin-bottom:40px">Sending and <em class="accent">deliverability</em></h2>
-    <div class="faq">
+    <div class="faq-group" id="sending">
+      <h2>Sending and <span class="dim">deliverability</span></h2>
+      <div class="faq">
       <details>
         <summary><span class="numeral">12</span><span class="q">Will mail from an agent land in spam?</span><span class="mark"></span></summary>
         <p class="a">Every domain sends with DKIM, SPF and DMARC. On the shared @mailgi.xyz domain they are already in place; on your own domain Mailgi generates the records and refuses to send until they verify. Reputation on the shared domain is protected by conservative sending limits; on your own domain it is yours alone.</p>
@@ -416,14 +480,11 @@
         <summary><span class="numeral">15</span><span class="q">Can two agents email each other?</span><span class="mark"></span></summary>
         <p class="a">Yes, and it is free. Mail to any @mailgi.xyz address or to your organisation's own domains costs nothing and is counted separately from external sending. See <a href="/agent-to-agent-email.html">agent-to-agent email</a>.</p>
       </details>
+      </div>
     </div>
-  </div>
-</section>
-
-<section class="rule-top surface">
-  <div class="section shell">
-    <h2 style="margin-bottom:40px">Pricing and <em class="accent">billing</em></h2>
-    <div class="faq">
+    <div class="faq-group" id="pricing">
+      <h2>Pricing and <span class="dim">billing</span></h2>
+      <div class="faq">
       <details>
         <summary><span class="numeral">16</span><span class="q">How much does Mailgi cost?</span><span class="mark"></span></summary>
         <p class="a">Receiving is free, and so is mail between your own agents. Until its first top-up an agent can write to up to 50 new recipients a day for free, with Mailgi branding on its mail. After that, mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription. Details on the <a href="/pricing.html">pricing page</a>.</p>
@@ -440,14 +501,11 @@
         <summary><span class="numeral">19</span><span class="q">How do I top up, and do I need an account?</span><span class="mark"></span></summary>
         <p class="a">Anyone can top up any agent by card at <a href="https://app.mailgi.xyz/topup">app.mailgi.xyz/topup</a>, with no Mailgi account. The minimum is $5 plus any sales tax or VAT; Stripe is the merchant of record. An agent can also request a checkout link with <span class="mono">POST /v1/billing/topup</span>.</p>
       </details>
+      </div>
     </div>
-  </div>
-</section>
-
-<section class="rule-top">
-  <div class="section shell">
-    <h2 style="margin-bottom:40px">Tools and <em class="accent">integrations</em></h2>
-    <div class="faq">
+    <div class="faq-group" id="tools">
+      <h2>Tools and <span class="dim">integrations</span></h2>
+      <div class="faq">
       <details>
         <summary><span class="numeral">20</span><span class="q">Is there an MCP server?</span><span class="mark"></span></summary>
         <p class="a">Yes, hosted at <span class="mono">https://api.mailgi.xyz/mcp</span> (Streamable HTTP). It works with Claude Code, Claude Desktop and Cursor, and every tool is a 1:1 proxy of a REST endpoint with the same limits and billing. It has no OAuth yet, so it cannot be added as a claude.ai or ChatGPT connector. Setup is on the <a href="/mcp.html">MCP server page</a>.</p>
@@ -460,14 +518,11 @@
         <summary><span class="numeral">22</span><span class="q">What is SKILL.md?</span><span class="mark"></span></summary>
         <p class="a"><a href="/SKILL.md">SKILL.md</a> is the whole API written in plain language for an agent to read at runtime. Point an agent at it and it can register, send and read mail without an SDK. It is versioned and tracks the live API. The <a href="/docs.html">docs page</a> explains how it differs from the OpenAPI spec and llms.txt.</p>
       </details>
+      </div>
     </div>
-  </div>
-</section>
-
-<section class="rule-top surface">
-  <div class="section shell">
-    <h2 style="margin-bottom:40px">Security and <em class="accent">privacy</em></h2>
-    <div class="faq">
+    <div class="faq-group" id="security">
+      <h2>Security and <span class="dim">privacy</span></h2>
+      <div class="faq">
       <details>
         <summary><span class="numeral">23</span><span class="q">Where is mail stored?</span><span class="mark"></span></summary>
         <p class="a">Mailbox content is stored in Germany, and outbound mail relays through AWS in Ireland. The <a href="/privacy.html">privacy page</a> lists every sub-processor and where each one runs.</p>
@@ -476,22 +531,26 @@
         <summary><span class="numeral">24</span><span class="q">How do I verify that a webhook came from Mailgi?</span><span class="mark"></span></summary>
         <p class="a">Compute HMAC-SHA256 over the <span class="mono">x-mailgi-timestamp</span> header, a dot, and the raw request body, using the secret returned when you created the endpoint, and compare it to <span class="mono">x-mailgi-signature</span> in constant time. Reject timestamps more than a few minutes old.</p>
       </details>
+      </div>
     </div>
-  </div>
-</section>
+      <p class="faq-empty" id="faq-empty" hidden>No matches. Try “domain”, “webhook” or “limit”, or email hello@mailgi.xyz.</p>
+    </div>
+  </section>
 
-<section class="rule-top">
-  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
-    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
-    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
-    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
-  </div>
-</section>
+  <section class="frame cta">
+    <h2>One POST to start.</h2>
+    <p>No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </section>
 
-<section class="rule-top related">
-  <div class="section shell">
-    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
-    <ul class="related-list">
+  <section class="frame split">
+    <div class="split-text">
+      <div class="eyebrow">Guides</div>
+      <h2 class="h2">Keep <span class="dim">reading.</span></h2>
+      <a class="more-link" href="/guides.html">all guides →</a>
+    </div>
+    <div class="split-side">
+    <ul class="list">
       <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
       <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
       <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
@@ -509,36 +568,73 @@
       <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
       <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
     </ul>
-  </div>
-</section>
+    </div>
+  </section>
 
 </main>
 
-<footer class="footer">
-  <div class="shell footer-inner">
-    <span class="footer-brand">mailgi</span>
-    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
-      <span class="dot"></span><span class="status-text">system status</span>
-    </a>
+<footer class="frame hf">
+  <div class="hf-top">
+    <span class="hf-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown"><span class="dot"></span><span class="status-text">system status</span></a>
+  </div>
+  <nav class="hf-links" aria-label="Footer">
+    <a href="https://app.mailgi.xyz">dashboard</a>
+    <a href="/guides.html">guides</a>
+    <a href="/vs-resend-postmark-mailgun.html">compare</a>
+    <a href="/docs.html">docs</a>
+    <a href="/faq.html">faq</a>
+    <a href="/changelog.html">changelog</a>
+    <a href="/mcp.html">mcp</a>
+    <a href="/SKILL.md">SKILL.md</a>
+    <a href="https://github.com/Mailgi">github</a>
+    <a href="/about.html">about</a>
+    <a href="/security.html">security</a>
+    <a href="/privacy.html">privacy</a>
+  </nav>
+  <div class="hf-base">
     <span>built for agents, not humans</span>
-    <span class="footer-end">
-      <a href="https://app.mailgi.xyz">dashboard</a>
-      <a href="/guides.html">guides</a>
-      <a href="/vs-resend-postmark-mailgun.html">compare</a>
-      <a href="/docs.html">docs</a>
-      <a href="/faq.html">faq</a>
-      <a href="/changelog.html">changelog</a>
-      <a href="/mcp.html">mcp</a>
-      <a href="/SKILL.md">SKILL.md</a>
-      <a href="https://github.com/Mailgi">github</a>
-      <a href="/about.html">about</a>
-      <a href="/security.html">security</a>
-      <a href="/privacy.html">privacy</a>
-      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
-    </span>
+    <span>support: hello@mailgi.xyz</span>
   </div>
 </footer>
 </div>
+<script>
+/* Search filter: decoration only. Without JS every question stays visible and the box stays hidden. */
+(function () {
+  var box = document.querySelector('.faq-search');
+  var input = document.getElementById('faq-q');
+  var count = document.getElementById('faq-count');
+  var empty = document.getElementById('faq-empty');
+  if (!box || !input) return;
+  box.hidden = false;
+  var groups = [].slice.call(document.querySelectorAll('.faq-group'));
+  var total = document.querySelectorAll('.faq-group details').length;
+  input.addEventListener('input', function () {
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    groups.forEach(function (g) {
+      var n = 0;
+      g.querySelectorAll('details').forEach(function (d) {
+        var hit = !q || d.textContent.toLowerCase().indexOf(q) !== -1;
+        d.hidden = !hit;
+        if (q) d.open = hit;
+        if (hit) n++;
+      });
+      g.hidden = n === 0;
+      var link = document.querySelector('.faq-topics a[href="#' + g.id + '"]');
+      if (link) link.classList.toggle('is-empty', n === 0);
+      shown += n;
+    });
+    count.textContent = q ? shown + (shown === 1 ? ' match' : ' matches') : total + ' questions';
+    empty.hidden = shown !== 0;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== input && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
+      e.preventDefault(); input.focus();
+    }
+  });
+})();
+</script>
 <script src="/status.js" defer></script>
 </body>
 </html>

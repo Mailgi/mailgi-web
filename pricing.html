@@ -20,7 +20,77 @@
 <meta name="twitter:description" content="Start free: 50 new recipients a day, with Mailgi branding. Then pay as you go: $0.0005 a recipient, $0.02 once per new address. Every limit in full." />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<link rel="stylesheet" href="/styles.css" />
+<link rel="preload" href="/fonts/geist-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="stylesheet" href="/chrome.css" />
+<link rel="stylesheet" href="/grid.css" />
+<style>
+/* Pricing page only. Tokens from chrome.css, components from grid.css. */
+.pr-hero { padding-bottom: clamp(64px, 9vw, 120px); }
+.pr-hero h1 { font-size: clamp(46px, 7.5vw, 104px); max-width: 1000px; }
+.pr-note { padding: 24px var(--gutter); color: var(--body); font-size: 15px; max-width: 900px; text-wrap: pretty; }
+.pr-note strong, .pr-wide strong { color: var(--ink); font-weight: 500; }
+.pr-wide { max-width: 660px; }
+.pr-foot { margin-top: auto; padding-top: 24px; font-size: 15px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Tables (the old .cmp lived in styles.css, which this page no longer loads) */
+.tbl-scroll { overflow-x: auto; border-top: 1px solid var(--line); }
+.tbl { width: 100%; border-collapse: collapse; font-size: 15px; }
+.tbl.tiers { min-width: 720px; }
+.tbl.limits { min-width: 600px; }
+.tbl th, .tbl td { padding: 16px 24px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.tbl th + th, .tbl td { border-left: 1px solid var(--line); }
+.tbl th:first-child { padding-left: var(--cell); font-weight: 400; color: var(--ink); }
+.tbl thead th {
+  font-family: var(--mono); font-size: 12px; font-weight: 400; text-transform: uppercase; letter-spacing: .06em; color: var(--mute);
+}
+.tbl thead th.paid { color: var(--accent); }
+.tbl td { color: var(--body); }
+.tbl.tiers th[scope="row"] { width: 34%; }
+.tbl.limits th[scope="row"] { width: 50%; }
+.tbl.limits td { font-family: var(--mono); font-size: 13.5px; }
+.tbl tbody tr:hover { background: var(--raised); }
+.tbl tbody tr:last-child > * { border-bottom: 0; }
+
+/* Introductions */
+.points { list-style: none; margin: 0; padding: 0; }
+.points li {
+  display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px;
+  padding: 24px var(--cell); border-bottom: 1px solid var(--line); font-size: 15.5px; text-wrap: pretty;
+}
+.points li::before { content: "→"; font-family: var(--mono); color: var(--accent); }
+.points li:last-child { border-bottom: 0; }
+
+/* Estimator: the static HTML is a complete worked example; JS adds the controls. */
+.est .split-text { gap: 28px; }
+.sliders { display: flex; flex-direction: column; gap: 28px; }
+.sliders[hidden], .modes[hidden] { display: none; }
+.sliders label { display: flex; flex-direction: column; gap: 12px; }
+.sl-head { display: flex; justify-content: space-between; gap: 16px; font-size: 15px; }
+.sl-head output { color: var(--accent); }
+.sliders input[type=range] { accent-color: var(--accent); width: 100%; margin: 0; }
+.bill { background: var(--raised); display: flex; flex-direction: column; }
+.modes { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+.modes button {
+  all: unset; cursor: pointer; padding: 16px 20px; text-align: center; font-family: var(--mono); font-size: 13px; color: var(--soft);
+}
+.modes button:hover { color: var(--ink); }
+.modes button[aria-pressed="true"] { color: var(--ink); background: var(--bg); box-shadow: inset 0 -2px 0 var(--accent); }
+.modes button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.bill-line {
+  display: flex; justify-content: space-between; gap: 16px; padding: 18px var(--cell);
+  border-bottom: 1px solid var(--line); font-size: 15px;
+}
+.bill-line > span:first-child { color: var(--body); }
+.bill-total { padding: 36px var(--cell); display: flex; flex-direction: column; gap: 8px; }
+.bill-total .total { font-size: clamp(52px, 6vw, 80px); font-weight: 500; letter-spacing: -0.045em; line-height: 1; }
+.bill-note {
+  padding: 16px var(--cell); border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.6; color: var(--mute);
+}
+.bill-note.ok { color: var(--accent); }
+.bill-note.warn { color: oklch(0.80 0.12 75); }
+</style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -243,178 +313,176 @@
 <body>
 <div style="min-height:100vh;display:flex;flex-direction:column">
 
-<nav class="nav shell">
-  <a class="brand" href="/">
-    <img src="/favicon.svg" alt="" width="26" height="26" />
-    <span>mailgi</span>
-  </a>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle-cb" />
-  <label class="nav-toggle" for="nav-toggle" aria-label="Menu"><span class="nav-toggle-bars" aria-hidden="true"></span></label>
-  <div class="nav-links">
-    <a href="/">Product</a>
-    <a href="/agents.html">For agents</a>
-    <a href="/pricing.html" aria-current="page">Pricing</a>
-    <div class="nav-group">
-      <a class="nav-group-trigger" href="/guides.html">Resources</a>
-      <div class="nav-menu-panel">
-        <a href="/guides.html">Guides</a>
-        <a href="/vs-resend-postmark-mailgun.html">Compare</a>
-        <a href="/docs.html">Docs</a>
-        <a href="/mcp.html">MCP server</a>
-        <a href="/faq.html">FAQ</a>
-      </div>
+<header class="hn">
+  <div class="hn-inner">
+    <a class="hn-brand" href="/" aria-label="Mailgi home"><span class="hn-mark" aria-hidden="true"></span>mailgi</a>
+    <nav class="hn-links" aria-label="Main">
+      <a href="/" data-i="0">Product</a>
+      <a href="/agents.html" data-i="1">For agents</a>
+      <a href="/pricing.html" aria-current="page" data-i="2">Pricing</a>
+      <a href="/mcp.html" data-i="3">MCP</a>
+      <a href="/guides.html" data-i="4">Guides</a>
+      <a href="/vs-resend-postmark-mailgun.html" data-i="5">Compare</a>
+      <a href="/faq.html" data-i="6">FAQ</a>
+      <a href="/docs.html" data-i="7">Docs</a>
+      <details class="hn-more">
+        <summary>More</summary>
+        <div class="hn-menu">
+          <a href="/" data-i="0">Product</a>
+          <a href="/agents.html" data-i="1">For agents</a>
+          <a href="/pricing.html" data-i="2">Pricing</a>
+          <a href="/mcp.html" data-i="3">MCP</a>
+          <a href="/guides.html" data-i="4">Guides</a>
+          <a href="/vs-resend-postmark-mailgun.html" data-i="5">Compare</a>
+          <a href="/faq.html" data-i="6">FAQ</a>
+          <a href="/docs.html" data-i="7">Docs</a>
+        </div>
+      </details>
+    </nav>
+    <div class="hn-end">
+      <a class="hn-gh" href="https://github.com/Mailgi">github</a>
+      <a class="hn-cta" href="https://app.mailgi.xyz"><span class="long">Open dashboard</span><span class="short">Dashboard</span></a>
     </div>
   </div>
-  <div class="nav-end">
-    <a class="icon-link" href="https://github.com/Mailgi" aria-label="Mailgi on GitHub">
-      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path></svg>
-    </a>
-    <span class="nav-note">receiving is free</span>
-    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open dashboard</a>
-  </div>
-</nav>
+</header>
 
 <main style="flex:1">
 
-<section class="hero shell">
-  <div class="kicker reveal" style="margin-bottom:26px">Pricing</div>
-  <h1 class="reveal reveal-1" style="max-width:900px">Start free. <em class="accent">Pay when you outgrow it.</em></h1>
-  <div class="hero-grid reveal reveal-2">
-    <p class="lede" style="max-width:540px">Every agent starts free, with up to 50 new recipients a day and Mailgi branding on its mail. The first top-up removes both; after that you pay per recipient. Receiving is always free. No subscription, no seats.</p>
+  <section class="frame hero pr-hero">
+    <div class="eyebrow">Pricing</div>
+    <h1>Start free. <span class="dim">Pay when you outgrow it.</span></h1>
+    <p class="lede">Every agent starts free: 50 new recipients a day, with Mailgi branding. The first top-up removes both, and after that you pay per recipient. Receiving is always free. No subscription, no seats.</p>
     <div class="hero-actions">
-      <a class="btn btn-solid btn-lg" href="https://app.mailgi.xyz">Start free</a>
-      <a class="link-serif" href="#tiers">see the prices →</a>
+      <a class="btn btn-solid" href="https://app.mailgi.xyz">Start free</a>
+      <a class="btn" href="#estimate">Estimate your bill →</a>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section shell rule-top" id="tiers">
-  <h2 style="margin-bottom:12px">Free and paid, <em class="accent">in one table</em></h2>
-  <p class="body" style="font-size:16px;margin-bottom:36px;max-width:700px">One step between them: the first top-up. An agent that registered itself has its own balance; agents on your organisation's domain share the organisation's.</p>
-  <div class="table-scroll">
-    <table class="cmp tiers" style="min-width:0">
-      <thead>
-        <tr>
-          <th scope="col"></th>
-          <th scope="col">Free</th>
-          <th scope="col">Paid</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">Mail to people outside Mailgi</th>
-          <td class="yes">Free</td>
-          <td>$0.0005 per recipient</td>
-        </tr>
-        <tr>
-          <th scope="row">First email to a new address</th>
-          <td>Free, up to 50 new addresses a day</td>
-          <td>+ $0.02, once; no daily cap</td>
-        </tr>
-        <tr>
-          <th scope="row">Mailgi branding on sent mail</th>
-          <td>Yes</td>
-          <td class="yes">No</td>
-        </tr>
-        <tr>
-          <th scope="row">Receiving, from anyone</th>
-          <td class="yes">Free, unlimited</td>
-          <td class="yes">Free, unlimited</td>
-        </tr>
-        <tr>
-          <th scope="row">Mail between your agents</th>
-          <td class="yes">Free</td>
-          <td class="yes">Free</td>
-        </tr>
-        <tr>
-          <th scope="row">Storage</th>
-          <td>First 10 MB per mailbox free, then $0.25 per GB-month</td>
-          <td>First 10 MB per mailbox free, then $0.25 per GB-month</td>
-        </tr>
-        <tr>
-          <th scope="row">Agents, keys, webhooks, custom domains, MCP, SDK</th>
-          <td class="yes">Included, unlimited</td>
-          <td class="yes">Included, unlimited</td>
-        </tr>
-        <tr>
-          <th scope="row">How you get it</th>
-          <td>Register an agent. No account, no card.</td>
-          <td>Top up once, from $5, by anyone's card</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="body" style="margin-top:32px;max-width:700px"><strong>What $5 buys:</strong> 10,000 emails to people your agent already corresponds with, or 243 first emails to new people, or any mix of the two. A mailbox holding 1 GB costs about $0.25 a month.</p>
-</section>
-
-<section class="dark" style="border-top:1px solid var(--rule)">
-  <div class="shell" style="padding-top:72px;padding-bottom:72px">
-    <h2 style="color:var(--on-dark);margin-bottom:28px">Why the first email <em class="accent-light">costs more</em></h2>
-    <div class="dark-points">
-      <div><span class="arrow">→</span><span class="t">Mail to strangers is where spam lives. Conversations are what agents are for. So the price sits on the introduction, once, and everything after it is a fraction of a cent.</span></div>
-      <div><span class="arrow">→</span><span class="t">An address stops being a stranger when it writes to your agent first. We check its DKIM signature, so that cannot be faked by a forged sender. <em>(an agent that answers mail never pays to introduce itself)</em></span></div>
-      <div><span class="arrow">→</span><span class="t">Or when your agent has paid to introduce itself once. After that, the same $0.0005 as anyone it already knows.</span></div>
-      <div><span class="arrow">→</span><span class="t">Known contacts belong to each agent and are stored only as keyed hashes, never as addresses, so the table cannot be read as a list of who an agent talks to.</span></div>
+  <section class="frame" id="tiers">
+    <div class="sec-head">
+      <div class="eyebrow">[01] Tiers</div>
+      <h2 class="h2">Free and paid, <span class="dim">one table.</span></h2>
+      <p class="body">One step between them: the first top-up. An agent that registered itself has its own balance; agents on your organisation's domain share the organisation's.</p>
     </div>
-    <p class="body" style="color:var(--on-dark-muted);max-width:680px;margin-top:36px;font-size:15px">This is also why unattended registration can stay open. An agent nobody vouches for can write to a few dozen new people a day, with Mailgi branding. To write to more, someone with a card has paid for it.</p>
-  </div>
-</section>
-
-<section class="section shell" id="paying">
-  <h2 style="margin-bottom:12px">Who pays, <em class="accent">and how</em></h2>
-  <div class="grid-3" style="margin-top:40px">
-    <div>
-      <div class="cap-label">one balance per owner</div>
-      <h3>Agent or organisation</h3>
-      <p class="small">An agent that registered itself on <span class="mono">@mailgi.xyz</span> has its own balance. Agents on your organisation's domain share the organisation's, which admins top up from the dashboard.</p>
+    <div class="tbl-scroll">
+      <table class="tbl tiers">
+        <thead>
+          <tr><th scope="col"><span class="sr">Item</span></th><th scope="col">Free</th><th scope="col" class="paid">Paid</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Mail to people outside Mailgi</th><td>Free</td><td>$0.0005 per recipient</td></tr>
+          <tr><th scope="row">First email to a new address</th><td>Free, up to 50 new addresses a day</td><td>+ $0.02, once; no daily cap</td></tr>
+          <tr><th scope="row">Mailgi branding on sent mail</th><td>Yes</td><td>No</td></tr>
+          <tr><th scope="row">Receiving, from anyone</th><td>Free, unlimited</td><td>Free, unlimited</td></tr>
+          <tr><th scope="row">Mail between your agents</th><td>Free</td><td>Free</td></tr>
+          <tr><th scope="row">Storage</th><td>First 10 MB per mailbox free, then $0.25 per GB-month</td><td>First 10 MB per mailbox free, then $0.25 per GB-month</td></tr>
+          <tr><th scope="row">Agents, keys, webhooks, custom domains, MCP, SDK</th><td>Included, unlimited</td><td>Included, unlimited</td></tr>
+          <tr><th scope="row">How you get it</th><td>Register an agent. No account, no card.</td><td>Top up once, from $5, by anyone's card</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div>
-      <div class="cap-label">no account needed</div>
-      <h3>Anyone can pay</h3>
-      <p class="small">Top up any agent by card at <span class="mono">app.mailgi.xyz/topup</span>. An agent can hand its human a link that opens with its address already filled in. Minimum $5, plus any sales tax or VAT.</p>
-    </div>
-    <div>
-      <div class="cap-label">nothing surprising</div>
-      <h3>When it runs out</h3>
-      <p class="small">A send the balance can't cover is refused whole with <span class="mono">402</span> and an itemised cost, and nothing is charged. Receiving and mail between your agents keep working.</p>
-    </div>
-  </div>
-</section>
+    <p class="pr-note"><strong>What $5 buys:</strong> 10,000 emails to people your agent already corresponds with, or 243 first emails to new people, or any mix of the two. A mailbox holding 1 GB costs about $0.25 a month.</p>
+  </section>
 
-<section class="section shell rule-top" id="limits">
-  <h2 style="margin-bottom:12px">The limits, <em class="accent">in full</em></h2>
-  <p class="body" style="font-size:16px;margin-bottom:12px;max-width:700px">These apply on both tiers; paying doesn't lift them. Several apply to outbound mail at once, and the lowest one wins. Most services quote you the friendliest number; here are all of them.</p>
-  <p class="body" style="font-size:16px;margin-bottom:40px;max-width:700px"><strong>Talking to agents doesn't eat your external quota.</strong> Mail to other <span class="mono">@mailgi.xyz</span> agents is counted on its own, separate allowance, so a busy agent-to-agent workflow never blocks mail to people.</p>
-  <div class="table-scroll">
-    <table class="cmp" style="min-width:0">
-      <thead>
-        <tr>
-          <th scope="col">Applies to</th>
-          <th scope="col">Per hour</th>
-          <th scope="col">Per day</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><th scope="row">Each API key</th><td>&mdash;</td><td>100 emails</td></tr>
-        <tr><th scope="row">Each agent, across all its keys</th><td>50</td><td>300</td></tr>
-        <tr><th scope="row">All @mailgi.xyz agents, shared</th><td>500</td><td>5,000</td></tr>
-        <tr><th scope="row">Org &mdash; domain verified under 3 days</th><td>20</td><td>100</td></tr>
-        <tr><th scope="row">Org &mdash; domain verified 3 to 30 days</th><td>100</td><td>1,000</td></tr>
-        <tr><th scope="row">Org &mdash; domain verified over 30 days</th><td>500</td><td>5,000</td></tr>
-        <tr><th scope="row">Mail to @mailgi.xyz agents, each agent</th><td>1,000</td><td>5,000</td></tr>
-        <tr><th scope="row">Free tier &mdash; new recipients</th><td>&mdash;</td><td>50</td></tr>
-        <tr><th scope="row">Inbound, from anyone</th><td class="yes">Unlimited</td><td class="yes">Unlimited</td></tr>
-        <tr><th scope="row">Reading your own inbox</th><td class="yes">Unlimited</td><td class="yes">Unlimited</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p class="body" style="margin-top:32px;max-width:700px">The one that surprises people: <strong>a brand-new custom domain starts at 100 emails a day for the whole organisation</strong> and only reaches 5,000 a day after it has been verified for a month. That's deliberate. Sending reputation is earned by sending a little, consistently, from a domain that behaves; a new domain that suddenly emits thousands of messages is indistinguishable from a compromised one, and receiving servers treat it accordingly. The ramp protects your domain from your own launch day.</p>
-</section>
+  <section class="frame split est" id="estimate">
+    <div class="split-text">
+      <div class="eyebrow">[02] Estimate</div>
+      <h2 class="h2">Your monthly bill, <span class="dim">roughly.</span></h2>
+      <p class="body est-static">Worked example: 3 agents send 6,000 emails a month to people they already know and 600 first emails to new people, and hold 1 GB of mail between them.</p>
+      <div class="sliders" id="est-sliders" hidden>
+        <label><span class="sl-head"><span>Agents (mailboxes)</span><output class="mono" data-for="agents">3</output></span><input type="range" data-k="agents" min="1" max="50" step="1" value="3" /></label>
+        <label><span class="sl-head"><span>Emails to known contacts / month</span><output class="mono" data-for="known">6,000</output></span><input type="range" data-k="known" min="0" max="60000" step="500" value="6000" /></label>
+        <label><span class="sl-head"><span>New recipients / month</span><output class="mono" data-for="fresh">600</output></span><input type="range" data-k="fresh" min="0" max="6000" step="50" value="600" /></label>
+        <label><span class="sl-head"><span>Total mailbox storage</span><output class="mono" data-for="storage">1 GB</output></span><input type="range" data-k="storage" min="0" max="20" step="0.5" value="1" /></label>
+      </div>
+      <p class="caps-note">The formula, after the first top-up: known emails × $0.0005 + new recipients × $0.0205 ($0.0005 plus the $0.02 introduction) + storage above 10 MB per mailbox × $0.25 per GB-month. Receiving and agent-to-agent mail are free and not counted. Billing is per recipient.</p>
+    </div>
+    <div class="split-side bill">
+      <div class="modes" id="est-modes" hidden>
+        <button type="button" data-mode="free" aria-pressed="false">Free tier</button>
+        <button type="button" data-mode="paid" aria-pressed="true">Paid</button>
+      </div>
+      <div id="est-lines">
+        <div class="bill-line"><span>6,000 × $0.0005 known contacts</span><span class="mono">$3.00</span></div>
+        <div class="bill-line"><span>600 × $0.0205 new recipients</span><span class="mono">$12.30</span></div>
+        <div class="bill-line"><span>0.97 GB × $0.25 storage</span><span class="mono">$0.24</span></div>
+      </div>
+      <div class="bill-total">
+        <span class="eyebrow">Estimated per month, paid</span>
+        <span class="total" id="est-total">$15.54</span>
+      </div>
+      <div id="est-notes">
+        <div class="bill-note">No branding, no daily cap on new recipients. Top up from $5.</div>
+        <div class="bill-note ok">On the free tier the same example costs $0.24, storage only: about 6.7 new recipients a day per agent, under the 50 cap, with Mailgi branding on the mail.</div>
+      </div>
+      <div class="bill-note">Assumes each agent has its own balance and sends evenly over 30 days. Example figures, not a quote.</div>
+    </div>
+  </section>
 
-<section class="rule-top">
-  <div class="section shell">
-    <h2 style="margin-bottom:40px">Questions, <em class="accent">answered</em></h2>
-    <div class="faq">
+  <section class="frame split" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">
+    <div class="split-text">
+      <div class="eyebrow">[03] Introductions</div>
+      <h2 class="h2">Why the first email <span class="dim">costs more.</span></h2>
+      <p class="body pr-foot">This is also why unattended registration can stay open. An agent nobody vouches for can write to a few dozen new people a day, with Mailgi branding. To write to more, someone with a card has paid for it.</p>
+    </div>
+    <div class="split-side">
+      <ul class="points">
+        <li>Mail to strangers is where spam lives. Conversations are what agents are for. So the price sits on the introduction, once, and everything after it is a fraction of a cent.</li>
+        <li>An address stops being a stranger when it writes to your agent first. We check its DKIM signature, so that cannot be faked by a forged sender. An agent that answers mail never pays to introduce itself.</li>
+        <li>Or when your agent has paid to introduce itself once. After that, the same $0.0005 as anyone it already knows.</li>
+        <li>Known contacts belong to each agent and are stored only as keyed hashes, never as addresses, so the table cannot be read as a list of who an agent talks to.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="frame" id="paying">
+    <div class="sec-head">
+      <div class="eyebrow">[04] Billing</div>
+      <h2 class="h2">Who pays, <span class="dim">and how.</span></h2>
+    </div>
+    <div class="cells" style="--min:300px">
+      <div class="cell feat"><span class="tag">one balance per owner</span><h3>Agent or organisation</h3><p>An agent that registered itself on <span class="mono">@mailgi.xyz</span> has its own balance. Agents on your organisation's domain share the organisation's, which admins top up from the dashboard.</p></div>
+      <div class="cell feat"><span class="tag">no account needed</span><h3>Anyone can pay</h3><p>Top up any agent by card at <span class="mono">app.mailgi.xyz/topup</span>. An agent can hand its human a link that opens with its address already filled in. Minimum $5, plus any sales tax or VAT.</p></div>
+      <div class="cell feat"><span class="tag">nothing surprising</span><h3>When it runs out</h3><p>A send the balance can't cover is refused whole with <span class="mono">402</span> and an itemised cost, and nothing is charged. Receiving and mail between your agents keep working.</p></div>
+    </div>
+  </section>
+
+  <section class="frame" id="limits">
+    <div class="sec-head">
+      <div class="eyebrow">[05] Limits</div>
+      <h2 class="h2">Every limit, <span class="dim">in full.</span></h2>
+      <p class="body pr-wide">These apply on both tiers; paying doesn't lift them. Several apply to outbound mail at once, and the lowest one wins. Most services quote you the friendliest number; here are all of them.</p>
+      <p class="body pr-wide"><strong>Talking to agents doesn't eat your external quota.</strong> Mail to other <span class="mono">@mailgi.xyz</span> agents is counted on its own, separate allowance, so a busy agent-to-agent workflow never blocks mail to people.</p>
+    </div>
+    <div class="tbl-scroll">
+      <table class="tbl limits">
+        <thead>
+          <tr><th scope="col">Applies to</th><th scope="col">Per hour</th><th scope="col">Per day</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Each API key</th><td>&mdash;</td><td>100 emails</td></tr>
+          <tr><th scope="row">Each agent, across all its keys</th><td>50</td><td>300</td></tr>
+          <tr><th scope="row">All @mailgi.xyz agents, shared</th><td>500</td><td>5,000</td></tr>
+          <tr><th scope="row">Org &mdash; domain verified under 3 days</th><td>20</td><td>100</td></tr>
+          <tr><th scope="row">Org &mdash; domain verified 3 to 30 days</th><td>100</td><td>1,000</td></tr>
+          <tr><th scope="row">Org &mdash; domain verified over 30 days</th><td>500</td><td>5,000</td></tr>
+          <tr><th scope="row">Mail to @mailgi.xyz agents, each agent</th><td>1,000</td><td>5,000</td></tr>
+          <tr><th scope="row">Free tier &mdash; new recipients</th><td>&mdash;</td><td>50</td></tr>
+          <tr><th scope="row">Inbound, from anyone</th><td>Unlimited</td><td>Unlimited</td></tr>
+          <tr><th scope="row">Reading your own inbox</th><td>Unlimited</td><td>Unlimited</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="pr-note">The one that surprises people: <strong>a brand-new custom domain starts at 100 emails a day for the whole organisation</strong> and only reaches 5,000 a day after it has been verified for a month. That's deliberate. Sending reputation is earned by sending a little, consistently, from a domain that behaves; a new domain that suddenly emits thousands of messages is indistinguishable from a compromised one, and receiving servers treat it accordingly. The ramp protects your domain from your own launch day.</p>
+  </section>
+
+  <section class="frame split" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))">
+    <div class="split-text">
+      <div class="eyebrow">[06] FAQ</div>
+      <h2 class="h2">Pricing <span class="dim">questions.</span></h2>
+      <a class="more-link" href="/faq.html">all questions →</a>
+    </div>
+    <div class="split-side faq">
       <details>
         <summary><span class="numeral">01</span><span class="q">How much does Mailgi cost?</span><span class="mark"></span></summary>
         <p class="a">Start free: until its first top-up an agent can send to up to 50 new recipients a day at no charge, with Mailgi branding on its mail. After the first top-up, mail that leaves Mailgi costs $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it, with no branding and no daily cap. Receiving, registering agents, custom domains and mail between your own agents are free on both. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top-ups start at $5.</p>
@@ -464,69 +532,138 @@
         <p class="a">Because anyone can register an agent without a human being involved, which is the point of the product and also exactly the shape of an abuse vector. The limits, together with the free tier's daily cap on new recipients and paying to introduce yourself after it, are what let us keep unattended registration open. They are deliberately inconvenient for bulk sending: Mailgi is not a marketing platform and has no lists, imports or campaigns. If you have a legitimate need for more volume, email us.</p>
       </details>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="rule-top">
-  <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
-    <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">Start free.</h2>
-    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:460px">One POST and your agent has an address that receives mail and can write to 50 new people a day. Add credit when it needs more.</p>
-    <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
-  </div>
-</section>
+  <section class="frame split" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">
+    <div class="split-text">
+      <div class="eyebrow">[07] Guides</div>
+      <h2 class="h2">Keep <span class="dim">reading.</span></h2>
+      <a class="more-link" href="/guides.html">all guides →</a>
+    </div>
+    <div class="split-side">
+      <ul class="list">
+        <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
+        <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
+        <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
+        <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
+        <li><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></li>
+        <li><a href="/langchain-email-agent.html">Build a LangChain email agent</a></li>
+        <li><a href="/crewai-email-agent.html">Give a CrewAI agent email</a></li>
+        <li><a href="/vercel-ai-sdk-email.html">Give a Vercel AI SDK agent email</a></li>
+        <li><a href="/n8n-email-agent.html">Give an n8n AI agent email</a></li>
+        <li><a href="/ai-assistant-email-address.html">Give your AI assistant its own email address</a></li>
+        <li><a href="/inbox-per-agent-vs-catch-all.html">Inbox per agent vs catch-all</a></li>
+        <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
+        <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
+        <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
+        <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
+        <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
+        <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
+      </ul>
+    </div>
+  </section>
 
-<section class="rule-top related">
-  <div class="section shell">
-    <h2 style="margin-bottom:28px">Keep <em class="accent">reading</em></h2>
-    <ul class="related-list">
-      <li><a href="/agent-email-address.html">How to give an AI agent an email address</a></li>
-      <li><a href="/agent-email-verification.html">How an AI agent receives a verification code</a></li>
-      <li><a href="/agent-support-inbox.html">Running a support inbox with an AI agent</a></li>
-      <li><a href="/agent-to-agent-email.html">Agent-to-agent email</a></li>
-      <li><a href="/openai-agents-sdk-email.html">Give an OpenAI Agents SDK agent email</a></li>
-      <li><a href="/langchain-email-agent.html">Build a LangChain email agent</a></li>
-      <li><a href="/crewai-email-agent.html">Give a CrewAI agent email</a></li>
-      <li><a href="/vercel-ai-sdk-email.html">Give a Vercel AI SDK agent email</a></li>
-      <li><a href="/n8n-email-agent.html">Give an n8n AI agent email</a></li>
-      <li><a href="/ai-assistant-email-address.html">Give your AI assistant its own email address</a></li>
-      <li><a href="/inbox-per-agent-vs-catch-all.html">Inbox per agent vs catch-all</a></li>
-      <li><a href="/choosing-an-email-api-for-ai-agents.html">How to choose an email API for an AI agent</a></li>
-      <li><a href="/best-email-api-for-ai-agents.html">Best email API for AI agents in 2026</a></li>
-      <li><a href="/agentmail-alternative.html">AgentMail alternative: Mailgi compared</a></li>
-      <li><a href="/vs-resend-postmark-mailgun.html">Mailgi vs AgentMail, Resend, Postmark and Mailgun</a></li>
-      <li><a href="/mcp.html">Email MCP server for Claude Code and Cursor</a></li>
-      <li><a href="/faq.html">Email for AI agents: FAQ</a></li>
-    </ul>
-  </div>
-</section>
+  <section class="frame cta">
+    <h2>Start free.</h2>
+    <p>One POST and your agent has an address that receives mail and can write to 50 new people a day. Add credit when it needs more.</p>
+    <a class="btn btn-solid" href="https://app.mailgi.xyz">Open the dashboard →</a>
+  </section>
 
 </main>
 
-<footer class="footer">
-  <div class="shell footer-inner">
-    <span class="footer-brand">mailgi</span>
-    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown">
-      <span class="dot"></span><span class="status-text">system status</span>
-    </a>
+<footer class="frame hf">
+  <div class="hf-top">
+    <span class="hf-brand">mailgi</span>
+    <a class="status" id="status" href="https://api.mailgi.xyz/health/ready" data-state="unknown"><span class="dot"></span><span class="status-text">system status</span></a>
+  </div>
+  <nav class="hf-links" aria-label="Footer">
+    <a href="https://app.mailgi.xyz">dashboard</a>
+    <a href="/guides.html">guides</a>
+    <a href="/vs-resend-postmark-mailgun.html">compare</a>
+    <a href="/docs.html">docs</a>
+    <a href="/faq.html">faq</a>
+    <a href="/changelog.html">changelog</a>
+    <a href="/mcp.html">mcp</a>
+    <a href="/SKILL.md">SKILL.md</a>
+    <a href="https://github.com/Mailgi">github</a>
+    <a href="/about.html">about</a>
+    <a href="/security.html">security</a>
+    <a href="/privacy.html">privacy</a>
+  </nav>
+  <div class="hf-base">
     <span>built for agents, not humans</span>
-    <span class="footer-end">
-      <a href="https://app.mailgi.xyz">dashboard</a>
-      <a href="/guides.html">guides</a>
-      <a href="/vs-resend-postmark-mailgun.html">compare</a>
-      <a href="/docs.html">docs</a>
-      <a href="/faq.html">faq</a>
-      <a href="/changelog.html">changelog</a>
-      <a href="/mcp.html">mcp</a>
-      <a href="/SKILL.md">SKILL.md</a>
-      <a href="https://github.com/Mailgi">github</a>
-      <a href="/about.html">about</a>
-      <a href="/security.html">security</a>
-      <a href="/privacy.html">privacy</a>
-      <span>support: <span class="mono" style="font-size:12px">hello@mailgi.xyz</span></span>
-    </span>
+    <span>support: hello@mailgi.xyz</span>
   </div>
 </footer>
 </div>
+<script>
+/* Progressive enhancement only. The estimator's worked example, its formula and
+   every price are in the served HTML; this adds the sliders and the free/paid
+   switch. Prices match the tiers table: $0.0005 per external recipient, $0.02
+   once per new address, $0.25 per GB-month above 10 MB per mailbox. */
+(function () {
+  var sliders = document.getElementById('est-sliders'), modes = document.getElementById('est-modes');
+  var lines = document.getElementById('est-lines'), totalEl = document.getElementById('est-total');
+  var notesEl = document.getElementById('est-notes');
+  if (!sliders || !modes || !lines || !totalEl || !notesEl) return;
+  var PER_EMAIL = 0.0005, INTRO = 0.02, GB_MONTH = 0.25, FREE_GB = 0.01, FREE_NEW_DAY = 50, KEY_DAY = 100, AGENT_DAY = 300;
+  var s = { agents: 3, known: 6000, fresh: 600, storage: 1, mode: 'paid' };
+  function money(v) { return '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function n(v) { return v.toLocaleString('en-US'); }
+  function line(k, v) { return '<div class="bill-line"><span>' + k + '</span><span class="mono">' + v + '</span></div>'; }
+  function note(t, c) { return '<div class="bill-note' + (c ? ' ' + c : '') + '">' + t + '</div>'; }
+  function render() {
+    var freeGB = s.agents * FREE_GB, billGB = Math.max(0, s.storage - freeGB), storage = billGB * GB_MONTH;
+    var newPerAgentDay = s.fresh / 30 / s.agents, sendsPerAgentDay = (s.known + s.fresh) / 30 / s.agents;
+    var html, total, notes = [];
+    if (s.mode === 'free') {
+      var fits = newPerAgentDay <= FREE_NEW_DAY;
+      html = line(n(s.known) + ' emails to known contacts', '$0.00') +
+        line(n(s.fresh) + ' new recipients', fits ? '$0.00' : 'over cap') +
+        line('Storage over ' + Math.round(freeGB * 1000) + ' MB free', money(storage));
+      total = storage;
+      notes.push(fits
+        ? note('≈ ' + newPerAgentDay.toFixed(1) + ' new recipients a day per agent: fits the free tier’s 50. Mail carries Mailgi branding.', 'ok')
+        : note('≈ ' + Math.round(newPerAgentDay) + ' new recipients a day per agent: over the free tier’s 50. Sends past the cap are refused with 402.', 'warn'));
+    } else {
+      var k = s.known * PER_EMAIL, f = s.fresh * (PER_EMAIL + INTRO);
+      html = line(n(s.known) + ' × $0.0005 known contacts', money(k)) +
+        line(n(s.fresh) + ' × $0.0205 new recipients', money(f)) +
+        line(billGB.toFixed(2) + ' GB × $0.25 storage', money(storage));
+      total = k + f + storage;
+      notes.push(note('No branding, no daily cap on new recipients. Top up from $5.'));
+    }
+    if (sendsPerAgentDay > AGENT_DAY) {
+      notes.push(note('≈ ' + Math.round(sendsPerAgentDay) + ' sends a day per agent is over the 300-a-day agent limit. Add agents or spread the load.', 'warn'));
+    } else if (sendsPerAgentDay > KEY_DAY) {
+      notes.push(note('≈ ' + Math.round(sendsPerAgentDay) + ' sends a day per agent is over 100, the per-API-key limit, so each agent needs more than one key.', 'warn'));
+    }
+    lines.innerHTML = html;
+    totalEl.textContent = money(total);
+    totalEl.previousElementSibling.textContent = 'Estimated per month, ' + (s.mode === 'free' ? 'free tier' : 'paid');
+    notesEl.innerHTML = notes.join('');
+  }
+  Array.prototype.forEach.call(sliders.querySelectorAll('input[type=range]'), function (inp) {
+    var out = sliders.querySelector('output[data-for="' + inp.dataset.k + '"]');
+    inp.addEventListener('input', function () {
+      var v = parseFloat(inp.value); s[inp.dataset.k] = v;
+      out.textContent = inp.dataset.k === 'storage' ? v + ' GB' : n(v);
+      render();
+    });
+  });
+  Array.prototype.forEach.call(modes.querySelectorAll('button'), function (b) {
+    b.addEventListener('click', function () {
+      s.mode = b.dataset.mode;
+      Array.prototype.forEach.call(modes.querySelectorAll('button'), function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+      render();
+    });
+  });
+  var stat = document.querySelector('.est-static');
+  if (stat) stat.hidden = true;
+  sliders.hidden = false; modes.hidden = false;
+  render();
+})();
+</script>
 <script src="/status.js" defer></script>
 </body>
 </html>
