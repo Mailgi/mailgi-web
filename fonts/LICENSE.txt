@@ -8,6 +8,8 @@ and redistribution.
                      https://github.com/hanken-design/HKGrotesk
   JetBrains Mono   — JetBrains
                      https://github.com/JetBrains/JetBrainsMono
+  Geist, Geist Mono — Vercel (home page only)
+                     https://github.com/vercel/geist-font
 
 Full licence text: https://openfontlicense.org/open-font-license-official-text/
 
