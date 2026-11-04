@@ -159,7 +159,7 @@ A: Yes. Attach a domain in the dashboard and publish the DNS records it shows yo
 
 Q: What does it cost?
 
-A: Receiving mail from any sender is free, and so is mail between your own agents. Until its first top-up an agent is on the free tier: it can write to up to 50 new recipients a day at no charge, and its mail carries a one-line Mailgi footer. After that, mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus a one-time $0.02 the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top up from $5 by card, with no account needed. Sending is also rate-limited: 100 a day per API key and 300 a day per agent, with per-organisation caps that grow with domain age. Full detail on the pricing page (https://www.mailgi.xyz/pricing.html).
+A: Receiving mail from any sender is free, and so is mail between your own agents. Until its first top-up an agent is on the free tier: it can write to up to 50 new recipients a day at no charge, and its mail carries Mailgi branding. After that, mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus a one-time $0.02 the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top up from $5 by card, with no account needed. Sending is also rate-limited: 100 a day per API key and 300 a day per agent, with per-organisation caps that grow with domain age. Full detail on the pricing page (https://www.mailgi.xyz/pricing.html).
 
 Q: Is there a machine-readable spec an AI agent can read to onboard itself?
 
@@ -180,7 +180,7 @@ A real one — inbox, outbox, and an address that doesn't look like a UUID. Regi
 
 →Send, receive and read mail over a clean REST API — a real SMTP/IMAP server underneath.
 
-→Receiving is free, and so is talking to other agents. You can write to 50 new people a day for free, with a one-line Mailgi footer; past that it is prepaid, and anyone can top you up by card. (two cents to introduce yourself, then $0.0005 a recipient)
+→Receiving is free, and so is talking to other agents. You can write to 50 new people a day for free, with Mailgi branding; past that it is prepaid, and anyone can top you up by card. (two cents to introduce yourself, then $0.0005 a recipient)
 
 →No SDK required — just HTTP. (there is one though, if you're into that sort of thing)
 
@@ -584,7 +584,7 @@ Build it |
 
 |
 Free tier |
-50 new recipients/day, with footer |
+50 new recipients/day, with Mailgi branding |
 3 inboxes, 3k/mo, 100/day |
 3k/mo, 100/day |
 100/mo, forever |
@@ -720,7 +720,7 @@ A: AgentMail is the more mature product: threading, full-text search, IMAP and S
 
 Q: What is the cheapest way to give an AI agent an email address?
 
-A: If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free, sends to up to 50 new recipients a day for free (with a Mailgi footer), and beyond that is pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail.
+A: If the agent only needs to catch a verification code in a test, a free disposable-mail API like mail.tm costs nothing and needs no API key. If you're already on Cloudflare Workers, Cloudflare Email Service receives for free and sends for about $0.35 per thousand after an included allowance on the $5 Workers plan. Mailgi receives for free, sends to up to 50 new recipients a day for free (with Mailgi branding), and beyond that is pay-as-you-go with no monthly fee: $0.0005 per recipient ($0.50 per thousand), plus $0.02 the first time an agent writes to a new address. Paid dedicated options start around $15–20 a month across Postmark, Mailgun, Resend and AgentMail.
 
 Q: Which email APIs let an AI agent sign itself up without a human?
 
@@ -874,11 +874,11 @@ Pricing
 
 # Start free. Pay when you outgrow it.
 
-Every agent starts on the free tier: it can write to up to 50 new people a day at no charge, and its mail carries a one-line Mailgi footer. The first top-up removes the footer and the cap, and from then on mail that leaves Mailgi is $0.0005 a recipient, plus $0.02 the first time an agent writes to someone new. Receiving is free on both. No subscription, no seats.
+Every agent starts free, with up to 50 new recipients a day and Mailgi branding on its mail. The first top-up removes both; after that you pay per recipient. Receiving is always free. No subscription, no seats.
 
-## Free and paid, side by side
+## Free and paid, in one table
 
-There are two tiers and one way between them: the first top-up. The same rules apply to an agent that registered itself and to an organisation on its own domain, whose agents share its tier.
+One step between them: the first top-up. An agent that registered itself has its own balance; agents on your organisation's domain share the organisation's.
 
 |
 |
@@ -886,29 +886,19 @@ Free |
 Paid |
 
 |
-How you get it |
-Register an agent. No account, no card. |
-Top up once, from $5, by anyone's card. |
-
-|
 Mail to people outside Mailgi |
 Free |
 $0.0005 per recipient |
 
 |
-New recipients (never written to before) |
-Up to 50 a day, free |
-No daily cap; $0.02 once each |
+First email to a new address |
+Free, up to 50 new addresses a day |
++ $0.02, once; no daily cap |
 
 |
-People you already correspond with |
-Free, not counted against the 50 |
-$0.0005 per recipient |
-
-|
-Footer on sent mail |
-One line: Sent with Mailgi |
-None |
+Mailgi branding on sent mail |
+Yes |
+No |
 
 |
 Receiving, from anyone |
@@ -922,54 +912,18 @@ Free |
 
 |
 Storage |
-10 MB per mailbox free, then $0.25 per GB-month |
-10 MB per mailbox free, then $0.25 per GB-month |
+First 10 MB per mailbox free, then $0.25 per GB-month |
+First 10 MB per mailbox free, then $0.25 per GB-month |
 
 |
-Custom domains, webhooks, MCP, SDK |
-Included |
-Included |
+Agents, keys, webhooks, custom domains, MCP, SDK |
+Included, unlimited |
+Included, unlimited |
 
 |
-Sending limits per key, agent and domain |
-The same for both, in full below |
-The same for both |
-
-The footer, exactly. On the free tier every message ends with one line, “Sent with Mailgi · Mailbox for AI agents”: after a -- separator in plain text, and as a small grey line in HTML. No link, no images, no tracking pixel, added once even when a reply quotes an earlier message. The send response tells the agent it is there and how to remove it. Once a balance has been topped up it never comes back, even if the balance later runs out.
-
-## Paid: three meters, nothing else
-
-From the first top-up. The same prices for an agent that registered itself and for an organisation on its own domain. Every charge lands in the ledger, itemised by agent.
-
-|
-What |
-Price |
-When it applies |
-
-|
-Outbound email |
-$0.0005 per recipient |
-Every recipient outside Mailgi, on every send. $0.50 per thousand. |
-
-|
-Introduction |
-+ $0.02, once |
-The first time an agent writes to an address that has never written to it. |
-
-|
-Storage |
-$0.25 per GB-month |
-Mailbox size above the first 10 MB, billed daily. |
-
-|
-Receiving, from anyone |
-Free |
-Any sender, any volume. |
-
-|
-Mail between your agents |
-Free |
-Anything on @mailgi.xyz, and between your own organisation's domains. |
+How you get it |
+Register an agent. No account, no card. |
+Top up once, from $5, by anyone's card |
 
 What $5 buys: 10,000 emails to people your agent already corresponds with, or 243 first emails to new people, or any mix of the two. A mailbox holding 1 GB costs about $0.25 a month.
 
@@ -983,7 +937,7 @@ What $5 buys: 10,000 emails to people your agent already corresponds with, or 24
 
 →Known contacts belong to each agent and are stored only as keyed hashes, never as addresses, so the table cannot be read as a list of who an agent talks to.
 
-This is also why unattended registration can stay open. An agent nobody vouches for can write to a few dozen new people a day, and every one of those messages says where it came from. To write to more, or without the footer, someone with a card has paid for it.
+This is also why unattended registration can stay open. An agent nobody vouches for can write to a few dozen new people a day, with Mailgi branding. To write to more, someone with a card has paid for it.
 
 ## Who pays, and how
 
@@ -1007,7 +961,7 @@ A send the balance can't cover is refused whole with 402 and an itemised cost, a
 
 ## The limits, in full
 
-Paying for a message doesn't lift the limits. Several apply to outbound mail at once, and the lowest one wins. Most services quote you the friendliest number; here are all of them.
+These apply on both tiers; paying doesn't lift them. Several apply to outbound mail at once, and the lowest one wins. Most services quote you the friendliest number; here are all of them.
 
 Talking to agents doesn't eat your external quota. Mail to other @mailgi.xyz agents is counted on its own, separate allowance, so a busy agent-to-agent workflow never blocks mail to people.
 
@@ -1030,7 +984,7 @@ Per day |
 
 | Mail to @mailgi.xyz agents, each agent | 1,000 | 5,000 |
 
-| Free tier — new recipients, per balance | — | 50 |
+| Free tier — new recipients | — | 50 |
 
 | Inbound, from anyone | Unlimited | Unlimited |
 
@@ -1038,59 +992,15 @@ Per day |
 
 The one that surprises people: a brand-new custom domain starts at 100 emails a day for the whole organisation and only reaches 5,000 a day after it has been verified for a month. That's deliberate. Sending reputation is earned by sending a little, consistently, from a domain that behaves; a new domain that suddenly emits thousands of messages is indistinguishable from a compromised one, and receiving servers treat it accordingly. The ramp protects your domain from your own launch day.
 
-## What stays free
-
-unmetered
-
-### Receiving
-
-Mail from any sender, kept in a real mailbox the agent can list and re-read. No per-message charge.
-
-free
-
-### Agent to agent
-
-Messages between agents on @mailgi.xyz, and between your organisation's own domains, cost nothing and have their own allowance.
-
-free
-
-### Custom domains
-
-Attach as many as you like. DKIM, SPF and a recommended DMARC record, all generated for you.
-
-free
-
-### Unlimited agents
-
-No per-seat or per-inbox charge. One registration token can mint a whole team of addresses on your domain.
-
-free
-
-### Keys, folders, webhooks
-
-As many API keys per agent as you want, with expiry and revocation; mailboxes to file into; signed webhooks when mail arrives.
-
-free
-
-### CLI and SDK
-
-The TypeScript SDK and the CLI are open and free. Neither is required — everything works over plain HTTP.
-
-What changed. Mailgi was free during its early beta. At the end of October 2026 mail leaving Mailgi became paid from the first message. Since November 2026 there is a free tier again: up to 50 new recipients a day, with a footer, until the first top-up. Everything in this section stays free on both tiers.
-
 ## Questions, answered
 
 Q: How much does Mailgi cost?
 
-A: You can start for free. Until its first top-up, an agent sends at no charge to up to 50 new recipients a day, and every message carries a one-line Mailgi footer. After the first top-up there is no footer and no daily cap on new recipients, and mail that leaves Mailgi is paid from a prepaid balance: $0.0005 per external recipient, plus a one-time $0.02 the first time an agent writes to an address that has never written to it. Receiving mail, registering agents, custom domains and mail between your own agents are free either way. Mailbox storage above the first 10 MB is $0.25 per GB-month. There is no subscription and no minimum beyond a $5 top-up.
+A: Start free: until its first top-up an agent can send to up to 50 new recipients a day at no charge, with Mailgi branding on its mail. After the first top-up, mail that leaves Mailgi costs $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it, with no branding and no daily cap. Receiving, registering agents, custom domains and mail between your own agents are free on both. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top-ups start at $5.
 
 Q: What is the free tier?
 
-A: Every agent starts on it, and so does every organisation until its first top-up. Sending is free, to up to 50 recipients a day that the agent has never corresponded with; people it already writes to, or who wrote to it first, are not counted. Past the cap a send is refused whole with 402 PAYMENT_REQUIRED and reason free_tier_limit, with the top-up link. The usual sending limits apply as well. The first top-up, of any amount from $5, ends the free tier for good: from then on the agent pays per recipient, with no footer and no daily cap on new recipients.
-
-Q: What is the footer, and how do I remove it?
-
-A: On the free tier every message ends with one line, “Sent with Mailgi · Mailbox for AI agents”: after a separator in plain text, and as a small grey line in HTML. No link, no images, no tracking pixel. It is added once, even when a reply quotes an earlier message that already has it. The send response tells the agent the footer is there and gives its top-up link. A top-up removes it from every message sent after that; there is no setting.
+A: Where every agent starts, and every organisation until its first top-up. Sending is free, to up to 50 recipients a day that the agent has never corresponded with; people it already writes to are not counted. Free-tier mail carries Mailgi branding. Past the cap a send is refused with 402 PAYMENT_REQUIRED (reason free_tier_limit) and a top-up link. The first top-up, from $5, ends the free tier for good.
 
 Q: Why does the first email to someone cost more?
 
@@ -1098,7 +1008,7 @@ A: Because mail to strangers is where spam lives, and conversations are what age
 
 Q: What is free?
 
-A: Receiving, from anyone, at any volume. Reading your own inbox. Mail to other agents on @mailgi.xyz, and, for agents on your own domains, mail between your organisation's domains. Registering agents, API keys, folders, custom domains with their DKIM, SPF and DMARC records, webhooks, the SDK and the CLI. The first 10 MB of storage in every mailbox. And, until the first top-up, sending to the outside world: up to 50 new recipients a day, with a one-line Mailgi footer.
+A: Receiving, from anyone, at any volume. Mail between your own agents. Registering agents, API keys, folders, custom domains with their DKIM, SPF and DMARC records, webhooks, the MCP server, the SDK and the CLI. The first 10 MB of storage in every mailbox. And, on the free tier, sending to up to 50 new people a day.
 
 Q: Who pays: the agent or the organisation?
 
@@ -1114,7 +1024,7 @@ A: A send the balance cannot cover is refused whole with 402 PAYMENT_REQUIRED, a
 
 Q: Do I need a credit card to start?
 
-A: No. Registering an agent takes one unauthenticated POST: no account, no card. Straight away, on the free tier, the agent can receive mail, write to other Mailgi agents, and write to up to 50 new people a day. A card is needed only to go past that or to remove the footer, and the card can be anyone's.
+A: No. Registering an agent takes one unauthenticated POST, with no account and no card, and the agent starts on the free tier. A card is needed only to go past 50 new recipients a day or to remove the branding, and it can be anyone's.
 
 Q: How many emails can an agent send per day?
 
@@ -2146,7 +2056,7 @@ A: Yes, and it is free. Mail to any @mailgi.xyz address or to your organisation'
 
 Q: How much does Mailgi cost?
 
-A: Receiving is free, and so is mail between your own agents. Until its first top-up an agent can write to up to 50 new recipients a day for free, with a one-line Mailgi footer on its mail. After that, mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription. Details on the pricing page (https://www.mailgi.xyz/pricing.html).
+A: Receiving is free, and so is mail between your own agents. Until its first top-up an agent can write to up to 50 new recipients a day for free, with Mailgi branding on its mail. After that, mail that leaves Mailgi is pay-as-you-go from a prepaid balance: $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription. Details on the pricing page (https://www.mailgi.xyz/pricing.html).
 
 Q: What is the $0.02 introduction charge?
 
@@ -2299,7 +2209,7 @@ Customer-facing changes to the API, SDK, dashboard and docs, newest first. Dates
 
 - Until its first top-up, an agent (or an organisation) sends for free to up to 50 new recipients a day. People it already corresponds with are not counted. Free and paid, compared (https://www.mailgi.xyz/pricing.html#tiers).
 
-- Free-tier mail ends with one line, “Sent with Mailgi · Mailbox for AI agents”. The send response's billing notice (status: unfunded) says how to remove it, with the top-up link. The first top-up removes the footer and the cap for good.
+- Free-tier mail carries Mailgi branding. The send response's billing notice (status: unfunded) says how to remove it, with the top-up link. The first top-up removes the branding and the cap for good.
 
 - Past the cap a send is refused whole with 402 PAYMENT_REQUIRED, reason: free_tier_limit. GET /v1/billing and the MCP billing_get tool show freeTier. SKILL.md 1.7.0.
 
@@ -2392,7 +2302,7 @@ Last verified: 2026-10-31 against each vendor's own pricing and documentation pa
 
 | AgentMail | Agent-native | Mailbox, threads, full-text search, IMAP/SMTP, WebSockets | Optional; can't send until one is attached (or pay from a USDC wallet) | 3 inboxes, 3k/mo, 100/day | $20/mo |
 
-| Mailgi | Agent-native | Mailbox, folders, webhooks; no search or threading | No human, sends immediately | Receiving free; 50 new recipients/day free, with footer | Prepaid from $5 |
+| Mailgi | Agent-native | Mailbox, folders, webhooks; no search or threading | No human, sends immediately | Receiving free; 50 new recipients/day free, with Mailgi branding | Prepaid from $5 |
 
 | Resend | Developer email + Inboxes | Inboxes (Oct 2026): threads, labels, search; inbound webhooks | Human signup and verified domain | 3k/mo, 100/day; 3 inboxes | $20/mo |
 
@@ -2472,7 +2382,7 @@ A: AgentMail, Mailgi, Resend Inboxes and Nylas Agent Accounts all provide real m
 
 Q: Is there a free email API for AI agents?
 
-A: Several have free tiers: AgentMail (3 inboxes, 3,000 emails a month), Resend (3,000 a month), Nylas (3 accounts), mails.ai (1 agent). Mailgi has no monthly fee: receiving, registration and mail between your own agents are free, a free tier covers 50 new recipients a day with a Mailgi footer, and beyond it outbound mail is $0.0005 per recipient from a prepaid balance.
+A: Several have free tiers: AgentMail (3 inboxes, 3,000 emails a month), Resend (3,000 a month), Nylas (3 accounts), mails.ai (1 agent). Mailgi has no monthly fee: receiving, registration and mail between your own agents are free, a free tier covers 50 new recipients a day with Mailgi branding, and beyond it outbound mail is $0.0005 per recipient from a prepaid balance.
 
 Q: Which email API has an MCP server?
 
@@ -2935,7 +2845,7 @@ A: Yes, at https://api.mailgi.xyz/mcp. Function tools are simpler when you only 
 
 Q: What does it cost?
 
-A: Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with a one-line Mailgi footer. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
+A: Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with Mailgi branding. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
 
 
 ---
@@ -3190,7 +3100,7 @@ A: Yes. Once it has its own address it can use mail_list and mail_get to find th
 
 Q: What does it cost?
 
-A: Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with a one-line Mailgi footer. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
+A: Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with Mailgi branding. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
 
 
 ---
@@ -3298,7 +3208,7 @@ A: Yes. Once it has its own address it can use mail_list and mail_get to find th
 
 Q: What does it cost?
 
-A: Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with a one-line Mailgi footer. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
+A: Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with Mailgi branding. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
 
 
 ---
@@ -3404,7 +3314,7 @@ A: Yes. Register an n8n Webhook URL with POST /v1/webhook-endpoints. Mailgi post
 
 Q: What does it cost?
 
-A: Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with a one-line Mailgi footer. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
+A: Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with Mailgi branding. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.
 
 
 ---
