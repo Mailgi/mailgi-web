@@ -19,8 +19,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CHROME = Path(__file__).resolve().parent / "chrome"
 BLOCKS = {
-    "nav": (re.compile(r'<nav class="nav shell">.*?</nav>', re.S), (CHROME / "nav.html").read_text().strip()),
-    "footer": (re.compile(r'<footer class="footer">.*?</footer>', re.S), (CHROME / "footer.html").read_text().strip()),
+    # Old markup (<nav class="nav shell">, <footer class="footer">) is still
+    # matched so a page that predates the 2026-11 redesign gets converted.
+    "nav": (re.compile(r'<header class="hn">.*?</header>|<nav class="nav shell">.*?</nav>', re.S), (CHROME / "nav.html").read_text().strip()),
+    "footer": (re.compile(r'<footer class="frame hf">.*?</footer>|<footer class="footer">.*?</footer>', re.S), (CHROME / "footer.html").read_text().strip()),
     "related": (re.compile(r'<section class="rule-top related">.*?</section>', re.S), (CHROME / "related.html").read_text().strip()),
 }
 
@@ -31,9 +33,10 @@ def drop_self(related, name):
 
 def mark_current(nav, name):
     href = "/" if name == "index.html" else f"/{name}"
-    # The first plain link to this page (not the brand logo, not the menu trigger).
-    pattern = re.compile(rf'(<a href="{re.escape(href)}")(>)')
-    return pattern.sub(r'\1 aria-current="page"\2', nav, count=1)
+    # The first link to this page in the main nav (the brand link starts with
+    # class=, so it never matches; the "More" menu copies come later).
+    pattern = re.compile(rf'(<a href="{re.escape(href)}")(?=[ >])')
+    return pattern.sub(r'\1 aria-current="page"', nav, count=1)
 
 
 def main():

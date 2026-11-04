@@ -269,42 +269,52 @@ Open the dashboard →
 
 Source: https://www.mailgi.xyz/agents.html (updated 2026-11-04)
 
-~/mailgi $ _
+~/mailgi $ curl -X POST api.mailgi.xyz/v1/agents/register_
 
-# Your agent needsan email of its own.
+# Your agent needs an email of its own.
 
-A real one — inbox, outbox, and an address that doesn't look like a UUID. Register in one POST. No OAuth. No dashboard. No feelings.
+A real inbox and outbox, at an address that doesn't look like a UUID. Register in one POST. No OAuth, no dashboard, no feelings.
 
-→Every agent gets a handle like buzzing-falcon@mailgi.xyz. (yes, it's random. yes, it's intentional.)
+handle
+Every agent gets a handle like buzzing-falcon@mailgi.xyz.
+Random, on purpose.
 
-→Send, receive and read mail over a clean REST API — a real SMTP/IMAP server underneath.
+rest
+Send, receive and read over REST, on a real SMTP/IMAP server.
+No IMAP client code on your side.
 
-→Receiving is free, and so is talking to other agents. You can write to 50 new people a day for free, with Mailgi branding; past that it is prepaid, and anyone can top you up by card. (two cents to introduce yourself, then $0.0005 a recipient)
+pricing
+Receiving and agent-to-agent mail are free. 50 new people a day are free too, with Mailgi branding.
+Then it is prepaid, and anyone can top you up by card: two cents to introduce yourself, $0.0005 a recipient.
 
-→No SDK required — just HTTP. (there is one though, if you're into that sort of thing)
+http
+No SDK required. Just HTTP.
+There is one, if you want it.
 
-## SKILL.md — for your agent, not you
+[01] Self-onboarding
 
-The full API reference written so an AI agent can read it and immediately start sending mail. No OpenAPI parsing. No SDK. Just words. Small enough to fit in any context window.
+## SKILL.md is written for your agent, not you.
+
+The full API in plain language. No OpenAPI parsing, no SDK. An agent reads it and starts sending. It fits in any context window.
 ↓ Download SKILL.md
 
 Claude Code
 OpenClaw
-Prompt injection
+System prompt
+paste oncecopy
 
 ```
-# In your CLAUDE.md or at the start of a session:
+# In CLAUDE.md or at the start of a session:
 
 Fetch https://www.mailgi.xyz/SKILL.md and follow the instructions
 to give the agent an email address.
 
-# Or let Claude Code fetch it directly:
+# Or ask directly:
 > Read https://www.mailgi.xyz/SKILL.md then register me an agent
 ```
 
 ```
-# Add to your agent's tool list or system context:
-
+# Add to the agent's tool list or system context:
 claw fetch https://www.mailgi.xyz/SKILL.md --inject system
 
 # Or reference it as a skill source in your claw config:
@@ -314,40 +324,43 @@ skills:
 ```
 
 ```
-# Paste this into any system prompt:
+# Paste into any system prompt:
 
 You have access to a real email API. Fetch
 https://www.mailgi.xyz/SKILL.md to learn how to use it.
 Register an address, then use it to send and receive mail.
 
-# Or inline the file directly — it fits in any context window.
+# Or inline the file. It fits in any context window.
 ```
 
-## The whole API, in four calls
+[02] Reference
 
-cURL shown — a CLI and a TypeScript SDK exist, if you're into that sort of thing. So does a hosted MCP server, if your agent lives in Claude Code, Claude Desktop or Cursor.
+## The whole API in four calls.
+
+Plain HTTP works everywhere. A CLI and TypeScript SDK exist if you want them, and the hosted MCP server (https://www.mailgi.xyz/mcp.html) covers Claude Code, Claude Desktop and Cursor.
 
 cURL
 CLI
 SDK (TypeScript)
 MCP
+api.mailgi.xyzcopy
 
 ```
-# Register — get an email address and API key
+# Register: get an address and API key
 curl -X POST https://api.mailgi.xyz/v1/agents/register \
   -H "Content-Type: application/json" \
   -d '{"label":"my-agent"}'
 # => { "emailAddress": "buzzing-falcon@mailgi.xyz", "apiKey": "amb_..." }
 
-# Send an email (Mailgi addresses are free; outside ones need a balance)
+# Send (Mailgi addresses are free; outside ones need a balance)
 curl -X POST https://api.mailgi.xyz/v1/mail/send \
   -H "Authorization: Bearer $KEY" \
   -d '{"to":["alice@example.com"],"subject":"Hi","textBody":"Hello"}'
 
-# Read inbox
+# Read the inbox
 curl https://api.mailgi.xyz/v1/mail -H "Authorization: Bearer $KEY"
 
-# Read a specific message
+# Read one message
 curl https://api.mailgi.xyz/v1/mail/<id> -H "Authorization: Bearer $KEY"
 ```
 
@@ -355,22 +368,20 @@ curl https://api.mailgi.xyz/v1/mail/<id> -H "Authorization: Bearer $KEY"
 # Install
 npm install -g @mailgi/mailgi
 
-# Register — saves credentials to ~/.mailgi/config.json
+# Register (saves credentials to ~/.mailgi/config.json)
 mailgi register --label my-agent
 # => registered buzzing-falcon@mailgi.xyz
 
-# Send an email
+# Send
 mailgi send --agent buzzing-falcon \
   --to alice@example.com --subject "Hi" --body "Hello from my agent"
 
-# Read inbox
+# Read the inbox
 mailgi inbox --agent buzzing-falcon
 ```
 
 ```
-// Install
-npm install @mailgi/mailgi
-
+// npm install @mailgi/mailgi
 import { AgentMailboxClient } from '@mailgi/mailgi';
 
 const client = AgentMailboxClient.withApiKey(
@@ -389,23 +400,64 @@ const email = await client.mail.get(messages[0].id);
 ```
 
 ```
-# Add the hosted MCP server — no credentials yet
+# Add the hosted MCP server, no credentials yet
 claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp
 
-# Ask the agent to call register_agent, which returns
-# an address and an API key (amb_...) shown once.
-# Then re-add the server with the key as a header:
+# Ask the agent to call register_agent. It returns an
+# address and an API key (amb_...) shown once.
+# Re-add the server with the key as a header:
 claude mcp remove mailgi
 claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp \
   --header "Authorization: Bearer amb_..."
 
-# Tools: mail_send, mail_list, mail_get, ... — each one
-# a 1:1 proxy of the REST endpoint. Full list: /mcp.html
+# Tools: mail_send, mail_list, mail_get, ...
+# each a 1:1 proxy of a REST endpoint. Full list: /mcp.html
 ```
 
-## Want it sending as your company instead?
+[03] Guides
 
-Attach your domain in the dashboard — DKIM, SPF and DMARC handled for you — then hand each agent a registration token.
+## Keep reading.
+
+Framework walkthroughs, use cases and comparisons, each with working code.
+all guides →
+
+- How to give an AI agent an email address (https://www.mailgi.xyz/agent-email-address.html)
+
+- How an AI agent receives a verification code (https://www.mailgi.xyz/agent-email-verification.html)
+
+- Running a support inbox with an AI agent (https://www.mailgi.xyz/agent-support-inbox.html)
+
+- Agent-to-agent email (https://www.mailgi.xyz/agent-to-agent-email.html)
+
+- Give an OpenAI Agents SDK agent email (https://www.mailgi.xyz/openai-agents-sdk-email.html)
+
+- Build a LangChain email agent (https://www.mailgi.xyz/langchain-email-agent.html)
+
+- Give a CrewAI agent email (https://www.mailgi.xyz/crewai-email-agent.html)
+
+- Give a Vercel AI SDK agent email (https://www.mailgi.xyz/vercel-ai-sdk-email.html)
+
+- Give an n8n AI agent email (https://www.mailgi.xyz/n8n-email-agent.html)
+
+- Give your AI assistant its own email address (https://www.mailgi.xyz/ai-assistant-email-address.html)
+
+- Inbox per agent vs catch-all (https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html)
+
+- How to choose an email API for an AI agent (https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html)
+
+- Best email API for AI agents in 2026 (https://www.mailgi.xyz/best-email-api-for-ai-agents.html)
+
+- AgentMail alternative: Mailgi compared (https://www.mailgi.xyz/agentmail-alternative.html)
+
+- Mailgi vs AgentMail, Resend, Postmark and Mailgun (https://www.mailgi.xyz/vs-resend-postmark-mailgun.html)
+
+- Email MCP server for Claude Code and Cursor (https://www.mailgi.xyz/mcp.html)
+
+- Email for AI agents: FAQ (https://www.mailgi.xyz/faq.html)
+
+## Rather send as your company?
+
+Attach your domain in the dashboard, with DKIM, SPF and DMARC handled, then give each agent a registration token.
 
 See the product →
 
@@ -604,17 +656,27 @@ Compare the options →
 
 Source: https://www.mailgi.xyz/vs-resend-postmark-mailgun.html (updated 2026-11-04)
 
-Comparison
+Comparison · verified 2026-10-31
 
-# Mailgi vs the alternatives, honestly
+# Mailgi vs the alternatives, honestly.
 
-Most of these are good products. Several are better than us at things we don't do. Here is what each one actually is, what it costs, and when you should pick it instead.
+Most of these are good products, and several beat us at things we don't do. Here's what each one actually is, what it costs, and when to pick it instead.
 
-The axis everyone compares on is deliverability, and it's the wrong one — Resend and Postmark are excellent at deliverability and we're not going to beat them at it. For an agent, three other things decide the build: whether inbound is a mailbox or a webhook, whether a program can get credentials without a human reading a code, and whether the mail is still there next week.
+Everyone compares on deliverability. That's the wrong axis: Resend and Postmark are excellent at it and we're not going to beat them.
 
-## The comparison, at a glance
+For an agent, three things decide the build
 
-Everything below was checked against each vendor's own documentation and pricing pages on the date shown. Pricing moves — re-check before you commit to anything.
+- 01Is inbound a mailbox or a webhook?
+
+- 02Can a program get credentials without a human reading a code?
+
+- 03Is the mail still there next week?
+
+[01] At a glance
+
+## The comparison, side by side.
+
+Everything below was checked against each vendor's own documentation and pricing pages on the date shown. Pricing moves, so re-check before you commit to anything.
 
 Last verified: 2026-10-31
 
@@ -699,95 +761,135 @@ $15/mo |
 $15/mo |
 $5/mo Workers |
 
-## The agent-native ones
+[02] Agent-native
+
+## Built for agents, like us.
 
 Products built for this use case specifically, rather than adapted to it.
 
-### AgentMail
+### AgentMailfrom $20/mo
 
 The most serious competitor in the category, and on most axes the more capable product. YC Summer 2025, a $6M seed led by General Catalyst, and a feature list we don't match: threading, full-text search, IMAP and SMTP access, WebSockets, multi-tenant pods, labels, a SOC 2 report on the $200 tier, an EU region on Enterprise and first-party framework connectors. The free tier is three inboxes, 3,000 messages a month and 100 a day, with no card; paid plans start at $20.
 
-Registration is where we differ, and the gap has narrowed since August. AgentMail's sign-up endpoint now takes an optional human_email. Without one, the agent gets an inbox that can receive but cannot send to anyone until a human is attached. With one, a six-digit code goes to that person, and until it is entered the account can only mail them. Separately, an agent holding a USDC wallet can create an inbox for $2 and pay per request over x402 with no API key; AgentMail's docs don't say what that inbox may send to. Mailgi's registration is one unauthenticated POST that can send straight away, with no wallet and no human. If you're building a multi-tenant agent platform and a one-time human signup is acceptable, AgentMail is more mature than we are and you should look at it.
+Registration is where we differ, and the gap has narrowed since August. AgentMail's sign-up endpoint now takes an optional human_email. Without one, the agent gets an inbox that can receive but cannot send to anyone until a human is attached. With one, a six-digit code goes to that person, and until it is entered the account can only mail them. Separately, an agent holding a USDC wallet can create an inbox for $2 and pay per request over x402 with no API key; AgentMail's docs don't say what that inbox may send to. Mailgi's registration is one unauthenticated POST that can send straight away, with no wallet and no human.
 
-### PhoboMail
+PICK IT IFYou're building a multi-tenant agent platform and a one-time human signup is acceptable. AgentMail is more mature than we are and you should look at it.
+
+### PhoboMailfree
 
 A small product that also registers an agent with no human involved — an agent calls a tool, gets an address and a key, and starts working. Free. If unattended registration is the only thing you need, it does that.
 
 It's MCP-only, so there's no REST API for anything that isn't an MCP client; there are no custom domains, so you're on their shared domain permanently; and it's a small solo project with no stated support commitment. Worth knowing about, and we'd rather tell you than have you find it later.
 
-### Nylas Agent Accounts
+PICK IT IFUnattended registration over MCP is the only thing you need.
 
-Nylas-hosted mailboxes (and calendars) for agents, created in one API call with no OAuth, in beta since April 2026. Real mailboxes with threads, folders and IMAP/SMTP on paid plans, and a US or EU region on every plan. Free is three accounts, 3,000 emails a month and 3 GB; Essentials is $15 a month and Pro $49. Getting the API key that creates accounts needs a human to sign up first. A good fit if you also want calendars, or already use Nylas.
+### Nylas Agent Accountsfrom $15/mo
 
-### mails.ai
+Nylas-hosted mailboxes (and calendars) for agents, created in one API call with no OAuth, in beta since April 2026. Real mailboxes with threads, folders and IMAP/SMTP on paid plans, and a US or EU region on every plan. Free is three accounts, 3,000 emails a month and 3 GB; Essentials is $15 a month and Pro $49. Getting the API key that creates accounts needs a human to sign up first.
+
+PICK IT IFYou also want calendars, or already use Nylas.
+
+### mails.aifrom $20/mo
 
 A newer entrant (launched in the third quarter of 2026) aimed at agents that send and handle replies: TypeScript and Python SDKs, an MCP server, signed webhooks and reply intent classification. Free is one agent and 3,000 emails a month; Pro is $20 and Scale $99. Inbound arrives as a stream of reply events rather than a mailbox you list and read, and a human mints the first API key.
 
-## The transactional providers
+PICK IT IFYour agent mostly sends and handles replies.
+
+[03] Transactional
+
+## Excellent at delivery, built for apps.
 
 Mature, excellent at delivery, built for applications rather than agents. All four require a human to create the account.
 
-### Resend
+### Resendfrom $20/mo
 
 Resend can receive mail, and since 22 October 2026 it has mailboxes. Inbound shipped in November 2025 as a receiving API, CLI streaming and an MCP server. The new Inboxes product adds threaded mailboxes on your own domain with folders, labels, drafts, Gmail-style search and configurable built-in agents: three inboxes free, then $1 per inbox on paid plans. It is also the best developer experience in the category, and past a million users.
 
 What still separates us: a human has to create the Resend account and verify a domain before an agent gets an inbox. Inbound messages count against the same quota as your sends, so a chatty agent burns allowance twice. And standard plans retain mail for 30 days, which is fine for a workflow and wrong for an agent that needs to remember a conversation from last quarter. Free is 3,000 a month and 100 a day; Pro starts at $20.
 
-### Postmark
+PICK IT IFA human can set it up once and 30-day retention is fine.
+
+### Postmarkfrom $15/mo
 
 The best inbound payload of anything here. Full body, headers, spam score and a StrippedTextReply field that removes quoted history — which, if you've ever tried to get a model to parse a reply chain, is worth real money on its own. Deliverability reputation is best in class. The free tier is 100 messages a month and doesn't expire.
 
 Inbound isn't on the free or entry tier — you need Pro at $16.50/month. And the model is one account, one application; spinning up an inbox per agent isn't what it's for.
 
-### Mailgun
+PICK IT IFYou need clean reply parsing for a single application.
+
+### Mailgunfrom $15/mo
 
 Powerful inbound routing with pattern matching, and a long track record. The constraint that bites agents is that routes are a metered resource — one on the free tier, five on the $15 plan. An architecture of one route per agent is dead on arrival; you'd run a single catch-all route and demultiplex yourself, which is work you were trying to avoid.
 
-### SendGrid
+PICK IT IFYou want pattern-matched inbound routing and a handful of routes is enough.
+
+### SendGrid~$20/mo
 
 The free tier was retired in 2025 — there's now a 60-day trial, after which sending stops unless you're on a paid plan starting somewhere around $20/month. Inbound Parse is a webhook and works. The genuine advantage is that it's part of Twilio, so if you also need SMS or voice from the same agent, that consolidation is worth something. For email alone, the others are better value.
 
-## The free and nearly-free options
+PICK IT IFYour agent also needs SMS or voice.
 
-Sometimes the right answer costs nothing, and we'd rather say so.
+[04] Free & nearly free
 
-### Cloudflare Email Service
+## Sometimes the answer costs nothing.
 
-Receiving is free and unlimited through Email Routing. Sending went to public beta in April 2026 at Cloudflare's Agents Week, and runs about $0.35 per thousand after an included allowance on the $5 Workers plan — several times cheaper than anyone else here. If your agent already runs on Workers, you should probably use this.
+We'd rather say so.
+
+### Cloudflare Email Service$5/mo Workers
+
+Receiving is free and unlimited through Email Routing. Sending went to public beta in April 2026 at Cloudflare's Agents Week, and runs about $0.35 per thousand after an included allowance on the $5 Workers plan — several times cheaper than anyone else here.
 
 What you don't get is a mailbox. There's no inbox object, no persistence and no shared domain — mail arrives at a Worker and storing it is your problem, on D1 or R2. You're building the thing the rest of this page is comparing, on excellent primitives. Sending is also still in beta.
 
-### Disposable mail APIs
+PICK IT IFYour agent already runs on Workers. You should probably use this.
 
-Services like mail.tm hand out a throwaway address over a free API with no key at all. If the whole job is catching one verification code in CI, use one of these. Paying for infrastructure to do that is over-engineering.
+### Disposable mail APIsfree
+
+Services like mail.tm hand out a throwaway address over a free API with no key at all. Paying for infrastructure to catch one code is over-engineering.
 
 Don't ship a product on one. The inboxes are typically public or shared, so anything sent there is readable by anyone who guesses the address; there's no sending; there's no reputation; and the domains are blocklisted by many of the services an agent would want to register with.
 
-### Gmail API on a human's account
+PICK IT IFThe whole job is catching one verification code in CI.
+
+### Gmail API on a human's accountfree
 
 Free, and reasonable for one internal agent on a Workspace account. It doesn't survive contact with production. Before the agent reads a message you need a cloud project, an OAuth consent screen and scope configuration; unverified apps are capped near 100 users and show a warning screen; and the mailbox scopes are restricted, so going external means OAuth verification plus a third-party CASA security assessment renewed every 12 months; Google says verification alone can take several weeks. The structural problem is that the agent can read everything else in that person's mail.
 
-## When not to use Mailgi
+PICK IT IFIt's one internal agent on a Workspace account.
+
+[05] Honest limits
+
+## When not to use Mailgi.
 
 We're in beta, we're small, and there are several situations where one of the products above is straightforwardly the better call.
+
+01
 
 ### You need search or threading
 
 We have neither, and no WebSocket. Webhooks we do have. AgentMail has full-text search, threading and WebSockets, and Resend's new Inboxes have threads and search.
 
+02
+
 ### One inbox, one human, one setup
 
 If a person can click through a signup once and never again, our whole differentiator is irrelevant to you. Postmark or Resend will serve you better.
+
+03
 
 ### You're already on Workers
 
 Cloudflare receives for free and sends for a fraction of anyone's per-message price. Use it, and keep the money.
 
+04
+
 ### You need compliance paperwork now
 
 No SOC 2 report, no dedicated IPs, no EU region, no enterprise agreement. If procurement needs those this quarter, we aren't a candidate yet.
 
-## What we're actually better at
+[06] Where we win
+
+## What we're actually better at.
 
 one POST
 
@@ -807,7 +909,10 @@ Receiving is a mailbox the agent can list, read, file and come back to — not a
 
 Start on a shared handle in seconds, move to your own verified domain with DKIM, SPF and DMARC when you're ready. Same endpoints either side, and custom domains aren't a paid upgrade.
 
-## Questions, answered
+[07] FAQ
+
+## Questions, answered.
+all questions →
 
 Q: Can Resend receive email?
 
@@ -837,9 +942,46 @@ Q: What does Mailgi not have that the alternatives do?
 
 A: Attachments, search, WebSocket push, threading headers, dedicated IPs, a SOC 2 report and an EU region. Webhooks are no longer on that list — inbound webhooks shipped in September 2026, signed, with a delivery log and replay. AgentMail has full-text search, IMAP and SMTP, and WebSockets; Resend's Inboxes have threads and search. Resend and Postmark have attachments and years of deliverability tuning. What we do that they don't is let a program register itself and send with no human and no wallet.
 
-## Not sure which of these you actually need?
+[08] Keep reading
 
-Skip the matrix. Four questions that decide it, and where each answer points.
+## Guides and other comparisons.
+all guides →
+
+- How to give an AI agent an email address (https://www.mailgi.xyz/agent-email-address.html)
+
+- How an AI agent receives a verification code (https://www.mailgi.xyz/agent-email-verification.html)
+
+- Running a support inbox with an AI agent (https://www.mailgi.xyz/agent-support-inbox.html)
+
+- Agent-to-agent email (https://www.mailgi.xyz/agent-to-agent-email.html)
+
+- Give an OpenAI Agents SDK agent email (https://www.mailgi.xyz/openai-agents-sdk-email.html)
+
+- Build a LangChain email agent (https://www.mailgi.xyz/langchain-email-agent.html)
+
+- Give a CrewAI agent email (https://www.mailgi.xyz/crewai-email-agent.html)
+
+- Give a Vercel AI SDK agent email (https://www.mailgi.xyz/vercel-ai-sdk-email.html)
+
+- Give an n8n AI agent email (https://www.mailgi.xyz/n8n-email-agent.html)
+
+- Give your AI assistant its own email address (https://www.mailgi.xyz/ai-assistant-email-address.html)
+
+- Inbox per agent vs catch-all (https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html)
+
+- How to choose an email API for an AI agent (https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html)
+
+- Best email API for AI agents in 2026 (https://www.mailgi.xyz/best-email-api-for-ai-agents.html)
+
+- AgentMail alternative: Mailgi compared (https://www.mailgi.xyz/agentmail-alternative.html)
+
+- Email MCP server for Claude Code and Cursor (https://www.mailgi.xyz/mcp.html)
+
+- Email for AI agents: FAQ (https://www.mailgi.xyz/faq.html)
+
+## Not sure what you need?
+
+Skip the matrix. Four questions decide it, and each answer points somewhere.
 
 Work it out →
 
@@ -973,101 +1115,107 @@ Pricing
 
 # Start free. Pay when you outgrow it.
 
-Every agent starts free, with up to 50 new recipients a day and Mailgi branding on its mail. The first top-up removes both; after that you pay per recipient. Receiving is always free. No subscription, no seats.
+Every agent starts free: 50 new recipients a day, with Mailgi branding. The first top-up removes both, and after that you pay per recipient. Receiving is always free. No subscription, no seats.
 
-## Free and paid, in one table
+[01] Tiers
+
+## Free and paid, one table.
 
 One step between them: the first top-up. An agent that registered itself has its own balance; agents on your organisation's domain share the organisation's.
 
-|
-|
-Free |
-Paid |
+| Item | Free | Paid |
 
-|
-Mail to people outside Mailgi |
-Free |
-$0.0005 per recipient |
+| Mail to people outside Mailgi | Free | $0.0005 per recipient |
 
-|
-First email to a new address |
-Free, up to 50 new addresses a day |
-+ $0.02, once; no daily cap |
+| First email to a new address | Free, up to 50 new addresses a day | + $0.02, once; no daily cap |
 
-|
-Mailgi branding on sent mail |
-Yes |
-No |
+| Mailgi branding on sent mail | Yes | No |
 
-|
-Receiving, from anyone |
-Free, unlimited |
-Free, unlimited |
+| Receiving, from anyone | Free, unlimited | Free, unlimited |
 
-|
-Mail between your agents |
-Free |
-Free |
+| Mail between your agents | Free | Free |
 
-|
-Storage |
-First 10 MB per mailbox free, then $0.25 per GB-month |
-First 10 MB per mailbox free, then $0.25 per GB-month |
+| Storage | First 10 MB per mailbox free, then $0.25 per GB-month | First 10 MB per mailbox free, then $0.25 per GB-month |
 
-|
-Agents, keys, webhooks, custom domains, MCP, SDK |
-Included, unlimited |
-Included, unlimited |
+| Agents, keys, webhooks, custom domains, MCP, SDK | Included, unlimited | Included, unlimited |
 
-|
-How you get it |
-Register an agent. No account, no card. |
-Top up once, from $5, by anyone's card |
+| How you get it | Register an agent. No account, no card. | Top up once, from $5, by anyone's card |
 
 What $5 buys: 10,000 emails to people your agent already corresponds with, or 243 first emails to new people, or any mix of the two. A mailbox holding 1 GB costs about $0.25 a month.
 
-## Why the first email costs more
+[02] Estimate
 
-→Mail to strangers is where spam lives. Conversations are what agents are for. So the price sits on the introduction, once, and everything after it is a fraction of a cent.
+## Your monthly bill, roughly.
 
-→An address stops being a stranger when it writes to your agent first. We check its DKIM signature, so that cannot be faked by a forged sender. (an agent that answers mail never pays to introduce itself)
+Worked example: 3 agents send 6,000 emails a month to people they already know and 600 first emails to new people, and hold 1 GB of mail between them.
 
-→Or when your agent has paid to introduce itself once. After that, the same $0.0005 as anyone it already knows.
+Agents (mailboxes)3
+Emails to known contacts / month6,000
+New recipients / month600
+Total mailbox storage1 GB
 
-→Known contacts belong to each agent and are stored only as keyed hashes, never as addresses, so the table cannot be read as a list of who an agent talks to.
+The formula, after the first top-up: known emails × $0.0005 + new recipients × $0.0205 ($0.0005 plus the $0.02 introduction) + storage above 10 MB per mailbox × $0.25 per GB-month. Receiving and agent-to-agent mail are free and not counted. Billing is per recipient.
+
+Free tier
+Paid
+
+6,000 × $0.0005 known contacts$3.00
+
+600 × $0.0205 new recipients$12.30
+
+0.97 GB × $0.25 storage$0.24
+
+Estimated per month, paid
+$15.54
+
+No branding, no daily cap on new recipients. Top up from $5.
+
+On the free tier the same example costs $0.24, storage only: about 6.7 new recipients a day per agent, under the 50 cap, with Mailgi branding on the mail.
+
+Assumes each agent has its own balance and sends evenly over 30 days. Example figures, not a quote.
+
+[03] Introductions
+
+## Why the first email costs more.
 
 This is also why unattended registration can stay open. An agent nobody vouches for can write to a few dozen new people a day, with Mailgi branding. To write to more, someone with a card has paid for it.
 
-## Who pays, and how
+- Mail to strangers is where spam lives. Conversations are what agents are for. So the price sits on the introduction, once, and everything after it is a fraction of a cent.
+
+- An address stops being a stranger when it writes to your agent first. We check its DKIM signature, so that cannot be faked by a forged sender. An agent that answers mail never pays to introduce itself.
+
+- Or when your agent has paid to introduce itself once. After that, the same $0.0005 as anyone it already knows.
+
+- Known contacts belong to each agent and are stored only as keyed hashes, never as addresses, so the table cannot be read as a list of who an agent talks to.
+
+[04] Billing
+
+## Who pays, and how.
 
 one balance per owner
 
 ### Agent or organisation
-
 An agent that registered itself on @mailgi.xyz has its own balance. Agents on your organisation's domain share the organisation's, which admins top up from the dashboard.
 
 no account needed
 
 ### Anyone can pay
-
 Top up any agent by card at app.mailgi.xyz/topup. An agent can hand its human a link that opens with its address already filled in. Minimum $5, plus any sales tax or VAT.
 
 nothing surprising
 
 ### When it runs out
-
 A send the balance can't cover is refused whole with 402 and an itemised cost, and nothing is charged. Receiving and mail between your agents keep working.
 
-## The limits, in full
+[05] Limits
+
+## Every limit, in full.
 
 These apply on both tiers; paying doesn't lift them. Several apply to outbound mail at once, and the lowest one wins. Most services quote you the friendliest number; here are all of them.
 
 Talking to agents doesn't eat your external quota. Mail to other @mailgi.xyz agents is counted on its own, separate allowance, so a busy agent-to-agent workflow never blocks mail to people.
 
-|
-Applies to |
-Per hour |
-Per day |
+| Applies to | Per hour | Per day |
 
 | Each API key | — | 100 emails |
 
@@ -1091,7 +1239,10 @@ Per day |
 
 The one that surprises people: a brand-new custom domain starts at 100 emails a day for the whole organisation and only reaches 5,000 a day after it has been verified for a month. That's deliberate. Sending reputation is earned by sending a little, consistently, from a domain that behaves; a new domain that suddenly emits thousands of messages is indistinguishable from a compromised one, and receiving servers treat it accordingly. The ramp protects your domain from your own launch day.
 
-## Questions, answered
+[06] FAQ
+
+## Pricing questions.
+all questions →
 
 Q: How much does Mailgi cost?
 
@@ -1141,6 +1292,50 @@ Q: Why are the sending limits so low?
 
 A: Because anyone can register an agent without a human being involved, which is the point of the product and also exactly the shape of an abuse vector. The limits, together with the free tier's daily cap on new recipients and paying to introduce yourself after it, are what let us keep unattended registration open. They are deliberately inconvenient for bulk sending: Mailgi is not a marketing platform and has no lists, imports or campaigns. If you have a legitimate need for more volume, email us.
 
+[07] Guides
+
+## Keep reading.
+all guides →
+
+- How to give an AI agent an email address (https://www.mailgi.xyz/agent-email-address.html)
+
+- How an AI agent receives a verification code (https://www.mailgi.xyz/agent-email-verification.html)
+
+- Running a support inbox with an AI agent (https://www.mailgi.xyz/agent-support-inbox.html)
+
+- Agent-to-agent email (https://www.mailgi.xyz/agent-to-agent-email.html)
+
+- Give an OpenAI Agents SDK agent email (https://www.mailgi.xyz/openai-agents-sdk-email.html)
+
+- Build a LangChain email agent (https://www.mailgi.xyz/langchain-email-agent.html)
+
+- Give a CrewAI agent email (https://www.mailgi.xyz/crewai-email-agent.html)
+
+- Give a Vercel AI SDK agent email (https://www.mailgi.xyz/vercel-ai-sdk-email.html)
+
+- Give an n8n AI agent email (https://www.mailgi.xyz/n8n-email-agent.html)
+
+- Give your AI assistant its own email address (https://www.mailgi.xyz/ai-assistant-email-address.html)
+
+- Inbox per agent vs catch-all (https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html)
+
+- How to choose an email API for an AI agent (https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html)
+
+- Best email API for AI agents in 2026 (https://www.mailgi.xyz/best-email-api-for-ai-agents.html)
+
+- AgentMail alternative: Mailgi compared (https://www.mailgi.xyz/agentmail-alternative.html)
+
+- Mailgi vs AgentMail, Resend, Postmark and Mailgun (https://www.mailgi.xyz/vs-resend-postmark-mailgun.html)
+
+- Email MCP server for Claude Code and Cursor (https://www.mailgi.xyz/mcp.html)
+
+- Email for AI agents: FAQ (https://www.mailgi.xyz/faq.html)
+
+## Start free.
+
+One POST and your agent has an address that receives mail and can write to 50 new people a day. Add credit when it needs more.
+Open the dashboard →
+
 
 ---
 
@@ -1148,95 +1343,86 @@ Source: https://www.mailgi.xyz/guides.html (updated 2026-10-31)
 
 Guides
 
-# How to actually build the thing
+# How to actually build the thing.
 
 Every code sample on these pages was run against the live API before it was published. Where the API can't do something, the guide says so instead of routing around it quietly.
 
-## Start here
+All
+Start here
+Use cases
+Frameworks
+Comparisons
+
+Start here
+
+## First time?
 
 If you've not given an agent an address before, read this one first.
 
-### How to give an AI agent an email address (https://www.mailgi.xyz/agent-email-address.html)
+- 01How to give an AI agent an email addressWhy an agent needs a mailbox of its own, the four approaches people try and how each one fails, a working setup, and what DKIM, SPF and DMARC actually do rather than just what they're called.→ (https://www.mailgi.xyz/agent-email-address.html)
 
-Why an agent needs a mailbox of its own, the four approaches people try and how each one fails, a working setup, and what DKIM, SPF and DMARC actually do rather than just what they're called.
+By use case
 
-## By what you're building
+## What you're building
 
 Three use cases, each with the full loop in runnable code and an honest list of what the API can't do yet.
 
-### Receiving a verification code (https://www.mailgi.xyz/agent-email-verification.html)
+- 02Receiving a verification codeThe wall most agents hit first: it can fill in the signup form but has no address for the confirmation email. Register an inbox, poll, pull the code out — plus the four mistakes that make this flaky in production.→ (https://www.mailgi.xyz/agent-email-verification.html)
 
-The wall most agents hit first: it can fill in the signup form but has no address for the confirmation email. Register an inbox, poll, pull the code out — plus the four mistakes that make this flaky in production.
+- 03Running a support inboxAn agent on support@yourdomain.com reading, triaging, filing and answering. Covers the custom-domain setup, using folders as ticket status, and why replies don't thread the way you'd expect.→ (https://www.mailgi.xyz/agent-support-inbox.html)
 
-### Running a support inbox (https://www.mailgi.xyz/agent-support-inbox.html)
+- 04Agent-to-agent coordinationTwo agents passing work over real addresses — free on the shared domain, on its own allowance separate from your external quota. Includes the loop-prevention rules, and a straight answer about when you should use a queue instead.→ (https://www.mailgi.xyz/agent-to-agent-email.html)
 
-An agent on support@yourdomain.com reading, triaging, filing and answering. Covers the custom-domain setup, using folders as ticket status, and why replies don't thread the way you'd expect.
+By framework
 
-### Agent-to-agent coordination (https://www.mailgi.xyz/agent-to-agent-email.html)
+## With your stack
 
-Two agents passing work over real addresses — free on the shared domain, on its own allowance separate from your external quota. Includes the loop-prevention rules, and a straight answer about when you should use a queue instead.
+Tested integrations, design choices, and the hosted MCP server.
 
-## With your framework, and design choices
+- 05Give an OpenAI Agents SDK agent emailThree function tools (send, list, read) over the REST API, tested against the live API, wired into openai-agents.→ (https://www.mailgi.xyz/openai-agents-sdk-email.html)
 
-### Give an OpenAI Agents SDK agent email (https://www.mailgi.xyz/openai-agents-sdk-email.html)
+- 06Build a LangChain email agentThe same three tools wrapped for LangChain's create_agent; why not the Gmail toolkit.→ (https://www.mailgi.xyz/langchain-email-agent.html)
 
-Three function tools (send, list, read) over the REST API, tested against the live API, wired into openai-agents.
+- 07Give a CrewAI agent emailMailgi's hosted MCP server in the agent's mcps list via MCPServerHTTP, filtered to three mail tools; tested on CrewAI 1.15.→ (https://www.mailgi.xyz/crewai-email-agent.html)
 
-### Build a LangChain email agent (https://www.mailgi.xyz/langchain-email-agent.html)
+- 08Give a Vercel AI SDK agent emailcreateMCPClient over Streamable HTTP, three mail tools passed to generateText or streamText; tested on ai 7.0.→ (https://www.mailgi.xyz/vercel-ai-sdk-email.html)
 
-The same three tools wrapped for LangChain's create_agent; why not the Gmail toolkit.
+- 09Give an n8n AI agent emailNo code: the MCP Client Tool node on an AI Agent, run on a schedule or from a Mailgi webhook.→ (https://www.mailgi.xyz/n8n-email-agent.html)
 
-### Give a CrewAI agent email (https://www.mailgi.xyz/crewai-email-agent.html)
+- 10Give your AI assistant its own email addressInstead of your Gmail password: register, forward or CC what it needs, reply as itself.→ (https://www.mailgi.xyz/ai-assistant-email-address.html)
 
-Mailgi's hosted MCP server in the agent's mcps list via MCPServerHTTP, filtered to three mail tools; tested on CrewAI 1.15.
+- 11Inbox per agent vs catch-allIsolation, credentials and prompt-injection exposure of a mailbox per agent versus one catch-all with a router; Mailgi has no catch-all.→ (https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html)
 
-### Give a Vercel AI SDK agent email (https://www.mailgi.xyz/vercel-ai-sdk-email.html)
+- 12Connecting Claude Code, Claude Desktop or CursorThe hosted MCP server at api.mailgi.xyz/mcp: config for each client, how an agent bootstraps its own key, every tool and the REST endpoint behind it, and what doesn't work yet — including claude.ai and ChatGPT connectors.→ (https://www.mailgi.xyz/mcp.html)
 
-createMCPClient over Streamable HTTP, three mail tools passed to generateText or streamText; tested on ai 7.0.
+Before you commit
 
-### Give an n8n AI agent email (https://www.mailgi.xyz/n8n-email-agent.html)
+## Choosing an API
 
-No code: the MCP Client Tool node on an AI Agent, run on a schedule or from a Mailgi webhook.
+Dated, sourced, and explicit about when to pick someone else.
 
-### Give your AI assistant its own email address (https://www.mailgi.xyz/ai-assistant-email-address.html)
+- 13Choosing an email API for an agentWhy deliverability is the wrong axis to compare on, and the four questions that actually decide the build — mailbox or webhook, who creates the account, how long mail is kept, whose domain.→ (https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html)
 
-Instead of your Gmail password: register, forward or CC what it needs, reply as itself.
+- 14Mailgi vs the alternativesA dated, sourced comparison against AgentMail, Resend, Postmark, Mailgun, SendGrid, Cloudflare and the free options — with an explicit section on when to pick one of them over us.→ (https://www.mailgi.xyz/vs-resend-postmark-mailgun.html)
 
-### Inbox per agent vs catch-all (https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html)
+- 15Best email API for AI agents in 2026Eight options ranked on what decides an agent build — real mailbox, human signup, search, price — with AgentMail first on capability.→ (https://www.mailgi.xyz/best-email-api-for-ai-agents.html)
 
-Isolation, credentials and prompt-injection exposure of a mailbox per agent versus one catch-all with a router; Mailgi has no catch-all.
+- 16AgentMail alternativeA line-by-line table against AgentMail, when to pick them instead of us, and sources.→ (https://www.mailgi.xyz/agentmail-alternative.html)
 
-## Before you commit to anything
+- 17Resend for agentsA line-by-line table against Resend, when to pick them instead of us, and sources.→ (https://www.mailgi.xyz/resend-for-ai-agents.html)
 
-### Choosing an email API for an agent (https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html)
+- 18Gmail API for agentsA line-by-line table against the Gmail API, when to pick it instead of us, and sources.→ (https://www.mailgi.xyz/gmail-api-for-ai-agents.html)
 
-Why deliverability is the wrong axis to compare on, and the four questions that actually decide the build — mailbox or webhook, who creates the account, how long mail is kept, whose domain.
-
-### Mailgi vs the alternatives (https://www.mailgi.xyz/vs-resend-postmark-mailgun.html)
-
-A dated, sourced comparison against AgentMail, Resend, Postmark, Mailgun, SendGrid, Cloudflare and the free options — with an explicit section on when to pick one of them over us.
-
-### Best email API for AI agents in 2026 (https://www.mailgi.xyz/best-email-api-for-ai-agents.html)
-
-Eight options ranked on what decides an agent build — real mailbox, human signup, search, price — with AgentMail first on capability.
-
-### AgentMail alternative (https://www.mailgi.xyz/agentmail-alternative.html), Resend for agents (https://www.mailgi.xyz/resend-for-ai-agents.html), Gmail API for agents (https://www.mailgi.xyz/gmail-api-for-ai-agents.html)
-
-One page per alternative: a line-by-line table, when to pick them instead of us, and sources.
-
-## From an MCP client
-
-### Connecting Claude Code, Claude Desktop or Cursor (https://www.mailgi.xyz/mcp.html)
-
-The hosted MCP server at api.mailgi.xyz/mcp: config for each client, how an agent bootstraps its own key, every tool and the REST endpoint behind it, and what doesn't work yet — including claude.ai and ChatGPT connectors.
-
-## For the agent, not you
+## For the agent, not you.
 
 These guides are written for a person building something. SKILL.md is the same API written for an agent to read at runtime and act on directly.
 
-plain language
-no SDK
-read SKILL.md →
+Read SKILL.md →
+
+## One POST to start.
+
+No signup form, no OAuth, no card to start. Receiving is free.
+Open the dashboard →
 
 
 ---
@@ -1785,41 +1971,44 @@ Source: https://www.mailgi.xyz/mcp.html (updated 2026-10-31)
 
 MCP server
 
-# Email for agents, as MCP tools
+# Email for agents, as MCP tools.
 
-A hosted Model Context Protocol server at https://api.mailgi.xyz/mcp. Point Claude Code, Claude Desktop or Cursor at it and the agent can register an address, send, read and file mail — with nothing to install on the server side.
-
-Every tool is the REST API, called for you. Same limits, same billing, same errors.
+A hosted Model Context Protocol server at https://api.mailgi.xyz/mcp. Point Claude Code, Claude Desktop or Cursor at it and the agent can register an address, send, read and file mail. Nothing to install on the server side.
 
 Streamable HTTP · Stateless · Headers for auth
 
+```
 # endpoint
-
 https://api.mailgi.xyz/mcp
 
 # headers decide which tools work
+Authorization: Bearer amb_…   → agent tools
+X-Mailgi-Session: <token>    → org tools
+(neither)                     → public tools only
+```
 
-Authorization: Bearer amb_… → agent tools
+Every tool is the REST API, called for you. Same limits, same billing, same errors.
 
-X-Mailgi-Session: <token> → org tools
+[01] What it is
 
-(neither) → public tools only
+## A thin layer over REST.
 
-## What it is
+The MCP server runs inside the Mailgi API itself. Each tool forwards to an existing REST endpoint and returns that endpoint's response, so a tool call and the equivalent curl behave identically: the same validation, the same rate limits, the same metering against the same wallet. Nothing is cached or reshaped in between.
 
-The MCP server runs inside the Mailgi API itself. Each tool forwards to an existing REST endpoint and returns that endpoint's response, so a tool call and the equivalent curl behave identically: the same validation, the same rate limits, the same metering against the same wallet. Nothing is cached or reshaped in between. The server is stateless — there is no MCP session to keep alive — and credentials travel as HTTP headers on the connection, not as tool arguments.
+The server is stateless, with no MCP session to keep alive. Credentials travel as HTTP headers on the connection, never as tool arguments.
 
-The server also exposes one resource, mailgi://skill, which serves SKILL.md — the plain-language guide to the API — so a client can load it as context without fetching the website.
+It also exposes one resource, mailgi://skill, which serves SKILL.md (https://www.mailgi.xyz/SKILL.md), the plain-language guide to the API, so a client can load it as context without fetching the website.
 
-## Connect a client
+[02] Connect
 
-Transport is Streamable HTTP. Already have an API key? Add it as the Authorization header and you're done. Don't have one yet? Start without headers and follow the bootstrap below.
+## Connect a client.
 
-Claude Desktop's config file only launches local processes, so it reaches a remote server through the mcp-remote bridge, which needs Node.js. Cursor speaks HTTP directly.
+Transport is Streamable HTTP. Already have an API key? Add it as the Authorization header and you're done. No key yet? Connect without headers and follow the bootstrap below. Claude Desktop's config file only launches local processes, so it reaches a remote server through the mcp-remote bridge, which needs Node.js. Cursor speaks HTTP directly.
 
 Claude Code
 Claude Desktop
 Cursor
+api.mailgi.xyz/mcpcopy
 
 ```
 # With an agent API key
@@ -1867,27 +2056,39 @@ claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp
 }
 ```
 
-## Bootstrap: from nothing to a key
+[03] Bootstrap
+
+## From nothing to a key.
 
 The server has no OAuth, so a credential can't be attached to the connection for you. The agent obtains one through a tool, and a human puts it into the client config once.
 
+01
+
 ### An agent of its own
 
-Connect with no headers and ask the agent to call register_agent (optionally with a label, or a domainToken and localPart to claim an address on a company domain). It returns the email address and an API key starting amb_ — shown exactly once. Re-add the server with Authorization: Bearer amb_… and the agent tools appear. In Claude Code that is claude mcp remove mailgi followed by the add command above.
+Connect with no headers and ask the agent to call register_agent (optionally with a label, or a domainToken and localPart to claim an address on a company domain). It returns the email address and an API key starting amb_, shown exactly once. Re-add the server with Authorization: Bearer amb_… and the agent tools appear. In Claude Code that is claude mcp remove mailgi followed by the add command above.
+
+02
 
 ### Org admin, by emailed code
 
-For the organisation tools — domains, members, registration tokens, the org wallet — the agent calls org_login_request_code with a human's email address. Mailgi emails that person a six-digit code; they tell the agent, which passes it to org_login_verify and gets back a dashboard session token. Add it to the connection as X-Mailgi-Session. Call org_logout to end that session when you're done with it.
+For the organisation tools (domains, members, registration tokens, the org wallet) the agent calls org_login_request_code with a human's email address. Mailgi emails that person a six-digit code; they tell the agent, which passes it to org_login_verify and gets back a dashboard session token. Add it to the connection as X-Mailgi-Session, and call org_logout to end that session when you're done.
+
+03
 
 ### Both at once
 
-The two headers are independent. Send both and the connection has agent and org tools together — for example an admin agent that creates a registration token with regtoken_create and hands it to another agent to self-register on the company domain.
+The two headers are independent. Send both and the connection has agent and org tools together, for example an admin agent that creates a registration token with regtoken_create and hands it to another agent to self-register on the company domain.
 
-## All 67 tools
+[04] Tools
 
-Tool names map one-to-one to REST endpoints, and each behaves exactly like the endpoint it names. For request and response fields, read the endpoint in the API docs or SKILL.md. Tools that delete, revoke or remove carry the MCP destructiveHint annotation, so a client that honours it asks before calling them.
+## All 67 tools.
 
-### Agent tools · 25 · need Authorization: Bearer amb_…
+Tool names map one-to-one to REST endpoints, and each behaves exactly like the endpoint it names. For request and response fields, read the endpoint in the API docs (https://api.mailgi.xyz/docs) or SKILL.md (https://www.mailgi.xyz/SKILL.md). Tools that delete, revoke or remove carry the MCP destructiveHint annotation, so a client that honours it asks before calling them.
+
+Agent tools 25need Authorization: Bearer amb_…
+Org tools 35need X-Mailgi-Session
+Public tools 7no credentials
 
 Everything an agent does with its own mailbox and wallet.
 
@@ -1944,8 +2145,6 @@ Agent tools
 | webhook_resend | POST /v1/webhook-endpoints/{id}/deliveries/{deliveryId}/resend | Re-queue a delivery |
 
 | webhook_enable | POST /v1/webhook-endpoints/{id}/enable | Re-enable an endpoint switched off by failures |
-
-### Org tools · 35 · need X-Mailgi-Session
 
 What a human does in the dashboard at app.mailgi.xyz, with that human's role in each organisation.
 
@@ -2023,8 +2222,6 @@ Organisation tools
 
 | org_logout | POST /v1/auth/logout | End the dashboard session |
 
-### Public tools · 7 · no credentials
-
 Bootstrap, paying for any agent's wallet by address, and a health check.
 
 Public tools
@@ -2047,30 +2244,77 @@ Public tools
 
 Not exposed over MCP: DID authentication (not available in the API either), OAuth sign-in redirects, signup attribution, and the inbound webhooks from Mailgi's own providers.
 
-## Limits, stated plainly
+[05] Limits
+
+## Limits, stated plainly.
+
+01
 
 ### One config edit after bootstrap
 
 A key obtained through register_agent or a session from org_login_verify doesn't attach itself to the connection. A human has to add the header to the client config and reconnect. Until then only the public tools work.
 
+02
+
 ### No OAuth, so no hosted connectors yet
 
-claude.ai and ChatGPT add remote MCP servers as hosted custom connectors, which authenticate with OAuth rather than a header you type in. The server doesn't implement OAuth, so it can't be used from those today. Clients where you control the headers — Claude Code, Claude Desktop through mcp-remote, Cursor — work.
+claude.ai and ChatGPT add remote MCP servers as hosted custom connectors, which authenticate with OAuth rather than a header you type in. The server doesn't implement OAuth, so it can't be used from those today. Clients where you control the headers (Claude Code, Claude Desktop through mcp-remote, Cursor) work.
+
+03
 
 ### Org tools give an agent admin reach
 
-A session token carries the signed-in human's role. An agent holding an owner's or admin's session can detach domains, remove members, revoke tokens and delete inboxes. The destructiveHint annotation only helps if your client asks before acting on it — only add X-Mailgi-Session to a connection you would trust with the dashboard, and end it with org_logout.
+A session token carries the signed-in human's role. An agent holding an owner's or admin's session can detach domains, remove members, revoke tokens and delete inboxes. destructiveHint only helps if your client asks before acting on it, so only add X-Mailgi-Session to a connection you would trust with the dashboard, and end it with org_logout.
+
+04
 
 ### Same limits and prices as REST
 
-MCP is not a separate tier. A mail_send is metered and rate-limited exactly like POST /v1/mail/send — see pricing — and errors come back as the endpoint's own error.
+MCP is not a separate tier. A mail_send is metered and rate-limited exactly like POST /v1/mail/send (see pricing (https://www.mailgi.xyz/pricing.html)), and errors come back as the endpoint's own error.
+
+[06] Guides
+
+## Keep reading.
+all guides →
+
+- How to give an AI agent an email address (https://www.mailgi.xyz/agent-email-address.html)
+
+- How an AI agent receives a verification code (https://www.mailgi.xyz/agent-email-verification.html)
+
+- Running a support inbox with an AI agent (https://www.mailgi.xyz/agent-support-inbox.html)
+
+- Agent-to-agent email (https://www.mailgi.xyz/agent-to-agent-email.html)
+
+- Give an OpenAI Agents SDK agent email (https://www.mailgi.xyz/openai-agents-sdk-email.html)
+
+- Build a LangChain email agent (https://www.mailgi.xyz/langchain-email-agent.html)
+
+- Give a CrewAI agent email (https://www.mailgi.xyz/crewai-email-agent.html)
+
+- Give a Vercel AI SDK agent email (https://www.mailgi.xyz/vercel-ai-sdk-email.html)
+
+- Give an n8n AI agent email (https://www.mailgi.xyz/n8n-email-agent.html)
+
+- Give your AI assistant its own email address (https://www.mailgi.xyz/ai-assistant-email-address.html)
+
+- Inbox per agent vs catch-all (https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html)
+
+- How to choose an email API for an AI agent (https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html)
+
+- Best email API for AI agents in 2026 (https://www.mailgi.xyz/best-email-api-for-ai-agents.html)
+
+- AgentMail alternative: Mailgi compared (https://www.mailgi.xyz/agentmail-alternative.html)
+
+- Mailgi vs AgentMail, Resend, Postmark and Mailgun (https://www.mailgi.xyz/vs-resend-postmark-mailgun.html)
+
+- Email for AI agents: FAQ (https://www.mailgi.xyz/faq.html)
 
 ## Not using MCP?
 
 The same API is plain HTTP, a CLI and a TypeScript SDK, and SKILL.md teaches any agent to use it directly.
 
 REST, CLI and SDK →
-read SKILL.md →
+Read SKILL.md
 
 
 ---
@@ -2079,11 +2323,26 @@ Source: https://www.mailgi.xyz/faq.html (updated 2026-11-04)
 
 FAQ
 
-# Everything people ask before they start
+# What people ask before they start.
 
-24 questions about giving an AI agent its own email address, answered against the live API.
+24 answers, checked against the live API. Where something isn't built yet, the answer says so.
 
 Mailgi gives an AI agent its own real email address in one API call, with no human in the loop. Receiving is free, mail between your own agents is free, a free tier covers 50 new recipients a day, and beyond it mail to the outside world costs $0.0005 per recipient from a prepaid balance. Every answer below matches the live API; where something isn't built yet, it says so.
+
+/
+
+24 questions
+
+Topics
+Getting an address5
+Receiving and reading6
+Sending and deliverability4
+Pricing and billing4
+Tools and integrations3
+Security and privacy2
+
+Start free → (https://app.mailgi.xyz)
+Read SKILL.md → (https://www.mailgi.xyz/SKILL.md)
 
 ## Getting an address
 
@@ -2192,6 +2451,50 @@ A: Mailbox content is stored in Germany, and outbound mail relays through AWS in
 Q: How do I verify that a webhook came from Mailgi?
 
 A: Compute HMAC-SHA256 over the x-mailgi-timestamp header, a dot, and the raw request body, using the secret returned when you created the endpoint, and compare it to x-mailgi-signature in constant time. Reject timestamps more than a few minutes old.
+
+No matches. Try “domain”, “webhook” or “limit”, or email hello@mailgi.xyz.
+
+## One POST to start.
+
+No signup form, no OAuth, no card to start. Receiving is free.
+Open the dashboard →
+
+Guides
+
+## Keep reading.
+all guides →
+
+- How to give an AI agent an email address (https://www.mailgi.xyz/agent-email-address.html)
+
+- How an AI agent receives a verification code (https://www.mailgi.xyz/agent-email-verification.html)
+
+- Running a support inbox with an AI agent (https://www.mailgi.xyz/agent-support-inbox.html)
+
+- Agent-to-agent email (https://www.mailgi.xyz/agent-to-agent-email.html)
+
+- Give an OpenAI Agents SDK agent email (https://www.mailgi.xyz/openai-agents-sdk-email.html)
+
+- Build a LangChain email agent (https://www.mailgi.xyz/langchain-email-agent.html)
+
+- Give a CrewAI agent email (https://www.mailgi.xyz/crewai-email-agent.html)
+
+- Give a Vercel AI SDK agent email (https://www.mailgi.xyz/vercel-ai-sdk-email.html)
+
+- Give an n8n AI agent email (https://www.mailgi.xyz/n8n-email-agent.html)
+
+- Give your AI assistant its own email address (https://www.mailgi.xyz/ai-assistant-email-address.html)
+
+- Inbox per agent vs catch-all (https://www.mailgi.xyz/inbox-per-agent-vs-catch-all.html)
+
+- How to choose an email API for an AI agent (https://www.mailgi.xyz/choosing-an-email-api-for-ai-agents.html)
+
+- Best email API for AI agents in 2026 (https://www.mailgi.xyz/best-email-api-for-ai-agents.html)
+
+- AgentMail alternative: Mailgi compared (https://www.mailgi.xyz/agentmail-alternative.html)
+
+- Mailgi vs AgentMail, Resend, Postmark and Mailgun (https://www.mailgi.xyz/vs-resend-postmark-mailgun.html)
+
+- Email MCP server for Claude Code and Cursor (https://www.mailgi.xyz/mcp.html)
 
 
 ---
