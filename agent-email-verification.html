@@ -150,7 +150,7 @@
           "name": "How long should an agent wait for a verification email?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Poll every two to three seconds for about ninety seconds. Most confirmation mail arrives within ten seconds; anything past a minute usually means the signup silently failed or the message was filtered rather than that it is still in flight. Always bound the loop and fail with a clear error rather than polling indefinitely."
+            "text": "Poll every two to three seconds for about ninety seconds. Most confirmation mail arrives within ten seconds; anything past a minute usually means the signup silently failed or the message was filtered rather than that it is still in flight. Always bound the loop and fail with a clear error rather than polling indefinitely. On @mailgi.xyz, mail from outside arrives 15 minutes late unless the mailbox has a MailPass ($0.20 a month), which is past most codes' expiry; if the list carries a held notice, hand its payLink to whoever pays."
           }
         },
         {
@@ -284,12 +284,17 @@ echo "$ADDR"     # =&gt; blank-reindeer@mailgi.xyz</pre>
         <h3 style="margin-bottom:14px">3 · Poll until it lands</h3>
         <p class="body">Webhooks exist, and this is the one case where you should not use them: the code arrives within seconds and the flow is over in a minute, so standing up an HTTPS endpoint to catch a single notification is more work than asking twice. Confirmation mail is usually readable within ten seconds.</p>
         <p class="body" style="margin-top:18px">Bound the loop. Ninety seconds is generous; past a minute the signup has usually failed rather than being slow.</p>
+        <p class="body" style="margin-top:18px">One exception: on <span class="mono">@mailgi.xyz</span>, mail from outside arrives 15 minutes late unless the mailbox has a MailPass, $0.20 a month. That is longer than most codes live. When mail is waiting, the list carries a <span class="mono">held</span> notice; hand its <span class="mono">payLink</span> to whoever you work for, and the code appears the moment they pay. A mailbox on your own domain is always instant.</p>
       </div>
       <div style="min-width:0">
 <pre class="code">for i in $(seq 1 30); do
   sleep 3
   LIST=$(curl -s https://api.mailgi.xyz/v1/mail \
     -H "Authorization: Bearer $KEY")
+
+  # held: no MailPass on this @mailgi.xyz mailbox
+  PAY=$(echo "$LIST" | jq -r '.held.payLink // empty')
+  [ -n "$PAY" ] &amp;&amp; { echo "mail on hold, MailPass: $PAY" &gt;&amp;2; exit 2; }
 
   # only look if something NEW arrived
   [ "$(echo "$LIST" | jq '.total')" -gt "$BEFORE" ] || continue
@@ -377,7 +382,7 @@ echo "$CODE"     # =&gt; 481902</pre>
       </details>
       <details>
         <summary><span class="numeral">03</span><span class="q">How long should an agent wait for a verification email?</span><span class="mark"></span></summary>
-        <p class="a">Poll every two to three seconds for about ninety seconds. Most confirmation mail is readable within ten; anything past a minute usually means the signup silently failed or the message was filtered, not that it's still in flight. Always bound the loop and fail with a clear error rather than polling forever.</p>
+        <p class="a">Poll every two to three seconds for about ninety seconds. Most confirmation mail is readable within ten; anything past a minute usually means the signup silently failed or the message was filtered, not that it's still in flight. Always bound the loop and fail with a clear error rather than polling forever. On <span class="mono">@mailgi.xyz</span>, mail from outside arrives 15 minutes late unless the mailbox has a MailPass ($0.20 a month), which is past most codes' expiry; if the list carries a <span class="mono">held</span> notice, hand its <span class="mono">payLink</span> to whoever pays.</p>
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">Why does my agent read the wrong verification code?</span><span class="mark"></span></summary>

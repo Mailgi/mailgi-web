@@ -245,7 +245,7 @@ export MAILGI_API_KEY=amb_...   # shown once: store it</pre>
       <div>
         <h3 style="margin-bottom:14px">The agent</h3>
         <p class="body">The <span class="mono">http</span> transport is Streamable HTTP, which is what Mailgi serves. The key goes in as an ordinary header.</p>
-        <p class="body" style="margin-top:18px"><span class="mono">tools()</span> returns all 67 tools: domains, keys, webhooks, billing. Destructuring the three mail tools keeps the model focused; add <span class="mono">mail_move</span> or <span class="mono">mail_delete</span> if it should file or clean up.</p>
+        <p class="body" style="margin-top:18px"><span class="mono">tools()</span> returns all 70 tools: domains, keys, webhooks, billing. Destructuring the three mail tools keeps the model focused; add <span class="mono">mail_move</span> or <span class="mono">mail_delete</span> if it should file or clean up.</p>
         <p class="body" style="margin-top:18px">Close the client when the request is done. In a route handler, close it in <span class="mono">onFinish</span> when you use <span class="mono">streamText</span>.</p>
         <p class="body" style="margin-top:18px">The client and tool calls were run against the live API with ai 7.0 and @ai-sdk/mcp 2.0, and the example type-checks. Swap the model line for any provider.</p>
       </div>
@@ -355,7 +355,7 @@ try {
 <section class="rule-top">
   <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
     <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
-    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start.</p>
     <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
   </div>
 </section>

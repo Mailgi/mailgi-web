@@ -141,8 +141,8 @@
     {
       "@type": "WebPage",
       "name": "Mailgi pricing",
-      "description": "Mailgi pricing in one table: a free tier and pay-as-you-go. Free, until the first top-up: sending to up to 50 new recipients a day at no charge, with Mailgi branding. Paid: $0.0005 per external recipient, $0.02 once per new address, no branding and no daily cap on new recipients. Receiving is free on both; storage above 10 MB per mailbox is $0.25 per GB-month. Every limit stated in full.",
-      "dateModified": "2026-11-04",
+      "description": "Mailgi pricing in one table: a free tier and pay-as-you-go. Free, until the first top-up: sending to up to 50 new recipients a day at no charge, with Mailgi branding. Paid: $0.0005 per external recipient, $0.02 once per new address, no branding and no daily cap on new recipients. Receiving is free on both; on @mailgi.xyz, mail from outside arrives 15 minutes late unless the mailbox has a MailPass, $0.20 per mailbox per month. Storage above 10 MB per mailbox is $0.25 per GB-month. Every limit stated in full.",
+      "dateModified": "2026-11-26",
       "isPartOf": {
         "@id": "https://www.mailgi.xyz/#website"
       },
@@ -153,7 +153,7 @@
     {
       "@type": "Offer",
       "name": "Mailgi free tier",
-      "description": "Free until the first top-up: sending to up to 50 never-seen recipients a day at no charge, with Mailgi branding on sent mail. Receiving, mail between your own agents, registration, custom domains and the first 10 MB of storage per mailbox are free.",
+      "description": "Free until the first top-up: sending to up to 50 never-seen recipients a day at no charge, with Mailgi branding on sent mail. Receiving, mail between your own agents, registration, custom domains and the first 10 MB of storage per mailbox are free. On @mailgi.xyz, mail from outside arrives 15 minutes late.",
       "price": "0",
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock",
@@ -164,7 +164,7 @@
     {
       "@type": "Offer",
       "name": "Mailgi pay-as-you-go",
-      "description": "Pay-as-you-go from a prepaid balance, from the first top-up: no branding and no daily cap on new recipients. Metered: each external recipient, a one-time introduction to a new address, and storage above 10 MB per mailbox. Receiving and mail between your own agents stay free. Minimum top-up $5, by card.",
+      "description": "Pay-as-you-go from a prepaid balance, from the first top-up: no branding and no daily cap on new recipients. Metered: each external recipient, a one-time introduction to a new address, and storage above 10 MB per mailbox. Receiving and mail between your own agents stay free; a MailPass makes a @mailgi.xyz mailbox's inbound mail instant. Minimum top-up $5, by card.",
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock",
       "seller": {
@@ -194,6 +194,13 @@
         },
         {
           "@type": "UnitPriceSpecification",
+          "name": "MailPass: instant inbound mail for a @mailgi.xyz mailbox",
+          "price": "0.20",
+          "priceCurrency": "USD",
+          "unitText": "mailbox-month"
+        },
+        {
+          "@type": "UnitPriceSpecification",
           "name": "Receiving mail",
           "price": "0",
           "priceCurrency": "USD",
@@ -209,7 +216,7 @@
           "name": "How much does Mailgi cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Start free: until its first top-up an agent can send to up to 50 new recipients a day at no charge, with Mailgi branding on its mail. After the first top-up, mail that leaves Mailgi costs $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it, with no branding and no daily cap. Receiving, registering agents, custom domains and mail between your own agents are free on both. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top-ups start at $5."
+            "text": "Start free: until its first top-up an agent can send to up to 50 new recipients a day at no charge, with Mailgi branding on its mail. After the first top-up, mail that leaves Mailgi costs $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it, with no branding and no daily cap. Receiving, registering agents, custom domains and mail between your own agents are free on both; on @mailgi.xyz, mail from outside arrives 15 minutes late unless the mailbox has a MailPass, $0.20 a month. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top-ups start at $5."
           }
         },
         {
@@ -233,7 +240,15 @@
           "name": "What is free?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Receiving, from anyone, at any volume. Mail between your own agents. Registering agents, API keys, folders, custom domains with their DKIM, SPF and DMARC records, webhooks, the MCP server, the SDK and the CLI. The first 10 MB of storage in every mailbox. And, on the free tier, sending to up to 50 new people a day."
+            "text": "Receiving, from anyone, at any volume (on @mailgi.xyz, 15 minutes late without a MailPass). Mail between your own agents. Registering agents, API keys, folders, custom domains with their DKIM, SPF and DMARC records, webhooks, the MCP server, the SDK and the CLI. The first 10 MB of storage in every mailbox. And, on the free tier, sending to up to 50 new people a day."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is MailPass?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Instant inbound mail for a @mailgi.xyz mailbox, $0.20 per mailbox per month. Without one, mail from outside the mailbox's wallet arrives 15 minutes late, which is too late for most verification codes. Paying a mailbox's top-up link starts its MailPass from the new balance and renews it every month while the balance lasts; one balance can cover several mailboxes. Mail between mailboxes on one balance is always instant, and so is every mailbox on your organisation's own domain, which never needs one."
           }
         },
         {
@@ -241,7 +256,7 @@
           "name": "Who pays: the agent or the organisation?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Whoever owns the address. An agent you registered on @mailgi.xyz has its own balance. Agents on an organisation's own domain share the organisation's balance, which admins see and top up on the dashboard's Billing screen, with every charge itemised by agent."
+            "text": "Whoever owns the address. A @mailgi.xyz agent's first top-up opens a balance for it, and other mailboxes you control can join that balance with a link code. Agents on an organisation's own domain share the organisation's balance, which admins see and top up on the dashboard's Billing screen, with every charge itemised by agent."
           }
         },
         {
@@ -351,7 +366,7 @@
   <section class="frame hero pr-hero">
     <div class="eyebrow">Pricing</div>
     <h1>Start free. <span class="dim">Pay when you outgrow it.</span></h1>
-    <p class="lede">Every agent starts free: 50 new recipients a day, with Mailgi branding. The first top-up removes both, and after that you pay per recipient. Receiving is always free. No subscription, no seats.</p>
+    <p class="lede">Every agent starts free: 50 new recipients a day, with Mailgi branding. The first top-up removes both, and after that you pay per recipient. Receiving is always free, and a MailPass makes it instant. No subscription, no seats.</p>
     <div class="hero-actions">
       <a class="btn btn-solid" href="https://app.mailgi.xyz">Start free</a>
       <a class="btn" href="#estimate">Estimate your bill →</a>
@@ -373,7 +388,8 @@
           <tr><th scope="row">Mail to people outside Mailgi</th><td>Free</td><td>$0.0005 per recipient</td></tr>
           <tr><th scope="row">First email to a new address</th><td>Free, up to 50 new addresses a day</td><td>+ $0.02, once; no daily cap</td></tr>
           <tr><th scope="row">Mailgi branding on sent mail</th><td>Yes</td><td>No</td></tr>
-          <tr><th scope="row">Receiving, from anyone</th><td>Free, unlimited</td><td>Free, unlimited</td></tr>
+          <tr><th scope="row">Receiving, from anyone</th><td>Free, unlimited; on <span class="mono">@mailgi.xyz</span>, 15 minutes late</td><td>Free, unlimited</td></tr>
+          <tr><th scope="row">MailPass: instant mail on <span class="mono">@mailgi.xyz</span></th><td>&mdash;</td><td>$0.20 per mailbox per month; your own domain is always instant</td></tr>
           <tr><th scope="row">Mail between your agents</th><td>Free</td><td>Free</td></tr>
           <tr><th scope="row">Storage</th><td>First 10 MB per mailbox free, then $0.25 per GB-month</td><td>First 10 MB per mailbox free, then $0.25 per GB-month</td></tr>
           <tr><th scope="row">Agents, keys, webhooks, custom domains, MCP, SDK</th><td>Included, unlimited</td><td>Included, unlimited</td></tr>
@@ -441,7 +457,7 @@
       <h2 class="h2">Who pays, <span class="dim">and how.</span></h2>
     </div>
     <div class="cells" style="--min:300px">
-      <div class="cell feat"><span class="tag">one balance per owner</span><h3>Agent or organisation</h3><p>An agent that registered itself on <span class="mono">@mailgi.xyz</span> has its own balance. Agents on your organisation's domain share the organisation's, which admins top up from the dashboard.</p></div>
+      <div class="cell feat"><span class="tag">one balance per owner</span><h3>Agent or organisation</h3><p>A <span class="mono">@mailgi.xyz</span> agent's first top-up opens a balance for it, and one balance can pay for several of your mailboxes. Agents on your organisation's domain share the organisation's, which admins top up from the dashboard.</p></div>
       <div class="cell feat"><span class="tag">no account needed</span><h3>Anyone can pay</h3><p>Top up any agent by card at <span class="mono">app.mailgi.xyz/topup</span>. An agent can hand its human a link that opens with its address already filled in. Minimum $5, plus any sales tax or VAT.</p></div>
       <div class="cell feat"><span class="tag">nothing surprising</span><h3>When it runs out</h3><p>A send the balance can't cover is refused whole with <span class="mono">402</span> and an itemised cost, and nothing is charged. Receiving and mail between your agents keep working.</p></div>
     </div>
@@ -485,7 +501,7 @@
     <div class="split-side faq">
       <details>
         <summary><span class="numeral">01</span><span class="q">How much does Mailgi cost?</span><span class="mark"></span></summary>
-        <p class="a">Start free: until its first top-up an agent can send to up to 50 new recipients a day at no charge, with Mailgi branding on its mail. After the first top-up, mail that leaves Mailgi costs $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it, with no branding and no daily cap. Receiving, registering agents, custom domains and mail between your own agents are free on both. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top-ups start at $5.</p>
+        <p class="a">Start free: until its first top-up an agent can send to up to 50 new recipients a day at no charge, with Mailgi branding on its mail. After the first top-up, mail that leaves Mailgi costs $0.0005 per external recipient, plus $0.02 once the first time an agent writes to an address that has never written to it, with no branding and no daily cap. Receiving, registering agents, custom domains and mail between your own agents are free on both; on @mailgi.xyz, mail from outside arrives 15 minutes late unless the mailbox has a MailPass, $0.20 a month. Storage above 10 MB per mailbox is $0.25 per GB-month. No subscription; top-ups start at $5.</p>
       </details>
       <details>
         <summary><span class="numeral">02</span><span class="q">What is the free tier?</span><span class="mark"></span></summary>
@@ -497,38 +513,42 @@
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">What is free?</span><span class="mark"></span></summary>
-        <p class="a">Receiving, from anyone, at any volume. Mail between your own agents. Registering agents, API keys, folders, custom domains with their DKIM, SPF and DMARC records, webhooks, the MCP server, the SDK and the CLI. The first 10 MB of storage in every mailbox. And, on the free tier, sending to up to 50 new people a day.</p>
+        <p class="a">Receiving, from anyone, at any volume (on @mailgi.xyz, 15 minutes late without a MailPass). Mail between your own agents. Registering agents, API keys, folders, custom domains with their DKIM, SPF and DMARC records, webhooks, the MCP server, the SDK and the CLI. The first 10 MB of storage in every mailbox. And, on the free tier, sending to up to 50 new people a day.</p>
       </details>
       <details>
-        <summary><span class="numeral">05</span><span class="q">Who pays: the agent or the organisation?</span><span class="mark"></span></summary>
-        <p class="a">Whoever owns the address. An agent you registered on <span class="mono">@mailgi.xyz</span> has its own balance. Agents on an organisation's own domain share the organisation's balance, which admins see and top up on the dashboard's Billing screen, with every charge itemised by agent.</p>
+        <summary><span class="numeral">05</span><span class="q">What is MailPass?</span><span class="mark"></span></summary>
+        <p class="a">Instant inbound mail for a <span class="mono">@mailgi.xyz</span> mailbox, $0.20 per mailbox per month. Without one, mail from outside the mailbox's wallet arrives 15 minutes late, which is too late for most verification codes. Paying a mailbox's top-up link starts its MailPass from the new balance and renews it every month while the balance lasts; one balance can cover several mailboxes. Mail between mailboxes on one balance is always instant, and so is every mailbox on your organisation's own domain, which never needs one.</p>
       </details>
       <details>
-        <summary><span class="numeral">06</span><span class="q">How do I add credit? Do I need an account?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">06</span><span class="q">Who pays: the agent or the organisation?</span><span class="mark"></span></summary>
+        <p class="a">Whoever owns the address. A <span class="mono">@mailgi.xyz</span> agent's first top-up opens a balance for it, and other mailboxes you control can join that balance with a link code. Agents on an organisation's own domain share the organisation's balance, which admins see and top up on the dashboard's Billing screen, with every charge itemised by agent.</p>
+      </details>
+      <details>
+        <summary><span class="numeral">07</span><span class="q">How do I add credit? Do I need an account?</span><span class="mark"></span></summary>
         <p class="a">No account is needed to pay. Anyone can top up any agent by card, through Stripe, at <span class="mono">app.mailgi.xyz/topup</span>. An agent can also hand its human a ready link: the top-up link in its billing details and in a refused send already carries its address, so the page opens filled in. The minimum is $5. Stripe sells the credit and adds any sales tax or VAT on top, so the amount you choose is the amount credited. Whoever pays becomes accountable for that balance's outbound mail.</p>
       </details>
       <details>
-        <summary><span class="numeral">07</span><span class="q">What happens when the balance runs out?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">08</span><span class="q">What happens when the balance runs out?</span><span class="mark"></span></summary>
         <p class="a">A send the balance cannot cover is refused whole with <span class="mono">402 PAYMENT_REQUIRED</span>, and nothing is charged. The error itemises the cost (how many external recipients, which of them are new, the price of each) and includes the top-up link. Receiving and mail between your own agents keep working. Storage is billed daily even at zero, so a balance can go slightly negative; that pauses outbound mail only, until it is topped up.</p>
       </details>
       <details>
-        <summary><span class="numeral">08</span><span class="q">Do I need a credit card to start?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">09</span><span class="q">Do I need a credit card to start?</span><span class="mark"></span></summary>
         <p class="a">No. Registering an agent takes one unauthenticated POST, with no account and no card, and the agent starts on the free tier. A card is needed only to go past 50 new recipients a day or to remove the branding, and it can be anyone's.</p>
       </details>
       <details>
-        <summary><span class="numeral">09</span><span class="q">How many emails can an agent send per day?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">10</span><span class="q">How many emails can an agent send per day?</span><span class="mark"></span></summary>
         <p class="a">Several limits apply at once and the lowest wins. Each API key may send 100 a day. Each agent may send 50 an hour and 300 a day across all its keys. On a custom domain the organisation is capped by domain age: 100 a day under three days, 1,000 from three to thirty, 5,000 after thirty. Agents on the shared <span class="mono">@mailgi.xyz</span> domain instead draw from one collective bucket of 500 an hour and 5,000 a day. Mail to other <span class="mono">@mailgi.xyz</span> agents is counted separately, on its own allowance of 1,000 an hour and 5,000 a day per agent, so talking to agents never eats your external quota. Receiving and reading are not limited.</p>
       </details>
       <details>
-        <summary><span class="numeral">10</span><span class="q">What happens when an agent hits a limit?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">11</span><span class="q">What happens when an agent hits a limit?</span><span class="mark"></span></summary>
         <p class="a">The send is rejected with HTTP 429 and an error code: <span class="mono">TOO_MANY_REQUESTS</span> when a sending quota is exhausted, <span class="mono">RATE_LIMITED</span> when one IP makes too many requests to any endpoint. Match on the code, not the status. Nothing is queued and nothing is charged; back off and retry when the window resets.</p>
       </details>
       <details>
-        <summary><span class="numeral">11</span><span class="q">Does a custom domain cost extra?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">12</span><span class="q">Does a custom domain cost extra?</span><span class="mark"></span></summary>
         <p class="a">No. Attaching and verifying your own domain is free, including the generated DKIM, SPF and DMARC records. Some competitors put custom domains behind a paid tier; we don't.</p>
       </details>
       <details>
-        <summary><span class="numeral">12</span><span class="q">Why are the sending limits so low?</span><span class="mark"></span></summary>
+        <summary><span class="numeral">13</span><span class="q">Why are the sending limits so low?</span><span class="mark"></span></summary>
         <p class="a">Because anyone can register an agent without a human being involved, which is the point of the product and also exactly the shape of an abuse vector. The limits, together with the free tier's daily cap on new recipients and paying to introduce yourself after it, are what let us keep unattended registration open. They are deliberately inconvenient for bulk sending: Mailgi is not a marketing platform and has no lists, imports or campaigns. If you have a legitimate need for more volume, email us.</p>
       </details>
     </div>
