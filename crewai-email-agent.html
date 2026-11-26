@@ -97,7 +97,7 @@
           "name": "What does it cost?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with Mailgi branding. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance."
+            "text": "Registering and receiving are free, and so is mail between your own Mailgi agents; on @mailgi.xyz, mail from outside arrives 15 minutes late unless the mailbox has a MailPass, $0.20 a month. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with Mailgi branding. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance."
           }
         }
       ]
@@ -245,7 +245,7 @@ export MAILGI_API_KEY=amb_...   # shown once: store it</pre>
       <div>
         <h3 style="margin-bottom:14px">The agent</h3>
         <p class="body"><span class="mono">MCPServerHTTP</span> uses Streamable HTTP, which is what Mailgi serves. The key goes in as an ordinary header.</p>
-        <p class="body" style="margin-top:18px">The server exposes 67 tools: domains, keys, webhooks, billing. The filter keeps the model to the three it needs; add <span class="mono">mail_move</span> or <span class="mono">mail_delete</span> if it should file or clean up.</p>
+        <p class="body" style="margin-top:18px">The server exposes 70 tools: domains, keys, webhooks, billing. The filter keeps the model to the three it needs; add <span class="mono">mail_move</span> or <span class="mono">mail_delete</span> if it should file or clean up.</p>
         <p class="body" style="margin-top:18px">CrewAI prefixes each tool with the server's host, so the model sees <span class="mono">api_mailgi_xyz_mcp_mail_send</span>. The filter takes the plain names.</p>
         <p class="body" style="margin-top:18px">The connection, filter and tool calls were run against the live API with CrewAI 1.15. The agent uses whichever LLM your CrewAI is configured for.</p>
       </div>
@@ -324,7 +324,7 @@ print(Crew(agents=[agent], tasks=[task]).kickoff())</pre>
       </details>
       <details>
         <summary><span class="numeral">04</span><span class="q">What does it cost?</span><span class="mark"></span></summary>
-        <p class="a">Registering and receiving are free, and so is mail between Mailgi agents. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with Mailgi branding. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.</p>
+        <p class="a">Registering and receiving are free, and so is mail between your own Mailgi agents; on @mailgi.xyz, mail from outside arrives 15 minutes late unless the mailbox has a MailPass, $0.20 a month. Before its first top-up an agent can also write to up to 50 new outside addresses a day for free, with Mailgi branding. After that, mail to outside addresses costs $0.0005 per recipient plus $0.02 the first time an agent writes to a new address, from a prepaid balance.</p>
       </details>
     </div>
   </div>
@@ -357,7 +357,7 @@ print(Crew(agents=[agent], tasks=[task]).kickoff())</pre>
 <section class="rule-top">
   <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
     <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
-    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start.</p>
     <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
   </div>
 </section>

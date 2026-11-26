@@ -4,12 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Email MCP server for Claude Code and Cursor — Mailgi</title>
-<meta name="description" content="Connect Claude Code, Claude Desktop or Cursor to Mailgi&#x27;s hosted email MCP server: 67 tools, each a 1:1 proxy of the REST API, same limits and billing." />
+<meta name="description" content="Connect Claude Code, Claude Desktop or Cursor to Mailgi&#x27;s hosted email MCP server: 70 tools, each a 1:1 proxy of the REST API, same limits and billing." />
 <link rel="canonical" href="https://www.mailgi.xyz/mcp.html" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Mailgi" />
 <meta property="og:title" content="Email MCP server for Claude Code and Cursor — Mailgi" />
-<meta property="og:description" content="Connect Claude Code, Claude Desktop or Cursor to Mailgi&#x27;s hosted email MCP server: 67 tools, each a 1:1 proxy of the REST API, same limits and billing." />
+<meta property="og:description" content="Connect Claude Code, Claude Desktop or Cursor to Mailgi&#x27;s hosted email MCP server: 70 tools, each a 1:1 proxy of the REST API, same limits and billing." />
 <meta property="og:url" content="https://www.mailgi.xyz/mcp.html" />
 <meta property="og:image" content="https://www.mailgi.xyz/og.png" />
 <meta property="og:image:type" content="image/png" />
@@ -17,7 +17,7 @@
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Email MCP server for Claude Code and Cursor — Mailgi" />
-<meta name="twitter:description" content="Connect Claude Code, Claude Desktop or Cursor to Mailgi&#x27;s hosted email MCP server: 67 tools, each a 1:1 proxy of the REST API, same limits and billing." />
+<meta name="twitter:description" content="Connect Claude Code, Claude Desktop or Cursor to Mailgi&#x27;s hosted email MCP server: 70 tools, each a 1:1 proxy of the REST API, same limits and billing." />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="preload" href="/fonts/geist-normal-latin.woff2" as="font" type="font/woff2" crossorigin />
@@ -178,7 +178,7 @@
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "Connect an MCP client to Mailgi's hosted MCP server",
-  "dateModified": "2026-10-31",
+  "dateModified": "2026-11-26",
   "description": "Add https://api.mailgi.xyz/mcp to Claude Code, Claude Desktop or Cursor, register an agent through the register_agent tool, then add its API key as the Authorization header.",
   "step": [
     {
@@ -249,7 +249,7 @@
       <p class="lede">A hosted Model Context Protocol server at <span class="mono">https://api.mailgi.xyz/mcp</span>. Point Claude Code, Claude Desktop or Cursor at it and the agent can register an address, send, read and file mail. Nothing to install on the server side.</p>
       <div class="hero-actions">
         <a class="btn btn-solid" href="#connect">Connect a client</a>
-        <a class="btn" href="#tools">All 67 tools →</a>
+        <a class="btn" href="#tools">All 70 tools →</a>
       </div>
     </div>
     <div class="split-side endpoint" aria-label="Endpoint and auth headers">
@@ -363,7 +363,7 @@ claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp</pre></div>
   <section class="frame" id="tools">
     <div class="sec-head" style="padding-bottom:40px">
       <div class="eyebrow">[04] Tools</div>
-      <h2 class="h2">All 67 <span class="dim">tools.</span></h2>
+      <h2 class="h2">All 70 <span class="dim">tools.</span></h2>
       <p class="body wide">Tool names map one-to-one to REST endpoints, and each behaves exactly like the endpoint it names. For request and response fields, read the endpoint in the <a href="https://api.mailgi.xyz/docs">API docs</a> or <a href="/SKILL.md">SKILL.md</a>. Tools that delete, revoke or remove carry the MCP <span class="mono">destructiveHint</span> annotation, so a client that honours it asks before calling them.</p>
     </div>
     <div class="tool-groups">
@@ -402,6 +402,9 @@ claude mcp add --transport http mailgi https://api.mailgi.xyz/mcp</pre></div>
 <tr><th scope="row" class="mono">billing_get</th><td class="mono"><b>GET</b> /v1/billing</td><td>Wallet balance, prices, how to top up</td></tr>
 <tr><th scope="row" class="mono">billing_topup</th><td class="mono"><b>POST</b> /v1/billing/topup</td><td>Create a card top-up link for a human to pay</td></tr>
 <tr><th scope="row" class="mono">billing_transactions</th><td class="mono"><b>GET</b> /v1/billing/transactions</td><td>Wallet ledger</td></tr>
+<tr><th scope="row" class="mono">billing_link</th><td class="mono"><b>POST</b> /v1/billing/link</td><td>Link this mailbox to a wallet with a link code; starts its MailPass</td></tr>
+<tr><th scope="row" class="mono">billing_unlink</th><td class="mono"><b>DELETE</b> /v1/billing/link</td><td>Unlink this mailbox; its paid month stays</td></tr>
+<tr><th scope="row" class="mono">billing_link_code</th><td class="mono"><b>POST</b> /v1/billing/link-codes</td><td>Code that links another mailbox to this wallet</td></tr>
 <tr><th scope="row" class="mono">webhook_list</th><td class="mono"><b>GET</b> /v1/webhook-endpoints</td><td>List webhook endpoints</td></tr>
 <tr><th scope="row" class="mono">webhook_create</th><td class="mono"><b>POST</b> /v1/webhook-endpoints</td><td>Register a webhook endpoint for inbound mail</td></tr>
 <tr><th scope="row" class="mono">webhook_delete</th><td class="mono"><b>DELETE</b> /v1/webhook-endpoints/{id}</td><td>Delete a webhook endpoint <span class="destr">destructive</span></td></tr>

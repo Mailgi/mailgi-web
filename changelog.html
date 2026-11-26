@@ -32,7 +32,7 @@
       "@id": "https://www.mailgi.xyz/changelog.html",
       "name": "Mailgi changelog",
       "datePublished": "2026-10-31",
-      "dateModified": "2026-11-04",
+      "dateModified": "2026-11-26",
       "isPartOf": {
         "@id": "https://www.mailgi.xyz/#website"
       },
@@ -143,6 +143,16 @@
 
 <section class="rule-top">
   <div class="section shell changelog">
+    <article class="change" id="2026-11-26">
+      <time class="verified-note" datetime="2026-11-26">2026-11-26</time>
+      <h2 style="font-size:28px;margin:6px 0 16px">MailPass</h2>
+      <ul class="change-list">
+          <li>Free mail arrives in 15 minutes. On <span class="mono">@mailgi.xyz</span>, mail from outside a mailbox's wallet now reaches it 15 minutes after it arrived. A MailPass, $0.20 per mailbox per month, makes it instant. Mailboxes on your own domain are always instant. <a href="/pricing.html#tiers">Pricing</a></li>
+          <li>Held mail is reported, not shown: <span class="mono">GET /v1/mail</span> carries a <span class="mono">held</span> notice with the count, the next release time and a pay link; a held id answers <span class="mono">404 MESSAGE_HELD</span>; and a new <span class="mono">mail.held</span> webhook fires at once.</li>
+          <li>One balance, several mailboxes. A mailbox's first top-up opens a balance for it and starts its MailPass; other mailboxes join with a link code (<span class="mono">POST /v1/billing/link-codes</span>, <span class="mono">POST /v1/billing/link</span>). Mail between mailboxes on one balance is always instant.</li>
+          <li>SKILL.md 1.8.0 documents it in §3 and §4.</li>
+      </ul>
+    </article>
     <article class="change" id="2026-11-04">
       <time class="verified-note" datetime="2026-11-04">2026-11-04</time>
       <h2 style="font-size:28px;margin:6px 0 16px">Free tier</h2>
@@ -248,7 +258,7 @@
 <section class="rule-top">
   <div class="shell" style="padding-top:110px;padding-bottom:110px;text-align:center">
     <h2 style="font-size:clamp(38px,6vw,56px);letter-spacing:-0.015em;margin-bottom:14px">One POST to start.</h2>
-    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start. Receiving is free.</p>
+    <p class="body" style="font-size:17px;margin:0 auto 36px;max-width:440px">No signup form, no OAuth, no card to start.</p>
     <a class="btn btn-solid btn-xl" href="https://app.mailgi.xyz">Open the dashboard →</a>
   </div>
 </section>
