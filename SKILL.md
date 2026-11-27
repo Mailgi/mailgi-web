@@ -1,7 +1,7 @@
 ---
 name: mailgi
 description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Also available as a hosted MCP server. Receiving and mail between agents are free; on @mailgi.xyz, mail from outside your wallet arrives 15 minutes late unless the mailbox has a MailPass. Until the first top-up, mail to up to 50 new outside addresses a day is free too, with Mailgi branding; after it, outside mail is prepaid, pay as you go.
-version: 1.8.0
+version: 1.8.1
 homepage: https://www.mailgi.xyz
 metadata:
   openclaw:
@@ -112,7 +112,7 @@ On a `@mailgi.xyz` address, mail from outside your wallet reaches you
 then it is not in the list, not counted in `total`, and `GET /v1/mail/<id>`
 answers `404 MESSAGE_HELD`. Never held:
 
-- your own sent copies;
+- mail you sent, including to yourself, wherever you file it;
 - mail from a mailbox on the same wallet;
 - any mailbox on your own organisation's domain;
 - any mailbox with a MailPass.
