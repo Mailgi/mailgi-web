@@ -1,7 +1,7 @@
 ---
 name: mailgi
 description: Give an AI agent a real, deliverable email address. Register in one POST with no OAuth and no signup form, then send, receive, read and organise mail over a plain REST API — polling or webhooks — on a shared handle or your own verified domain. Also available as a hosted MCP server. Receiving and mail between agents are free; on @mailgi.xyz, mail from outside your wallet arrives 15 minutes late unless the mailbox has a MailPass. Until the first top-up, mail to up to 50 new outside addresses a day is free too, with Mailgi branding; after it, outside mail is prepaid, pay as you go.
-version: 1.8.1
+version: 1.8.2
 homepage: https://www.mailgi.xyz
 metadata:
   openclaw:
@@ -126,20 +126,26 @@ When something is waiting, the list says so:
   "position": 0,
   "held": {
     "status": "held",
-    "message": "New mail is on hold. Get a MailPass to receive mail instantly.",
+    "message": "New mail is on hold for 15 minutes. Fund a wallet with payLink for instant mail on this and other mailboxes.",
     "count": 1,
     "nextReleaseAt": "2026-11-26T16:30:00Z",
     "holdMinutes": 15,
     "mailPassUsd": 0.2,
-    "payLink": "https://app.mailgi.xyz/topup?address=buzzing-falcon%40mailgi.xyz"
+    "payLink": "https://app.mailgi.xyz/topup?address=buzzing-falcon%40mailgi.xyz",
+    "linkEndpoint": "POST /v1/billing/link",
+    "docUrl": "https://www.mailgi.xyz/SKILL.md#mailpass"
   }
 }
 ```
 
 **Waiting for a verification code?** Most codes expire before 15 minutes are
 up. If you see `held` while waiting for one, give `payLink` to whoever you work
-for: paying it starts this mailbox's MailPass, and held mail appears at once.
-Otherwise keep polling; it appears at `nextReleaseAt`. See §4, "MailPass".
+for: paying it funds a wallet and starts this mailbox's MailPass, and held mail
+appears at once. One wallet can pay for many mailboxes: if whoever you work for
+already has one, ask its first mailbox for a link code and redeem it at
+`linkEndpoint`. Otherwise keep polling; mail appears at `nextReleaseAt`.
+`GET /v1/mail/<id>` on a held message answers `404 MESSAGE_HELD` with the same
+fields under `error.details`, plus `releaseAt`. See §4, "MailPass".
 
 **Get full body of a message:**
 
@@ -247,9 +253,10 @@ creates one and links it (see "MailPass"). Before that it has none of its own
 (`wallet.kind` is `agent`). `GET /v1/billing` tells you which: `wallet.kind` is
 `wallet`, `org` or `agent`.
 
-### MailPass: instant mail for a `@mailgi.xyz` mailbox
+### MailPass
 
-A MailPass makes this mailbox's inbound mail instant instead of 15 minutes late.
+A MailPass makes a `@mailgi.xyz` mailbox's inbound mail instant instead of 15
+minutes late.
 It is charged per mailbox per month, up front, from the mailbox's wallet. The
 price is `GET /v1/billing` → `prices.mailPassUsd`. It renews automatically while
 the wallet can pay, and lapses back to delayed mail when it can't. Mailboxes on
@@ -538,7 +545,9 @@ MailPass is held (§3, "Held mail"). It doesn't name the sender, and
   "releaseAt": "2026-09-03T10:15:00Z",
   "holdMinutes": 15,
   "mailPassUsd": 0.2,
-  "payLink": "https://app.mailgi.xyz/topup?address=buzzing-falcon%40mailgi.xyz"
+  "payLink": "https://app.mailgi.xyz/topup?address=buzzing-falcon%40mailgi.xyz",
+  "linkEndpoint": "POST /v1/billing/link",
+  "docUrl": "https://www.mailgi.xyz/SKILL.md#mailpass"
 }
 ```
 
